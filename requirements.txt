@@ -1,0 +1,4 @@
+# AI News Daily runs out-of-the-box using only the Python 3.11+ standard library.
+# Optional packages if extending locally:
+python-dotenv>=1.0.1
+google-genai>=1.0.0

@@ -1,0 +1,89 @@
+name: Daily AI News Briefing
+
+on:
+  schedule:
+    # Runs every day at 08:00 UTC (8:00 AM GMT / 9:00 AM BST)
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+    inputs:
+      lookback_hours:
+        description: "Lookback window in hours"
+        required: false
+        default: "24"
+      dry_run:
+        description: "Dry run (generate digests without sending Discord/Email notifications)"
+        required: false
+        default: false
+        type: boolean
+      commit_digest:
+        description: "Commit generated Markdown/HTML digest back to the repository's digests/ folder"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  send-daily-briefing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch, summarize, and deliver AI News Briefing
+        env:
+          # Gemini AI Summarization (Optional — falls back to structured digest if unset)
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
+
+          # Discord Webhook Notification
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+          # Email Option A: Resend API
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+          # Email Option B: Standard SMTP (e.g. Gmail App Password)
+          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+          # Aggregation Options
+          LOOKBACK_HOURS: ${{ inputs.lookback_hours || vars.LOOKBACK_HOURS || '24' }}
+          MAX_ITEMS_PER_SOURCE: ${{ vars.MAX_ITEMS_PER_SOURCE || '5' }}
+          DRY_RUN_FLAG: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+        run: |
+          python main.py $DRY_RUN_FLAG
+
+      - name: Upload Daily Digest Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-ai-digest-${{ github.run_id }}
+          path: |
+            digests/*.md
+            digests/*.html
+          retention-days: 30
+
+      - name: Commit and push daily digest to repository archive
+        if: ${{ inputs.commit_digest != false }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add digests/*.md digests/*.html
+          if git diff --staged --quiet; then
+            echo "No changes to digests/ to commit."
+          else
+            TODAY=$(date -u +"%Y-%m-%d")
+            git commit -m "chore(digest): add daily AI news briefing for ${TODAY}"
+            git push
+          fi
