@@ -116,10 +116,10 @@ def build_fallback_markdown(items: list[NewsItem], settings: Settings | None = N
 
         lines.append(f"## {heading}")
         lines.append("")
-        for (score, _tier, clean_summary, benefit), item in scored_items[:8]:
+        for (score, _tier, func_tag, clean_summary, benefit), item in scored_items[:8]:
             summary_snippet = f" — {clean_summary}" if clean_summary else ""
             lines.append(
-                f"- **[{item.title}]({item.url})** (*{item.source}*, Priority `{score}/100`){summary_snippet}  \n"
+                f"- **[{item.title}]({item.url})** (*{item.source}* · {func_tag} · Priority `{score}/100`){summary_snippet}  \n"
                 f"  *🇬🇧 UK Finance Benefit:* {benefit}"
             )
         lines.append("")

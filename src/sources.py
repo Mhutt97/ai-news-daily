@@ -41,12 +41,12 @@ RSS_FEEDS: list[dict[str, str]] = [
     {
         "name": "UK CFO & Finance Teams AI",
         "category": "UK Finance & CFO AI",
-        "url": "https://news.google.com/rss/search?q=(%22AI%22+OR+%22artificial+intelligence%22)+AND+(%22CFO%22+OR+%22finance+team%22+OR+%22accounting%22+OR+%22FP%26A%22+OR+%22audit%22)+UK+when:7d&hl=en-GB&gl=GB&ceid=GB:en",
+        "url": "https://news.google.com/rss/search?q=(%22AI%22+OR+%22artificial+intelligence%22)+AND+(%22CFO%22+OR+%22finance+team%22+OR+%22finance+leaders%22+OR+%22accounting%22+OR+%22FP%26A%22+OR+%22internal+audit%22)+UK+-SEO+when:7d&hl=en-GB&gl=GB&ceid=GB:en",
     },
     {
-        "name": "UK Financial Services & Fintech AI",
+        "name": "UK Financial Services & Big Four AI",
         "category": "UK Finance & CFO AI",
-        "url": "https://news.google.com/rss/search?q=(%22AI%22+OR+%22generative+AI%22)+AND+(%22UK+finance%22+OR+%22FCA%22+OR+%22UK+fintech%22+OR+%22ICAEW%22+OR+%22ACCA%22)+when:7d&hl=en-GB&gl=GB&ceid=GB:en",
+        "url": "https://news.google.com/rss/search?q=(%22AI%22+OR+%22generative+AI%22)+AND+(%22UK+finance%22+OR+%22FCA%22+OR+%22ICAEW%22+OR+%22ACCA%22+OR+%22Deloitte%22+OR+%22EY%22+OR+%22PwC%22+OR+%22KPMG%22)+UK+-SEO+when:7d&hl=en-GB&gl=GB&ceid=GB:en",
     },
     # Category 1: AI Labs & Official Blogs
     {
@@ -156,9 +156,23 @@ def fetch_rss_feed(
     rss_items = root.findall(".//item")
     if rss_items:
         for elem in rss_items:
-            title = _clean_html(elem.findtext("title") or "", max_len=200)
+            raw_title = _clean_html(elem.findtext("title") or "", max_len=220)
             link = (elem.findtext("link") or "").strip()
             desc = _clean_html(elem.findtext("description") or "")
+            source_tag = _clean_html(elem.findtext("source") or "", max_len=60)
+
+            title = raw_title
+            publisher = source_tag or feed_info["name"]
+            if " - " in raw_title and (source_tag or "news.google.com" in feed_info["url"]):
+                 main_t, _, tail_pub = raw_title.rpartition(" - ")
+                 if main_t and tail_pub and len(tail_pub) < 45:
+                     title = main_t.strip()
+                     publisher = source_tag or tail_pub.strip()
+
+            # If description just repeats the title (common in Google News RSS), clear it
+            if desc and title and desc.lower().startswith(title[:35].lower()):
+                desc = ""
+
             pub_raw = (
                 elem.findtext("pubDate")
                 or elem.findtext("{http://purl.org/dc/elements/1.1/}date")
@@ -172,7 +186,7 @@ def fetch_rss_feed(
                     NewsItem(
                         title=title,
                         url=link,
-                        source=feed_info["name"],
+                        source=publisher,
                         category=feed_info["category"],
                         published_at=dt.strftime("%Y-%m-%d %H:%M UTC") if dt else "Recent",
                         summary=desc,
