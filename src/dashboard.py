@@ -7,6 +7,7 @@ import html
 import json
 from pathlib import Path
 import re
+import urllib.parse
 import urllib.request
 
 from src.config import PROJECT_ROOT, Settings
@@ -14,6 +15,121 @@ from src.sources import NewsItem
 
 DOCS_DIR = PROJECT_ROOT / "docs"
 DEFAULT_DASHBOARD_URL = "https://mhutt97.github.io/ai-news-daily/"
+
+PUBLISHER_DOMAINS: dict[str, str] = {
+    "deloitte": "deloitte.com",
+    "ey": "ey.com",
+    "pwc": "pwc.co.uk",
+    "kpmg": "kpmg.com",
+    "uk finance": "ukfinance.org.uk",
+    "enterprise times": "enterprisetimes.co.uk",
+    "it brief uk": "itbrief.co.uk",
+    "seeking alpha": "seekingalpha.com",
+    "going concern": "goingconcern.com",
+    "tokenpost": "tokenpost.com",
+    "openai": "openai.com",
+    "google": "blog.google",
+    "hugging face": "huggingface.co",
+    "hf daily papers": "huggingface.co",
+    "techcrunch": "techcrunch.com",
+    "the verge": "theverge.com",
+    "ars technica": "arstechnica.com",
+    "mit technology review": "technologyreview.com",
+    "arxiv": "arxiv.org",
+    "hacker news": "news.ycombinator.com",
+    "r/machinelearning": "reddit.com",
+    "r/localllama": "reddit.com",
+}
+
+
+def resolve_publisher_domain(source_name: str, article_url: str) -> str:
+    """Resolve the best domain for a publisher favicon."""
+    s_lower = source_name.lower()
+    for key, dom in PUBLISHER_DOMAINS.items():
+        if key in s_lower:
+            return dom
+    try:
+        parsed = urllib.parse.urlparse(article_url)
+        if parsed.netloc and "news.google.com" not in parsed.netloc:
+            return parsed.netloc.lstrip("www.")
+    except Exception:
+        pass
+    return "ukfinance.org.uk"
+
+
+def build_executive_breakdown(
+    item: NewsItem, score: int, func_tag: str, benefit: str
+) -> dict[str, str]:
+    """Build structured 3-point Executive Drawer guidance + role-specific priority weights."""
+    text = f"{item.title} {item.summary}".lower()
+
+    # Role weights (cfo, audit, fpa)
+    cfo_w = score
+    audit_w = score
+    fpa_w = score
+
+    if "🏛️" in func_tag or "🛡️" in func_tag or "🔒" in func_tag:
+        audit_w = min(100, score + 12)
+        cfo_w = min(98, score + 4)
+        ssl_risk = (
+            "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. "
+            "Ensure any AI-assisted outputs have a documented human-in-the-loop review trail."
+        )
+        action = (
+            "Log this update in your AI Risk & Governance register and review current workspace/vendor "
+            "controls against FCA and internal audit standards."
+        )
+    elif "📈" in func_tag or "🏦" in func_tag or "📊" in func_tag:
+        cfo_w = min(100, score + 10)
+        fpa_w = min(96, score + 6)
+        ssl_risk = (
+            "Highlights governance pressure vs. control maturity: deploying AI too quickly without "
+            "reconciliation checks creates financial reporting and disclosure exposure."
+        )
+        action = (
+            "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy "
+            "metrics before expanding software spend."
+        )
+    elif "🤖" in func_tag or "⚙️" in func_tag or "💻" in func_tag or "⚡" in func_tag or "🧠" in func_tag:
+        fpa_w = min(99, score + 18)
+        cfo_w = min(92, score + 6)
+        ssl_risk = (
+            "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting "
+            "new AI agents or models to ERP, FP&A, or payroll spreadsheets."
+        )
+        action = (
+            "Evaluate whether this capability can automate repetitive month-end close, variance commentary, "
+            "or data extraction workflows in a sandboxed pilot."
+        )
+    else:
+        fpa_w = min(90, score + 8)
+        ssl_risk = (
+            "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability "
+            "that will influence enterprise software over the next 6–12 months."
+        )
+        action = (
+            "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+        )
+
+    if "fca" in text:
+        ssl_risk = (
+            "High UK Regulatory Relevance: FCA oversight expects senior management accountability (SM&CR), "
+            "outcome testing, and clear operational resilience when AI is used in financial services."
+        )
+    elif "gmail" in text or "privacy" in text or "no internet" in text:
+        ssl_risk = (
+            "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential "
+            "management accounts, M&A drafts, or customer PII."
+        )
+
+    return {
+        "strategic": benefit,
+        "risk_angle": ssl_risk,
+        "action_item": action,
+        "cfo_score": cfo_w,
+        "audit_score": audit_w,
+        "fpa_score": fpa_w,
+    }
 
 
 def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]:
@@ -131,7 +247,10 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
             f"2026 Compliance Benchmark ({item.source}): Benchmarks how chief compliance and audit leaders are updating governance controls for generative AI.",
         )
 
-    if re.search(r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo)\b", text):
+    if re.search(
+        r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo)\b",
+        text,
+    ):
         return (
             94,
             "High UK Finance Impact",
@@ -206,7 +325,12 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
             f"Cloud Privacy Alert ({item.source}): Reminder for finance teams to verify enterprise workspace opt-outs so corporate email and documents are never used for ad targeting or model training.",
         )
 
-    if "no internet" in text or "live internet" in text or "containment" in text or "securing" in text:
+    if (
+        "no internet" in text
+        or "live internet" in text
+        or "containment" in text
+        or "securing" in text
+    ):
         return (
             83,
             "Finance Ops & Governance",
@@ -372,19 +496,28 @@ def prepare_prioritized_cards(
             else:
                 tier = "General AI & Research"
 
+        breakdown = build_executive_breakdown(item, score, func_tag, benefit)
+        pub_domain = resolve_publisher_domain(item.source, item.url)
+
         cards.append(
             {
                 "id": f"item-{idx}",
                 "title": item.title,
                 "url": item.url,
                 "source": item.source,
+                "pub_domain": pub_domain,
                 "category": item.category,
                 "published_at": item.published_at,
                 "score": score,
+                "cfo_score": breakdown["cfo_score"],
+                "audit_score": breakdown["audit_score"],
+                "fpa_score": breakdown["fpa_score"],
                 "tier": tier,
                 "func_tag": func_tag,
                 "summary": summary,
                 "benefit": benefit,
+                "risk_angle": breakdown["risk_angle"],
+                "action_item": breakdown["action_item"],
             }
         )
 
@@ -394,9 +527,14 @@ def prepare_prioritized_cards(
 
 def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     """Render a modern, mobile-first, animated UK Finance & AI Intelligence Dashboard."""
+    total = max(len(cards), 1)
     high_impact_count = sum(1 for c in cards if int(c["score"]) >= 85)
     ops_count = sum(1 for c in cards if 70 <= int(c["score"]) < 85)
     general_count = sum(1 for c in cards if int(c["score"]) < 70)
+
+    high_pct = round((high_impact_count / total) * 100, 1)
+    ops_pct = round((ops_count / total) * 100, 1)
+    gen_pct = max(0.0, round(100.0 - high_pct - ops_pct, 1))
 
     cards_json = json.dumps(cards, ensure_ascii=False)
 
@@ -410,17 +548,18 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
   <title>UK Finance & AI Daily Intelligence — {html.escape(date_str)}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {{
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --bg: #070b14;
       --bg-mesh-1: rgba(59, 130, 246, 0.11);
       --bg-mesh-2: rgba(245, 158, 11, 0.08);
-      --surface: rgba(17, 24, 39, 0.84);
+      --surface: rgba(17, 24, 39, 0.86);
       --surface-solid: #111827;
       --surface-elevated: #192338;
       --surface-hover: #1e293b;
-      --glass-bg: rgba(15, 23, 42, 0.8);
+      --glass-bg: rgba(15, 23, 42, 0.82);
       --border: rgba(255, 255, 255, 0.09);
       --border-subtle: rgba(255, 255, 255, 0.06);
       --text: #f8fafc;
@@ -447,7 +586,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       --bg: #f4f7fb;
       --bg-mesh-1: rgba(37, 99, 235, 0.07);
       --bg-mesh-2: rgba(245, 158, 11, 0.07);
-      --surface: rgba(255, 255, 255, 0.94);
+      --surface: rgba(255, 255, 255, 0.95);
       --surface-solid: #ffffff;
       --surface-elevated: #f1f5f9;
       --surface-hover: #f8fafc;
@@ -474,11 +613,20 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       --card-shadow: 0 10px 25px -8px rgba(15, 23, 42, 0.07);
     }}
 
-    * {{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }}
+    /* Strict Font Consistency Across 100% of Elements */
+    *, *::before, *::after {{
+      box-sizing: border-box;
+      font-family: var(--font-sans);
+      font-variant-numeric: tabular-nums;
+      -webkit-tap-highlight-color: transparent;
+    }}
+    button, input, select, textarea, table, th, td, code, kbd, span, div, p, a, h1, h2, h3, h4 {{
+      font-family: var(--font-sans);
+    }}
+
     html {{ scroll-behavior: smooth; }}
     body {{
       margin: 0;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       background-image:
         radial-gradient(at 12% 0%, var(--bg-mesh-2) 0px, transparent 50%),
@@ -513,7 +661,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       justify-content: space-between;
       align-items: flex-end;
       gap: 20px;
-      padding-bottom: 24px;
+      padding-bottom: 22px;
       border-bottom: 1px solid var(--border);
       animation: fadeSlideDown 0.6s var(--spring) both;
     }}
@@ -528,11 +676,10 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.08em;
       padding: 5px 12px;
       border-radius: 999px;
       background: var(--gold-bg);
@@ -548,17 +695,16 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       animation: pulseDot 2s infinite;
     }}
     .date-chip {{
-      font-family: "JetBrains Mono", monospace;
       font-size: 11.5px;
+      font-weight: 600;
       color: var(--muted);
-      padding: 4px 10px;
+      padding: 4px 11px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
     }}
     h1 {{
       margin: 0;
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: clamp(23px, 3.2vw, 34px);
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -568,6 +714,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       margin: 6px 0 0;
       color: var(--muted);
       font-size: clamp(13.5px, 1.5vw, 15px);
+      font-weight: 400;
       max-width: 68ch;
     }}
     .header-actions {{
@@ -581,7 +728,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      padding: 10px 16px;
+      padding: 10px 15px;
       min-height: 42px;
       border-radius: 11px;
       font-size: 13px;
@@ -589,9 +736,10 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       transition: transform 0.2s var(--spring), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
+      text-decoration: none;
     }}
     .btn:hover {{
       transform: translateY(-2px);
@@ -613,9 +761,58 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border-color: rgba(255, 255, 255, 0.3);
     }}
 
+    /* UK Finance Role Lens Switcher */
+    .lens-bar {{
+      margin: 20px 0 18px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: fadeSlideUp 0.6s 0.05s var(--spring) both;
+    }}
+    .lens-label {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }}
+    .lens-pills {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }}
+    .lens-btn {{
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s var(--spring);
+    }}
+    .lens-btn:hover {{
+      color: var(--text);
+      border-color: var(--accent);
+    }}
+    .lens-btn.active {{
+      background: var(--gold-bg);
+      border-color: var(--gold-border);
+      color: var(--gold-text);
+      font-weight: 700;
+    }}
+
     /* 60-Second CFO Hero Brief */
     .hero-section {{
-      margin: 24px 0 26px;
+      margin: 0 0 22px;
       background: var(--hero-gradient);
       border: 1px solid var(--gold-border);
       border-radius: 18px;
@@ -637,8 +834,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       display: flex;
       align-items: center;
       gap: 9px;
-      font-family: "Plus Jakarta Sans", sans-serif;
-      font-size: clamp(14px, 1.8vw, 16px);
+      font-size: clamp(13.5px, 1.8vw, 15.5px);
       font-weight: 800;
       color: var(--gold-text);
       text-transform: uppercase;
@@ -664,6 +860,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+      cursor: pointer;
       transition: transform 0.28s var(--spring), border-color 0.25s ease, box-shadow 0.28s ease;
     }}
     .hero-card:hover {{
@@ -672,9 +869,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       box-shadow: 0 14px 28px -10px rgba(245, 158, 11, 0.2);
     }}
     .rank-pill {{
-      font-family: "JetBrains Mono", monospace;
       font-size: 10.5px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: 0.04em;
       padding: 3px 9px;
       border-radius: 6px;
       background: var(--gold-bg);
@@ -682,13 +879,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border: 1px solid var(--gold-border);
     }}
 
-    /* KPI Strip */
+    /* KPI Strip & Signal Mix Bar */
     .kpi-grid {{
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin-bottom: 24px;
-      animation: fadeSlideUp 0.65s 0.15s var(--spring) both;
+      margin-bottom: 14px;
+      animation: fadeSlideUp 0.65s 0.14s var(--spring) both;
     }}
     .kpi-card {{
       background: var(--surface);
@@ -715,9 +912,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border-color: var(--accent);
       box-shadow: var(--card-shadow);
     }}
-    .kpi-card:hover::after {{
-      opacity: 1;
-    }}
+    .kpi-card:hover::after {{ opacity: 1; }}
     .kpi-card.active-kpi {{
       border-color: var(--accent);
       box-shadow: 0 0 0 1px var(--accent);
@@ -730,7 +925,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       color: var(--muted);
     }}
     .kpi-val {{
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: clamp(22px, 2.5vw, 28px);
       font-weight: 800;
       margin-top: 4px;
@@ -740,6 +934,57 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       font-size: 11.5px;
       color: var(--muted);
       margin-top: 4px;
+    }}
+
+    /* Segmented Signal Mix Bar */
+    .signal-mix-card {{
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeSlideUp 0.65s 0.18s var(--spring) both;
+    }}
+    .signal-mix-top {{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }}
+    .signal-legend {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }}
+    .legend-item {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }}
+    .legend-dot {{
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }}
+    .signal-track {{
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      background: var(--border);
+      gap: 2px;
+    }}
+    .signal-seg {{
+      height: 100%;
+      transition: width 0.6s var(--spring);
     }}
 
     /* Glassmorphic Sticky Filter & View Bar */
@@ -760,7 +1005,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       top: 10px;
       z-index: 40;
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35);
-      transition: box-shadow 0.2s ease;
     }}
     .tabs {{
       display: flex;
@@ -772,9 +1016,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       -ms-overflow-style: none;
       padding-bottom: 2px;
     }}
-    .tabs::-webkit-scrollbar {{
-      display: none;
-    }}
+    .tabs::-webkit-scrollbar {{ display: none; }}
     .tab {{
       cursor: pointer;
       border: 1px solid transparent;
@@ -820,6 +1062,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       background: var(--bg);
       color: var(--text);
       font-size: 13px;
+      font-weight: 500;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }}
     .search-input:focus {{
@@ -832,11 +1075,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       right: 9px;
       top: 50%;
       transform: translateY(-50%);
-      font-family: "JetBrains Mono", monospace;
       font-size: 10.5px;
+      font-weight: 700;
       color: var(--muted);
       border: 1px solid var(--border);
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: 4px;
       pointer-events: none;
     }}
@@ -881,6 +1124,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       justify-content: space-between;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
       box-shadow: var(--card-shadow);
       opacity: 0;
       transform: translateY(22px) scale(0.985);
@@ -908,9 +1152,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border-color: var(--accent);
       box-shadow: 0 18px 36px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--accent-glow);
     }}
-    .news-card:hover::before {{
-      opacity: 1;
-    }}
+    .news-card:hover::before {{ opacity: 1; }}
     .card-top {{
       display: flex;
       justify-content: space-between;
@@ -956,6 +1198,16 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       background: var(--surface-elevated);
       color: var(--text-secondary);
       border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }}
+    .pub-favicon {{
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      object-fit: contain;
+      flex-shrink: 0;
     }}
     .card-actions {{
       display: flex;
@@ -987,10 +1239,10 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .card-title {{
       margin: 0 0 10px;
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: 16.5px;
       font-weight: 700;
       line-height: 1.4;
+      letter-spacing: -0.01em;
     }}
     .card-title a {{
       color: var(--text);
@@ -1037,8 +1289,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 10.5px;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--muted);
     }}
     .score-bar {{
@@ -1061,13 +1313,34 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
+      font-weight: 500;
       color: var(--muted);
       padding-top: 12px;
       border-top: 1px solid var(--border-subtle);
     }}
+    .footer-links {{
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }}
+    .quick-brief-btn {{
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 7px;
+      transition: all 0.15s;
+    }}
+    .quick-brief-btn:hover {{
+      border-color: var(--accent);
+      color: var(--text);
+    }}
     .read-link {{
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -1100,6 +1373,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       text-align: left;
       padding: 13px 16px;
       font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--muted);
@@ -1113,11 +1387,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       vertical-align: top;
       transition: background 0.15s;
     }}
+    .compact-table tr {{ cursor: pointer; }}
     .compact-table tr:hover td {{
       background: var(--surface-hover);
     }}
     .compact-headline {{
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-weight: 700;
       color: var(--text);
       text-decoration: none;
@@ -1130,6 +1404,109 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     .compact-takeaway {{
       font-size: 12.5px;
       color: var(--muted);
+    }}
+
+    /* Slide-Over Executive Quick-Brief Drawer */
+    .drawer-backdrop {{
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.65);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }}
+    .drawer-backdrop.open {{
+      opacity: 1;
+      pointer-events: auto;
+    }}
+    .drawer-panel {{
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(520px, 100vw);
+      background: var(--surface-solid);
+      border-left: 1px solid var(--border);
+      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.55);
+      z-index: 210;
+      display: flex;
+      flex-direction: column;
+       justify-content: space-between;
+      transform: translateX(102%);
+      transition: transform 0.35s var(--spring);
+      overflow-y: auto;
+    }}
+    .drawer-panel.open {{
+      transform: translateX(0);
+    }}
+    .drawer-header {{
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--surface-solid);
+      z-index: 5;
+    }}
+    .drawer-body {{
+      padding: 24px;
+      flex: 1;
+    }}
+    .drawer-title {{
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin: 14px 0 12px;
+      letter-spacing: -0.02em;
+    }}
+    .drawer-meta {{
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }}
+    .drawer-section {{
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px 16px;
+      margin-bottom: 14px;
+    }}
+    .drawer-sec-title {{
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }}
+    .drawer-sec-text {{
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 0;
+    }}
+    .drawer-footer {{
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      bottom: 0;
+      background: var(--surface-solid);
+    }}
+    .drawer-nav {{
+      display: inline-flex;
+      gap: 6px;
     }}
 
     /* Floating Back-to-Top Button */
@@ -1145,6 +1522,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       backdrop-filter: blur(12px);
       color: var(--text);
       font-size: 18px;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -1166,7 +1544,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       transform: translateY(-3px) scale(1.05);
     }}
 
-    /* Toast Notification */
     #toast {{
       position: fixed;
       bottom: 24px;
@@ -1186,7 +1563,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       transform: translateY(12px) scale(0.96);
       pointer-events: none;
       transition: all 0.25s var(--spring);
-      z-index: 100;
+      z-index: 250;
     }}
     #toast.show {{
       opacity: 1;
@@ -1223,66 +1600,59 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
 
     @media (max-width: 960px) {{
-      .kpi-grid {{
-        grid-template-columns: repeat(2, 1fr);
-      }}
+      .kpi-grid {{ grid-template-columns: repeat(2, 1fr); }}
     }}
     @media (max-width: 680px) {{
+      .container {{ padding: 18px 14px 84px; }}
+      header {{ align-items: stretch; gap: 14px; }}
+      .header-actions {{ width: 100%; }}
+      .header-actions .btn {{ flex: 1; padding: 9px 10px; font-size: 12px; }}
+      .hero-section {{ padding: 16px; }}
+      .hero-grid {{ grid-template-columns: 1fr; }}
+      .kpi-grid {{ grid-template-columns: repeat(2, 1fr); gap: 10px; }}
+      .kpi-card {{ padding: 13px 14px; }}
+      .controls {{ padding: 10px 12px; top: 6px; }}
+      .right-controls {{ width: 100%; min-width: 100%; }}
+      .search-wrap {{ max-width: none; }}
+      .kbd-hint {{ display: none; }}
+      .cards-grid {{ grid-template-columns: 1fr; gap: 14px; }}
+      .news-card {{ padding: 18px; }}
+      .compact-hide-mobile {{ display: none; }}
+      #toast {{ left: 14px; right: 14px; bottom: 16px; justify-content: center; }}
+    }}
+
+    /* Boardroom A4 Print / PDF Stylesheet */
+    @media print {{
+      body {{
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 11pt;
+      }}
+      #scrollProgress, .header-actions, .lens-bar, .controls, .card-actions,
+      .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel {{
+        display: none !important;
+      }}
       .container {{
-        padding: 18px 14px 84px;
+        max-width: 100% !important;
+        padding: 0 !important;
       }}
-      header {{
-        align-items: stretch;
-        gap: 14px;
-      }}
-      .header-actions {{
-        width: 100%;
-      }}
-      .header-actions .btn {{
-        flex: 1;
-      }}
-      .hero-section {{
-        padding: 16px;
-      }}
-      .hero-grid {{
-        grid-template-columns: 1fr;
-      }}
-      .kpi-grid {{
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }}
-      .kpi-card {{
-        padding: 13px 14px;
-      }}
-      .controls {{
-        padding: 10px 12px;
-        top: 6px;
-      }}
-      .right-controls {{
-        width: 100%;
-        min-width: 100%;
-      }}
-      .search-wrap {{
-        max-width: none;
-      }}
-      .kbd-hint {{
-        display: none;
+      .hero-section, .news-card, .kpi-card, .signal-mix-card {{
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        break-inside: avoid;
       }}
       .cards-grid {{
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
       }}
-      .news-card {{
-        padding: 18px;
-      }}
-      .compact-hide-mobile {{
-        display: none;
-      }}
-      #toast {{
-        left: 14px;
-        right: 14px;
-        bottom: 16px;
-        justify-content: center;
+      .benefit-box {{
+        background: #f8fafc !important;
+        color: #1e293b !important;
+        border-left: 3px solid #0f172a !important;
       }}
     }}
 
@@ -1309,15 +1679,27 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       </div>
       <div class="header-actions">
         <button class="btn btn-primary" onclick="copyTeamBriefing()">📋 Copy Team Summary</button>
+        <button class="btn" onclick="window.print()" title="Print or save as Boardroom PDF">🖨️ Export PDF Brief</button>
         <button class="btn" onclick="toggleTheme()" aria-label="Toggle colour theme">☀️ / 🌙 Theme</button>
       </div>
     </header>
 
+    <!-- UK Finance Role Lens Switcher -->
+    <div class="lens-bar">
+      <div class="lens-label">👔 Prioritise Feed for UK Finance Role:</div>
+      <div class="lens-pills" role="group" aria-label="Finance Role Lens">
+        <button class="lens-btn active" data-lens="default" onclick="setRoleLens('default', this)">🎯 All Finance Roles</button>
+        <button class="lens-btn" data-lens="cfo" onclick="setRoleLens('cfo', this)">👔 CFO & Strategy</button>
+        <button class="lens-btn" data-lens="audit" onclick="setRoleLens('audit', this)">🛡️ Audit, Risk & FCA</button>
+        <button class="lens-btn" data-lens="fpa" onclick="setRoleLens('fpa', this)">📊 FP&A & Systems</button>
+      </div>
+    </div>
+
     <!-- 60-Second CFO Hero Brief -->
     <section class="hero-section" id="heroSection">
       <div class="hero-header">
-        <h2 class="hero-title">⚡ 60-Second UK Finance Morning Brief — Top 3 Today</h2>
-        <span class="hero-sub">Highest-priority regulatory, audit & CFO insights</span>
+        <h2 class="hero-title" id="heroTitle">⚡ 60-Second UK Finance Morning Brief — Top 3 Today</h2>
+        <span class="hero-sub">Click any card to open the Executive Quick-Brief Drawer</span>
       </div>
       <div class="hero-grid" id="heroGrid"></div>
     </section>
@@ -1346,6 +1728,23 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       </div>
     </div>
 
+    <!-- Segmented Signal Mix Visual Bar -->
+    <div class="signal-mix-card">
+      <div class="signal-mix-top">
+        <span>TODAY'S INTELLIGENCE SIGNAL MIX</span>
+        <div class="signal-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--gold-text);"></span> UK Finance & FCA ({high_pct}%)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--emerald-text);"></span> Ops & Data Security ({ops_pct}%)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--blue-text);"></span> Global AI & Research ({gen_pct}%)</span>
+        </div>
+      </div>
+      <div class="signal-track">
+        <div class="signal-seg" style="width:{high_pct}%;background:var(--gold-text);"></div>
+        <div class="signal-seg" style="width:{ops_pct}%;background:var(--emerald-text);"></div>
+        <div class="signal-seg" style="width:{gen_pct}%;background:var(--blue-text);"></div>
+      </div>
+    </div>
+
     <!-- Glassmorphic Sticky Filter & View Bar -->
     <div class="controls">
       <div class="tabs" role="tablist">
@@ -1370,6 +1769,23 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     <div id="mainContainer"></div>
   </div>
 
+  <!-- Slide-Over Executive Quick-Brief Drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+  <aside class="drawer-panel" id="drawerPanel" aria-label="Executive Quick-Brief Drawer">
+    <div class="drawer-header">
+      <span class="brand-badge" id="drawerBadge">⚡ Executive Quick-Brief</span>
+      <button class="icon-btn" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-footer">
+      <div class="drawer-nav">
+        <button class="btn" onclick="stepDrawer(-1)" title="Previous story (←)">← Prev</button>
+        <button class="btn" onclick="stepDrawer(1)" title="Next story (→)">Next →</button>
+      </div>
+      <a class="btn btn-primary" id="drawerReadLink" href="#" target="_blank" rel="noopener noreferrer">Open Article ↗</a>
+    </div>
+  </aside>
+
   <button id="backToTop" onclick="window.scrollTo({{top: 0, behavior: 'smooth'}})" aria-label="Back to top" title="Back to top">↑</button>
   <div id="toast" role="status" aria-live="polite">✓ Copied Top 5 UK Finance Briefing!</div>
 
@@ -1377,8 +1793,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     const ITEMS = {cards_json};
     const ITEM_MAP = new Map(ITEMS.map(it => [it.id, it]));
     let currentFilter = 'all';
+    let currentLens = 'default';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
+    let activeDrawerId = null;
+    let currentDisplayedIds = [];
     let revealObserver = null;
 
     function escapeHtml(str) {{
@@ -1393,6 +1812,21 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       t.classList.add('show');
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+    }}
+
+    function getActiveScore(item) {{
+      if (currentLens === 'cfo') return item.cfo_score || item.score;
+      if (currentLens === 'audit') return item.audit_score || item.score;
+      if (currentLens === 'fpa') return item.fpa_score || item.score;
+      return item.score;
+    }}
+
+    function getSortedItems() {{
+      return [...ITEMS].sort((a, b) => getActiveScore(b) - getActiveScore(a));
+    }}
+
+    function faviconUrl(domain) {{
+      return `https://www.google.com/s2/favicons?domain=${{encodeURIComponent(domain || 'ukfinance.org.uk')}}&sz=32`;
     }}
 
     function formatRelativeTime(pubStr) {{
@@ -1460,6 +1894,78 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       }}
     }}
 
+    function openDrawer(id, ev) {{
+      if (ev && (ev.target.closest('a') || ev.target.closest('button.icon-btn'))) return;
+      const item = ITEM_MAP.get(id);
+      if (!item) return;
+      activeDrawerId = id;
+      const effScore = getActiveScore(item);
+      document.getElementById('drawerBadge').textContent = `${{item.func_tag}} · Priority ${{effScore}}/100`;
+      document.getElementById('drawerReadLink').href = item.url;
+
+      const summaryBlock = item.summary
+        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--blue-text);">📰 Article Summary</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
+        : '';
+
+      document.getElementById('drawerBody').innerHTML = `
+        <div class="tag-group">
+          <span class="pub-pill">
+            <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
+            ${{escapeHtml(item.source)}}
+          </span>
+          <span class="pub-pill">${{escapeHtml(item.category)}}</span>
+        </div>
+        <h2 class="drawer-title">${{escapeHtml(item.title)}}</h2>
+        <div class="drawer-meta">Published ${{escapeHtml(formatRelativeTime(item.published_at))}} (${{escapeHtml(item.published_at)}})</div>
+        ${{summaryBlock}}
+        <div class="drawer-section">
+          <div class="drawer-sec-title" style="color:var(--gold-text);">🎯 UK CFO & Strategic Impact</div>
+          <p class="drawer-sec-text">${{escapeHtml(item.benefit)}}</p>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-sec-title" style="color:var(--emerald-text);">🛡️ Audit, Risk & FCA Governance Angle</div>
+          <p class="drawer-sec-text">${{escapeHtml(item.risk_angle)}}</p>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-sec-title" style="color:var(--blue-text);">✅ Recommended Action for UK Finance Team</div>
+          <p class="drawer-sec-text">${{escapeHtml(item.action_item)}}</p>
+        </div>
+      `;
+
+      document.getElementById('drawerBackdrop').classList.add('open');
+      document.getElementById('drawerPanel').classList.add('open');
+    }}
+
+    function closeDrawer() {{
+      activeDrawerId = null;
+      document.getElementById('drawerBackdrop').classList.remove('open');
+      document.getElementById('drawerPanel').classList.remove('open');
+    }}
+
+    function stepDrawer(delta) {{
+      if (!activeDrawerId || !currentDisplayedIds.length) return;
+      const idx = currentDisplayedIds.indexOf(activeDrawerId);
+      if (idx === -1) return;
+      const nextIdx = (idx + delta + currentDisplayedIds.length) % currentDisplayedIds.length;
+      openDrawer(currentDisplayedIds[nextIdx]);
+    }}
+
+    function setRoleLens(lens, btn) {{
+      currentLens = lens;
+      document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const labels = {{
+        default: '⚡ 60-Second UK Finance Morning Brief — Top 3 Today',
+        cfo: '👔 CFO & Strategy Lens — Top 3 Strategic Priorities',
+        audit: '🛡️ Audit, Risk & FCA Lens — Top 3 Governance Priorities',
+        fpa: '📊 FP&A & Systems Lens — Top 3 Automation & Model Priorities'
+      }};
+      document.getElementById('heroTitle').textContent = labels[lens] || labels.default;
+      renderHero();
+      renderMain();
+      showToast(`Switched view to ${{btn ? btn.textContent.trim() : lens}}`);
+    }}
+
     function setupScrollReveal() {{
       if (revealObserver) revealObserver.disconnect();
       const cards = document.querySelectorAll('.news-card');
@@ -1493,7 +1999,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
 
     function renderHero() {{
-      const top3 = ITEMS.filter(i => i.score >= 85).slice(0, 3);
+      const sorted = getSortedItems();
+      const top3 = sorted.slice(0, 3);
       const heroSec = document.getElementById('heroSection');
       const heroGrid = document.getElementById('heroGrid');
       if (!top3.length || currentFilter !== 'all') {{
@@ -1504,13 +2011,17 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
 
       heroGrid.innerHTML = top3.map((item, idx) => {{
         const isSaved = savedUrls.has(item.url);
+        const effScore = getActiveScore(item);
         return `
-          <article class="hero-card">
+          <article class="hero-card" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
-                  <span class="rank-pill">#${{idx + 1}} PRIORITY</span>
-                  <span class="pub-pill">${{escapeHtml(item.source)}}</span>
+                  <span class="rank-pill">#${{idx + 1}} · ${{effScore}}/100</span>
+                  <span class="pub-pill">
+                    <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
+                    ${{escapeHtml(item.source)}}
+                  </span>
                 </div>
                 <div class="card-actions">
                   <button class="icon-btn" title="Copy story link" onclick="shareById('${{item.id}}', event)">🔗</button>
@@ -1526,7 +2037,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
             </div>
             <div class="card-footer">
               <span>${{escapeHtml(item.func_tag)}} · <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span></span>
-              <a class="read-link" href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">Read <span class="arrow">→</span></a>
+              <span class="read-link">Quick Brief <span class="arrow">→</span></span>
             </div>
           </article>
         `;
@@ -1563,8 +2074,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     function renderMain() {{
       const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
       const container = document.getElementById('mainContainer');
+      const sorted = getSortedItems();
 
-      const filtered = ITEMS.filter(item => {{
+      const filtered = sorted.filter(item => {{
         if (currentFilter === 'high' && item.score < 85) return false;
         if (currentFilter === 'ops' && (item.score < 70 || item.score >= 85)) return false;
         if (currentFilter === 'general' && item.score >= 70) return false;
@@ -1575,6 +2087,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
         }}
         return true;
       }});
+
+      currentDisplayedIds = filtered.map(i => i.id);
 
       if (!filtered.length) {{
         container.className = '';
@@ -1599,20 +2113,26 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
             <tbody>
               ${{filtered.map(item => {{
                 const isSaved = savedUrls.has(item.url);
+                const effScore = getActiveScore(item);
                 return `
-                  <tr>
+                  <tr onclick="openDrawer('${{item.id}}', event)">
                     <td>
                       <button class="icon-btn ${{isSaved ? 'saved' : ''}}" onclick="toggleSaveById('${{item.id}}', event)">
                         ${{isSaved ? '⭐' : '☆'}}
                       </button>
                     </td>
-                    <td><span class="badge ${{badgeClass(item.score)}}">${{escapeHtml(item.func_tag)}}</span></td>
+                    <td><span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span></td>
                     <td>
                       <a class="compact-headline" href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
                       <div class="compact-takeaway">${{escapeHtml(item.benefit)}}</div>
                     </td>
-                    <td class="compact-hide-mobile"><span class="pub-pill">${{escapeHtml(item.source)}}</span></td>
-                    <td class="compact-hide-mobile"><strong>${{item.score}}</strong>/100</td>
+                    <td class="compact-hide-mobile">
+                      <span class="pub-pill">
+                        <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
+                        ${{escapeHtml(item.source)}}
+                      </span>
+                    </td>
+                    <td class="compact-hide-mobile"><strong>${{effScore}}</strong>/100</td>
                     <td style="white-space:nowrap;" title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</td>
                   </tr>
                 `;
@@ -1626,16 +2146,20 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       container.className = 'cards-grid';
       container.innerHTML = filtered.map(item => {{
         const isSaved = savedUrls.has(item.url);
+        const effScore = getActiveScore(item);
         const summaryHtml = item.summary
           ? `<p class="card-summary">${{escapeHtml(item.summary)}}</p>`
           : '';
         return `
-          <article class="news-card">
+          <article class="news-card" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
-                  <span class="badge ${{badgeClass(item.score)}}">${{escapeHtml(item.func_tag)}}</span>
-                  <span class="pub-pill">${{escapeHtml(item.source)}}</span>
+                  <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span>
+                  <span class="pub-pill">
+                    <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
+                    ${{escapeHtml(item.source)}}
+                  </span>
                 </div>
                 <div class="card-actions">
                   <button class="icon-btn" title="Share / copy link" onclick="shareById('${{item.id}}', event)">🔗</button>
@@ -1650,19 +2174,22 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
               ${{summaryHtml}}
             </div>
             <div>
-              <div class="benefit-box ${{boxClass(item.score)}}">
+              <div class="benefit-box ${{boxClass(effScore)}}">
                 <div class="benefit-header">
                   <span class="benefit-label">🇬🇧 UK Finance Team Takeaway</span>
                   <span class="score-meter-wrap">
-                    <span>${{item.score}}/100</span>
-                    <span class="score-bar"><span class="score-fill" style="width:${{item.score}}%"></span></span>
+                    <span>${{effScore}}/100</span>
+                    <span class="score-bar"><span class="score-fill" style="width:${{effScore}}%"></span></span>
                   </span>
                 </div>
                 ${{escapeHtml(item.benefit)}}
               </div>
               <div class="card-footer">
                 <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
-                <a class="read-link" href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">Read article <span class="arrow">→</span></a>
+                <div class="footer-links">
+                  <button class="quick-brief-btn" onclick="openDrawer('${{item.id}}', event)">⚡ Quick Brief</button>
+                  <a class="read-link" href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">Source <span class="arrow">↗</span></a>
+                </div>
               </div>
             </div>
           </article>
@@ -1689,7 +2216,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
 
     function copyTeamBriefing() {{
-      const top5 = ITEMS.slice(0, 5);
+      const top5 = getSortedItems().slice(0, 5);
       const lines = [
         `🇬🇧💷 *UK Finance & AI Morning Briefing ({html.escape(date_str)})*`,
         `📊 Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
@@ -1722,6 +2249,18 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}, {{ passive: true }});
 
     window.addEventListener('keydown', (e) => {{
+      if (e.key === 'Escape' && activeDrawerId) {{
+        closeDrawer();
+        return;
+      }}
+      if (activeDrawerId && e.key === 'ArrowRight') {{
+        stepDrawer(1);
+        return;
+      }}
+      if (activeDrawerId && e.key === 'ArrowLeft') {{
+        stepDrawer(-1);
+        return;
+      }}
       if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {{
         e.preventDefault();
         document.getElementById('searchInput').focus();

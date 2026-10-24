@@ -8,17 +8,18 @@
   <title>UK Finance & AI Daily Intelligence — October 24, 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --bg: #070b14;
       --bg-mesh-1: rgba(59, 130, 246, 0.11);
       --bg-mesh-2: rgba(245, 158, 11, 0.08);
-      --surface: rgba(17, 24, 39, 0.84);
+      --surface: rgba(17, 24, 39, 0.86);
       --surface-solid: #111827;
       --surface-elevated: #192338;
       --surface-hover: #1e293b;
-      --glass-bg: rgba(15, 23, 42, 0.8);
+      --glass-bg: rgba(15, 23, 42, 0.82);
       --border: rgba(255, 255, 255, 0.09);
       --border-subtle: rgba(255, 255, 255, 0.06);
       --text: #f8fafc;
@@ -45,7 +46,7 @@
       --bg: #f4f7fb;
       --bg-mesh-1: rgba(37, 99, 235, 0.07);
       --bg-mesh-2: rgba(245, 158, 11, 0.07);
-      --surface: rgba(255, 255, 255, 0.94);
+      --surface: rgba(255, 255, 255, 0.95);
       --surface-solid: #ffffff;
       --surface-elevated: #f1f5f9;
       --surface-hover: #f8fafc;
@@ -72,11 +73,20 @@
       --card-shadow: 0 10px 25px -8px rgba(15, 23, 42, 0.07);
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    /* Strict Font Consistency Across 100% of Elements */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      font-family: var(--font-sans);
+      font-variant-numeric: tabular-nums;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, input, select, textarea, table, th, td, code, kbd, span, div, p, a, h1, h2, h3, h4 {
+      font-family: var(--font-sans);
+    }
+
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       background-image:
         radial-gradient(at 12% 0%, var(--bg-mesh-2) 0px, transparent 50%),
@@ -111,7 +121,7 @@
       justify-content: space-between;
       align-items: flex-end;
       gap: 20px;
-      padding-bottom: 24px;
+      padding-bottom: 22px;
       border-bottom: 1px solid var(--border);
       animation: fadeSlideDown 0.6s var(--spring) both;
     }
@@ -126,11 +136,10 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.08em;
       padding: 5px 12px;
       border-radius: 999px;
       background: var(--gold-bg);
@@ -146,17 +155,16 @@
       animation: pulseDot 2s infinite;
     }
     .date-chip {
-      font-family: "JetBrains Mono", monospace;
       font-size: 11.5px;
+      font-weight: 600;
       color: var(--muted);
-      padding: 4px 10px;
+      padding: 4px 11px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface);
     }
     h1 {
       margin: 0;
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: clamp(23px, 3.2vw, 34px);
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -166,6 +174,7 @@
       margin: 6px 0 0;
       color: var(--muted);
       font-size: clamp(13.5px, 1.5vw, 15px);
+      font-weight: 400;
       max-width: 68ch;
     }
     .header-actions {
@@ -179,7 +188,7 @@
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      padding: 10px 16px;
+      padding: 10px 15px;
       min-height: 42px;
       border-radius: 11px;
       font-size: 13px;
@@ -187,9 +196,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       transition: transform 0.2s var(--spring), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
       user-select: none;
+      text-decoration: none;
     }
     .btn:hover {
       transform: translateY(-2px);
@@ -211,9 +221,58 @@
       border-color: rgba(255, 255, 255, 0.3);
     }
 
+    /* UK Finance Role Lens Switcher */
+    .lens-bar {
+      margin: 20px 0 18px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: fadeSlideUp 0.6s 0.05s var(--spring) both;
+    }
+    .lens-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .lens-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .lens-btn {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s var(--spring);
+    }
+    .lens-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+    .lens-btn.active {
+      background: var(--gold-bg);
+      border-color: var(--gold-border);
+      color: var(--gold-text);
+      font-weight: 700;
+    }
+
     /* 60-Second CFO Hero Brief */
     .hero-section {
-      margin: 24px 0 26px;
+      margin: 0 0 22px;
       background: var(--hero-gradient);
       border: 1px solid var(--gold-border);
       border-radius: 18px;
@@ -235,8 +294,7 @@
       display: flex;
       align-items: center;
       gap: 9px;
-      font-family: "Plus Jakarta Sans", sans-serif;
-      font-size: clamp(14px, 1.8vw, 16px);
+      font-size: clamp(13.5px, 1.8vw, 15.5px);
       font-weight: 800;
       color: var(--gold-text);
       text-transform: uppercase;
@@ -262,6 +320,7 @@
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+      cursor: pointer;
       transition: transform 0.28s var(--spring), border-color 0.25s ease, box-shadow 0.28s ease;
     }
     .hero-card:hover {
@@ -270,9 +329,9 @@
       box-shadow: 0 14px 28px -10px rgba(245, 158, 11, 0.2);
     }
     .rank-pill {
-      font-family: "JetBrains Mono", monospace;
       font-size: 10.5px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: 0.04em;
       padding: 3px 9px;
       border-radius: 6px;
       background: var(--gold-bg);
@@ -280,13 +339,13 @@
       border: 1px solid var(--gold-border);
     }
 
-    /* KPI Strip */
+    /* KPI Strip & Signal Mix Bar */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin-bottom: 24px;
-      animation: fadeSlideUp 0.65s 0.15s var(--spring) both;
+      margin-bottom: 14px;
+      animation: fadeSlideUp 0.65s 0.14s var(--spring) both;
     }
     .kpi-card {
       background: var(--surface);
@@ -313,9 +372,7 @@
       border-color: var(--accent);
       box-shadow: var(--card-shadow);
     }
-    .kpi-card:hover::after {
-      opacity: 1;
-    }
+    .kpi-card:hover::after { opacity: 1; }
     .kpi-card.active-kpi {
       border-color: var(--accent);
       box-shadow: 0 0 0 1px var(--accent);
@@ -328,7 +385,6 @@
       color: var(--muted);
     }
     .kpi-val {
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: clamp(22px, 2.5vw, 28px);
       font-weight: 800;
       margin-top: 4px;
@@ -338,6 +394,57 @@
       font-size: 11.5px;
       color: var(--muted);
       margin-top: 4px;
+    }
+
+    /* Segmented Signal Mix Bar */
+    .signal-mix-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeSlideUp 0.65s 0.18s var(--spring) both;
+    }
+    .signal-mix-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .signal-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .signal-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      background: var(--border);
+      gap: 2px;
+    }
+    .signal-seg {
+      height: 100%;
+      transition: width 0.6s var(--spring);
     }
 
     /* Glassmorphic Sticky Filter & View Bar */
@@ -358,7 +465,6 @@
       top: 10px;
       z-index: 40;
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35);
-      transition: box-shadow 0.2s ease;
     }
     .tabs {
       display: flex;
@@ -370,9 +476,7 @@
       -ms-overflow-style: none;
       padding-bottom: 2px;
     }
-    .tabs::-webkit-scrollbar {
-      display: none;
-    }
+    .tabs::-webkit-scrollbar { display: none; }
     .tab {
       cursor: pointer;
       border: 1px solid transparent;
@@ -418,6 +522,7 @@
       background: var(--bg);
       color: var(--text);
       font-size: 13px;
+      font-weight: 500;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .search-input:focus {
@@ -430,11 +535,11 @@
       right: 9px;
       top: 50%;
       transform: translateY(-50%);
-      font-family: "JetBrains Mono", monospace;
       font-size: 10.5px;
+      font-weight: 700;
       color: var(--muted);
       border: 1px solid var(--border);
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: 4px;
       pointer-events: none;
     }
@@ -479,6 +584,7 @@
       justify-content: space-between;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
       box-shadow: var(--card-shadow);
       opacity: 0;
       transform: translateY(22px) scale(0.985);
@@ -506,9 +612,7 @@
       border-color: var(--accent);
       box-shadow: 0 18px 36px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--accent-glow);
     }
-    .news-card:hover::before {
-      opacity: 1;
-    }
+    .news-card:hover::before { opacity: 1; }
     .card-top {
       display: flex;
       justify-content: space-between;
@@ -554,6 +658,16 @@
       background: var(--surface-elevated);
       color: var(--text-secondary);
       border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .pub-favicon {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      object-fit: contain;
+      flex-shrink: 0;
     }
     .card-actions {
       display: flex;
@@ -585,10 +699,10 @@
     }
     .card-title {
       margin: 0 0 10px;
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-size: 16.5px;
       font-weight: 700;
       line-height: 1.4;
+      letter-spacing: -0.01em;
     }
     .card-title a {
       color: var(--text);
@@ -635,8 +749,8 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 10.5px;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--muted);
     }
     .score-bar {
@@ -659,13 +773,34 @@
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
+      font-weight: 500;
       color: var(--muted);
       padding-top: 12px;
       border-top: 1px solid var(--border-subtle);
     }
+    .footer-links {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .quick-brief-btn {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 7px;
+      transition: all 0.15s;
+    }
+    .quick-brief-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
     .read-link {
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -698,6 +833,7 @@
       text-align: left;
       padding: 13px 16px;
       font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--muted);
@@ -711,11 +847,11 @@
       vertical-align: top;
       transition: background 0.15s;
     }
+    .compact-table tr { cursor: pointer; }
     .compact-table tr:hover td {
       background: var(--surface-hover);
     }
     .compact-headline {
-      font-family: "Plus Jakarta Sans", sans-serif;
       font-weight: 700;
       color: var(--text);
       text-decoration: none;
@@ -728,6 +864,109 @@
     .compact-takeaway {
       font-size: 12.5px;
       color: var(--muted);
+    }
+
+    /* Slide-Over Executive Quick-Brief Drawer */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.65);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .drawer-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(520px, 100vw);
+      background: var(--surface-solid);
+      border-left: 1px solid var(--border);
+      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.55);
+      z-index: 210;
+      display: flex;
+      flex-direction: column;
+       justify-content: space-between;
+      transform: translateX(102%);
+      transition: transform 0.35s var(--spring);
+      overflow-y: auto;
+    }
+    .drawer-panel.open {
+      transform: translateX(0);
+    }
+    .drawer-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--surface-solid);
+      z-index: 5;
+    }
+    .drawer-body {
+      padding: 24px;
+      flex: 1;
+    }
+    .drawer-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin: 14px 0 12px;
+      letter-spacing: -0.02em;
+    }
+    .drawer-meta {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .drawer-section {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 15px 16px;
+      margin-bottom: 14px;
+    }
+    .drawer-sec-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .drawer-sec-text {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 0;
+    }
+    .drawer-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      bottom: 0;
+      background: var(--surface-solid);
+    }
+    .drawer-nav {
+      display: inline-flex;
+      gap: 6px;
     }
 
     /* Floating Back-to-Top Button */
@@ -743,6 +982,7 @@
       backdrop-filter: blur(12px);
       color: var(--text);
       font-size: 18px;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -764,7 +1004,6 @@
       transform: translateY(-3px) scale(1.05);
     }
 
-    /* Toast Notification */
     #toast {
       position: fixed;
       bottom: 24px;
@@ -784,7 +1023,7 @@
       transform: translateY(12px) scale(0.96);
       pointer-events: none;
       transition: all 0.25s var(--spring);
-      z-index: 100;
+      z-index: 250;
     }
     #toast.show {
       opacity: 1;
@@ -821,66 +1060,59 @@
     }
 
     @media (max-width: 960px) {
-      .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 680px) {
+      .container { padding: 18px 14px 84px; }
+      header { align-items: stretch; gap: 14px; }
+      .header-actions { width: 100%; }
+      .header-actions .btn { flex: 1; padding: 9px 10px; font-size: 12px; }
+      .hero-section { padding: 16px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .kpi-card { padding: 13px 14px; }
+      .controls { padding: 10px 12px; top: 6px; }
+      .right-controls { width: 100%; min-width: 100%; }
+      .search-wrap { max-width: none; }
+      .kbd-hint { display: none; }
+      .cards-grid { grid-template-columns: 1fr; gap: 14px; }
+      .news-card { padding: 18px; }
+      .compact-hide-mobile { display: none; }
+      #toast { left: 14px; right: 14px; bottom: 16px; justify-content: center; }
+    }
+
+    /* Boardroom A4 Print / PDF Stylesheet */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 11pt;
+      }
+      #scrollProgress, .header-actions, .lens-bar, .controls, .card-actions,
+      .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel {
+        display: none !important;
+      }
       .container {
-        padding: 18px 14px 84px;
+        max-width: 100% !important;
+        padding: 0 !important;
       }
-      header {
-        align-items: stretch;
-        gap: 14px;
-      }
-      .header-actions {
-        width: 100%;
-      }
-      .header-actions .btn {
-        flex: 1;
-      }
-      .hero-section {
-        padding: 16px;
-      }
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-      .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-      .kpi-card {
-        padding: 13px 14px;
-      }
-      .controls {
-        padding: 10px 12px;
-        top: 6px;
-      }
-      .right-controls {
-        width: 100%;
-        min-width: 100%;
-      }
-      .search-wrap {
-        max-width: none;
-      }
-      .kbd-hint {
-        display: none;
+      .hero-section, .news-card, .kpi-card, .signal-mix-card {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        break-inside: avoid;
       }
       .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
       }
-      .news-card {
-        padding: 18px;
-      }
-      .compact-hide-mobile {
-        display: none;
-      }
-      #toast {
-        left: 14px;
-        right: 14px;
-        bottom: 16px;
-        justify-content: center;
+      .benefit-box {
+        background: #f8fafc !important;
+        color: #1e293b !important;
+        border-left: 3px solid #0f172a !important;
       }
     }
 
@@ -907,15 +1139,27 @@
       </div>
       <div class="header-actions">
         <button class="btn btn-primary" onclick="copyTeamBriefing()">📋 Copy Team Summary</button>
+        <button class="btn" onclick="window.print()" title="Print or save as Boardroom PDF">🖨️ Export PDF Brief</button>
         <button class="btn" onclick="toggleTheme()" aria-label="Toggle colour theme">☀️ / 🌙 Theme</button>
       </div>
     </header>
 
+    <!-- UK Finance Role Lens Switcher -->
+    <div class="lens-bar">
+      <div class="lens-label">👔 Prioritise Feed for UK Finance Role:</div>
+      <div class="lens-pills" role="group" aria-label="Finance Role Lens">
+        <button class="lens-btn active" data-lens="default" onclick="setRoleLens('default', this)">🎯 All Finance Roles</button>
+        <button class="lens-btn" data-lens="cfo" onclick="setRoleLens('cfo', this)">👔 CFO & Strategy</button>
+        <button class="lens-btn" data-lens="audit" onclick="setRoleLens('audit', this)">🛡️ Audit, Risk & FCA</button>
+        <button class="lens-btn" data-lens="fpa" onclick="setRoleLens('fpa', this)">📊 FP&A & Systems</button>
+      </div>
+    </div>
+
     <!-- 60-Second CFO Hero Brief -->
     <section class="hero-section" id="heroSection">
       <div class="hero-header">
-        <h2 class="hero-title">⚡ 60-Second UK Finance Morning Brief — Top 3 Today</h2>
-        <span class="hero-sub">Highest-priority regulatory, audit & CFO insights</span>
+        <h2 class="hero-title" id="heroTitle">⚡ 60-Second UK Finance Morning Brief — Top 3 Today</h2>
+        <span class="hero-sub">Click any card to open the Executive Quick-Brief Drawer</span>
       </div>
       <div class="hero-grid" id="heroGrid"></div>
     </section>
@@ -944,6 +1188,23 @@
       </div>
     </div>
 
+    <!-- Segmented Signal Mix Visual Bar -->
+    <div class="signal-mix-card">
+      <div class="signal-mix-top">
+        <span>TODAY'S INTELLIGENCE SIGNAL MIX</span>
+        <div class="signal-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--gold-text);"></span> UK Finance & FCA (18.9%)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--emerald-text);"></span> Ops & Data Security (32.4%)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--blue-text);"></span> Global AI & Research (48.7%)</span>
+        </div>
+      </div>
+      <div class="signal-track">
+        <div class="signal-seg" style="width:18.9%;background:var(--gold-text);"></div>
+        <div class="signal-seg" style="width:32.4%;background:var(--emerald-text);"></div>
+        <div class="signal-seg" style="width:48.7%;background:var(--blue-text);"></div>
+      </div>
+    </div>
+
     <!-- Glassmorphic Sticky Filter & View Bar -->
     <div class="controls">
       <div class="tabs" role="tablist">
@@ -968,15 +1229,35 @@
     <div id="mainContainer"></div>
   </div>
 
+  <!-- Slide-Over Executive Quick-Brief Drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+  <aside class="drawer-panel" id="drawerPanel" aria-label="Executive Quick-Brief Drawer">
+    <div class="drawer-header">
+      <span class="brand-badge" id="drawerBadge">⚡ Executive Quick-Brief</span>
+      <button class="icon-btn" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-footer">
+      <div class="drawer-nav">
+        <button class="btn" onclick="stepDrawer(-1)" title="Previous story (←)">← Prev</button>
+        <button class="btn" onclick="stepDrawer(1)" title="Next story (→)">Next →</button>
+      </div>
+      <a class="btn btn-primary" id="drawerReadLink" href="#" target="_blank" rel="noopener noreferrer">Open Article ↗</a>
+    </div>
+  </aside>
+
   <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Back to top" title="Back to top">↑</button>
   <div id="toast" role="status" aria-live="polite">✓ Copied Top 5 UK Finance Briefing!</div>
 
   <script>
-    const ITEMS = [{"id": "item-29", "title": "AI adoption and regulation: the latest FCA view", "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNaU1ZRE5WNzc2QjkySmpoQndVX3lVMjMtMUxxejhCdEZpVzJIZEo3d1NYSDk2cVZqbHdkZjNNaENkNGlEN3NwRW5LdnA2aGRTUm9fQkZPbHo1MFY0NGl2ZVl5NHNaZ21SbXgtM2YwU3JjZ19rN19lVTFSOGFfcTVNQ1N4RGc2RU9fZ3U5TkZMVFQ0eFhIV21JWQ?oc=5", "source": "Deloitte", "category": "UK Finance & CFO AI", "published_at": "2026-10-22 14:51 UTC", "score": 99, "tier": "High UK Finance Impact", "func_tag": "🏛️ FCA & Regulation", "summary": "", "benefit": "FCA AI Governance (Deloitte): Key briefing for UK finance and risk leaders aligning AI model oversight and senior accountability with FCA expectations."}, {"id": "item-26", "title": "82% of UK and Irish Finance Leaders Feel Pressured to Adopt AI Faster Than They Are Comfortable With", "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNc0dOWmFZX2wzVTByazBEa0VySmFTMkhoblg5MF9tS0lYa2JhQzlWbXBmc3E4QW5UM0I0M2Q0RnduZUhiM0VGNkdQSXdVWFhWTlBxRVVtb19JbVlfVHVrQ21Vb1pRbEgwSkg1VGtGT3hCOXcwdWhxY3VHcE1VaEdwNDk4OTdpZk5zWnJpVzk0VTU0dzZLQVp2NGQ4NnVkLWlpZHBLeGZGM2xHQWFWOHJlWElYalVGZlFsVXJWZ3ZnWXV0b0N4M2RMcjA4VG5TMUhsY3F4SkI4MkhRcEFwRVE?oc=5", "source": "Enterprise Times", "category": "UK Finance & CFO AI", "published_at": "2026-10-22 09:28 UTC", "score": 97, "tier": "High UK Finance Impact", "func_tag": "📈 CFO Survey Benchmark", "summary": "", "benefit": "UK & Ireland CFO Pulse (82% stat via Enterprise Times): Quantifies boardroom pressure on finance leaders to accelerate AI adoption without compromising financial accuracy."}, {"id": "item-27", "title": "UK finance leaders back AI but struggle to prove value", "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQYlpCNUtrbzNuMVRPc2Q0azR1QlZua3IzOHBkcGxVeWw5NVRSSFc5cl9YVS1oODdYWTRCQlF2aDFCdmdsVXFISFB0d1EzX2JiQ3NDd284LUhXakxrem9sNXlmTjlFUWR1amdjOTdIcGtrVktvYk9PdHA1RTJrZE10UHhCSGRMRGVUOHc?oc=5", "source": "IT Brief UK", "category": "UK Finance & CFO AI", "published_at": "2026-10-23 16:00 UTC", "score": 96, "tier": "High UK Finance Impact", "func_tag": "📈 CFO ROI & Value", "summary": "", "benefit": "UK CFO Value Benchmark (IT Brief UK): Addresses the #1 hurdle for UK finance directors—moving AI projects from pilot enthusiasm to measurable P&L and time-saving ROI."}, {"id": "item-32", "title": "U.K. FCA Draft Flags Rigid Crypto Tracing Limits Without Risk Measures", "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaU1BuLVFlbE1sRC10dlJYTE9vckxsdnltUzZIbXhmc2JlQmJXVDVzV1U2ZTVvUm4yR2hQaExvYi1MNXd1amQ5OEUyN2FxUmhrN054WDM0ZmVod2s?oc=5", "source": "TOKENPOST", "category": "UK Finance & CFO AI", "published_at": "2026-10-24 04:24 UTC", "score": 96, "tier": "High UK Finance Impact", "func_tag": "🏛️ FCA & Compliance", "summary": "", "benefit": "FCA Digital Asset Rules (TOKENPOST): Flags where automated transaction tracing must be paired with proportionate risk-based compliance controls."}, {"id": "item-30", "title": "AI’s biggest challenge in banking isn’t technology alone", "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNakJ2dmRBMGxDbDVqb25JaUJaVmZFanducE1tNXB1ODM0SkpUU1YteWt1SjRjQWZWTVkxUnhBYm5fLWxWNEFxUUR6Yjk3MnpvNFlmNTJ0R09OaGVhSkYzY0JyQ2kxaHlfV2N5U00yVDAxcWVZbjV5Y2wxUjR2YXZ3cDJrclpVT0o5VDNsWHZxQXZrQjZISlpNc2d6M3ZERE1GSDltTmhWZGg?oc=5", "source": "UK Finance", "category": "UK Finance & CFO AI", "published_at": "2026-10-22 10:16 UTC", "score": 95, "tier": "High UK Finance Impact", "func_tag": "🏦 UK Banking & Strategy", "summary": "", "benefit": "Sector Leadership View (UK Finance): Highlights why data quality, staff capability, and change management matter as much as model selection in UK financial services."}, {"id": "item-31", "title": "Chief Ethics and Compliance Officer Survey 2026", "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOeU8wWmNMcElybGV6M2FlNk0wWFQxclh6WTNYMmZtNS1HWXBLckxKOEN2SkFrTkRpWmxQekFVa3V6RFp6MlM5QTdHeDF4cGVJZzk4eG91WVlPV1JUZHR5NXhxa29uc3Rfa21kd0NUMFd6cnBwVXRXeGZ6OXhDdno2RA?oc=5", "source": "KPMG International", "category": "UK Finance & CFO AI", "published_at": "2026-10-23 22:54 UTC", "score": 95, "tier": "High UK Finance Impact", "func_tag": "🛡️ Governance & Ethics", "summary": "", "benefit": "2026 Compliance Benchmark (KPMG International): Benchmarks how chief compliance and audit leaders are updating governance controls for generative AI."}, {"id": "item-28", "title": "Barclays: AI-Driven Job Cuts And Overdone Bank Tax Fears (NYSE:BCS)", "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNVm5ZZUFkeXFQeDR3MHlOMF95SXpsMGVUb2c2UUN0bmNSbHNxeGNyZ0doUkJNMFR0MDNZbVg0ZXQxZjlDc20waElmYUNxOTAxdmJwSENtWlIwcVNOMUl0SVZtSGxMU2ZaQlRMUkRsbGhZcWJfcFhTSl95UTB6T3RTQUZtTlVNVzlJSC1UT2N2ZXZBZ3V6WS1PRW5qaEQ?oc=5", "source": "Seeking Alpha", "category": "UK Finance & CFO AI", "published_at": "2026-10-24 14:41 UTC", "score": 93, "tier": "High UK Finance Impact", "func_tag": "🏦 UK Banking & Workforce", "summary": "", "benefit": "UK Banking Sector Analysis (Seeking Alpha): Evaluates how major UK banks are balancing AI-driven cost efficiencies, headcount restructuring, and UK tax policy."}, {"id": "item-21", "title": "Updated Google privacy policy says your Gmail might be used for advertising", "url": "https://arstechnica.com/gadgets/2026/10/updated-google-privacy-policy-says-your-gmail-might-be-used-for-advertising/", "source": "Ars Technica AI", "category": "Tech & AI News", "published_at": "2026-10-23 20:19 UTC", "score": 84, "tier": "Finance Ops & Governance", "func_tag": "🔒 Workspace Data Privacy", "summary": "Turning on Personal Intelligence gives the company more data for ad targeting.", "benefit": "Cloud Privacy Alert (Ars Technica AI): Reminder for finance teams to verify enterprise workspace opt-outs so corporate email and documents are never used for ad targeting or model training."}, {"id": "item-4", "title": "OpenAI says it will no longer train its AI models on the live internet, citing “significant risks”", "url": "https://techcrunch.com/2026/10/23/openai-says-it-will-no-longer-train-its-ai-models-on-the-live-internet-citing-significant-risks/", "source": "TechCrunch AI", "category": "Tech & AI News", "published_at": "2026-10-23 23:05 UTC", "score": 83, "tier": "Finance Ops & Governance", "func_tag": "🔒 AI Security & Containment", "summary": "OpenAI will cut frontier models off from the internet weeks after one of its engineers said that solution wouldn't work.", "benefit": "Model Security Posture (TechCrunch AI): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks."}, {"id": "item-6", "title": "Securing our frontier model training environment", "url": "https://openai.com/index/securing-our-frontier-model-training-environment", "source": "OpenAI News", "category": "AI Labs & Blogs", "published_at": "2026-10-23 10:00 UTC", "score": 83, "tier": "Finance Ops & Governance", "func_tag": "🔒 AI Security & Containment", "summary": "OpenAI explains how we strengthened containment for frontier model training and evaluation, including offline environments and high-compute red-teaming.", "benefit": "Model Security Posture (OpenAI News): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks."}, {"id": "item-7", "title": "Designing an AI serving harness built to last", "url": "https://www.technologyreview.com/2026/10/22/1146109/designing-an-ai-serving-harness-built-to-last/", "source": "MIT Technology Review AI", "category": "Tech & AI News", "published_at": "2026-10-22 21:17 UTC", "score": 81, "tier": "Finance Ops & Productivity", "func_tag": "⚙️ Enterprise AI Architecture", "summary": "The next competitive advantage in enterprise AI has less to do with which model you choose than with what you build around it. That’s an important shift. For the past several years, much of the AI conversation has centered on model capability: bigger models, better reasoning,…", "benefit": "Enterprise Deployment (MIT Technology Review AI): Explains why wrapping AI models in reliable data governance, audit logging, and workflow harnesses matters more than raw model size."}, {"id": "item-8", "title": "The Foundations of Scalable AI", "url": "https://www.technologyreview.com/2026/10/22/1146103/the-foundations-of-scalable-ai/", "source": "MIT Technology Review AI", "category": "Tech & AI News", "published_at": "2026-10-22 18:48 UTC", "score": 81, "tier": "Finance Ops & Productivity", "func_tag": "⚙️ Enterprise AI Architecture", "summary": "A scalable AI system requires a strong foundation. Data, engineering, platforms, operating models, and governance must converge to work as one. This session from MIT Technology Review’s EmTech Future conference explores what it takes to build that foundation in a highly…", "benefit": "Enterprise Deployment (MIT Technology Review AI): Explains why wrapping AI models in reliable data governance, audit logging, and workflow harnesses matters more than raw model size."}, {"id": "item-3", "title": "Here are the top AI agents that can live in your text messages", "url": "https://techcrunch.com/2026/10/24/all-the-ai-agents-that-can-live-in-your-text-messages/", "source": "TechCrunch AI", "category": "Tech & AI News", "published_at": "2026-10-24 14:00 UTC", "score": 78, "tier": "Finance Ops & Productivity", "func_tag": "🤖 AI Agents & Workflows", "summary": "We created a list of the most notable AI agents that can live in your text messages, from general assistants to agents designed for families, travel, and work.", "benefit": "Agentic Workflows (TechCrunch AI): Illustrates how lightweight AI agents are moving into everyday communication channels for rapid task execution."}, {"id": "item-1", "title": "Block’s new voice model sounds eerily human", "url": "https://techcrunch.com/2026/10/24/blocks-new-voice-model-sounds-eerily-human/", "source": "TechCrunch AI", "category": "Tech & AI News", "published_at": "2026-10-24 16:00 UTC", "score": 76, "tier": "Finance Ops & Productivity", "func_tag": "💻 Local & On-Device AI", "summary": "Block said that the voice model can run locally on a MacBook M4 Max", "benefit": "On-Device Privacy (TechCrunch AI): Running capable AI models locally on corporate hardware keeps sensitive financial discussions entirely off third-party clouds."}, {"id": "item-5", "title": "Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II)", "url": "https://openai.com/index/scaling-storage-one-billion-users-part-two", "source": "OpenAI News", "category": "AI Labs & Blogs", "published_at": "2026-10-23 17:00 UTC", "score": 75, "tier": "Finance Ops & Productivity", "func_tag": "⚡ Cloud Infrastructure", "summary": "Learn how OpenAI scaled Habitat with reliable multi-tenancy, global caching, and Azure Cosmos DB to deliver 12× faster reads for ChatGPT.", "benefit": "Infrastructure Reliability (OpenAI News): Engineering look at how high-throughput enterprise AI platforms maintain low latency and multi-tenant data isolation at scale."}, {"id": "item-0", "title": "The AI graveyard: a running list of projects and startups that didn’t make it", "url": "https://techcrunch.com/2026/10/24/the-ai-graveyard-a-running-list-of-projects-and-startups-that-didnt-make-it/", "source": "TechCrunch AI", "category": "Tech & AI News", "published_at": "2026-10-24 19:00 UTC", "score": 74, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "From Apple's repeatedly delayed Siri AI to OpenAI's messy \"super app\" launch, here's a look at the AI projects that shut down or missed expectations.", "benefit": "Model Capability & Compute (TechCrunch AI): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools."}, {"id": "item-2", "title": "Forced to pick, Grok’s AI model chooses Republicans. OpenAI’s picks Democrats.", "url": "https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/", "source": "TechCrunch AI", "category": "Tech & AI News", "published_at": "2026-10-24 15:00 UTC", "score": 74, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "A new study found Grok's AI overwhelmingly recommends Republican candidates while OpenAI's GPT favors Democrats, with the two AI models disagreeing in more than 90% of nearly 500 election races.", "benefit": "Model Capability & Compute (TechCrunch AI): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools."}, {"id": "item-20", "title": "Gemini 4 Argon: Built to solve your hardest problems", "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/", "source": "Google AI & DeepMind Blog", "category": "AI Labs & Blogs", "published_at": "2026-10-13 16:00 UTC", "score": 74, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "We’re giving developers, enterprises, scientists, and consumers access to Gemini 4 Argon, our latest frontier model.", "benefit": "Model Capability & Compute (Google AI & DeepMind Blog): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools."}, {"id": "item-34", "title": "Does Your Model Run on AWS Trainium? Look It Up", "url": "https://huggingface.co/blog/torch-neuronx-model-support", "source": "Hugging Face Blog", "category": "AI Labs & Blogs", "published_at": "2026-10-23 00:00 UTC", "score": 74, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "", "benefit": "Model Capability & Compute (Hugging Face Blog): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools."}, {"id": "item-12", "title": "Reliable AI-Assisted Decisions via Selective Auditing", "url": "https://arxiv.org/abs/2610.31662v1", "source": "ArXiv (cs.AI / cs.LG)", "category": "Research Papers", "published_at": "2026-10-22", "score": 66, "tier": "General AI & Research", "func_tag": "🔬 AI Governance Research", "summary": "We consider online monitoring of an AI system that produces a sequence of decisions. At each round, the system outputs a proposed decision together with a confidence score estimating the trustworthiness of the decision. The decision and confidence score need…", "benefit": "Academic Research (ArXiv (cs.AI / cs.LG)): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification."}, {"id": "item-13", "title": "SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing", "url": "https://arxiv.org/abs/2610.31659v1", "source": "ArXiv (cs.AI / cs.LG)", "category": "Research Papers", "published_at": "2026-10-22", "score": 66, "tier": "General AI & Research", "func_tag": "🔬 AI Governance Research", "summary": "Auditing whether a text-to-image (T2I) model was fine-tuned on a particular image collection is difficult: a model can absorb collection-level visual characteristics without reproducing training images. Proactive dataset-use auditing plants a shared signal…", "benefit": "Academic Research (ArXiv (cs.AI / cs.LG)): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification."}, {"id": "item-15", "title": "The LLM-Attacker: A Unified Red-Team Framework for Privacy Evaluation of Split and Distributed LLM Systems", "url": "https://huggingface.co/papers/2610.22722", "source": "HF Daily Papers", "category": "Research Papers", "published_at": "2026-10-15", "score": 66, "tier": "General AI & Research", "func_tag": "🔬 AI Governance Research", "summary": "[4 upvotes] Split language models keep input text on a client but send intermediate representations to a server. Attacks can reconstruct text from these messages. Comparing privacy evaluations is difficult when attackers see different messages, know different model weights or use different…", "benefit": "Academic Research (HF Daily Papers): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification."}, {"id": "item-23", "title": "Pennsylvania will require labels on AI-generated ads", "url": "https://www.theverge.com/ai-artificial-intelligence/1018187/pennsylvania-ai-deceptive-advertising-act", "source": "The Verge AI", "category": "Tech & AI News", "published_at": "Recent", "score": 65, "tier": "General AI & Research", "func_tag": "⚖️ AI Transparency Law", "summary": "", "benefit": "Global AI Regulation (The Verge AI): Tracks mandatory disclosure and watermarking laws for AI-generated commercial communications."}, {"id": "item-10", "title": "Direct Pass@k Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning", "url": "https://arxiv.org/abs/2610.31667v1", "source": "ArXiv (cs.AI / cs.LG)", "category": "Research Papers", "published_at": "2026-10-22", "score": 62, "tier": "General AI & Research", "func_tag": "🔬 Reasoning & Eval Paper", "summary": "Test-time scaling has emerged as a key inference strategy for reasoning models, where a model generates a large number of candidate solutions in the hope of finding at least one correct solution. Running all candidate solutions to completion can be…", "benefit": "Reasoning Benchmark (ArXiv (cs.AI / cs.LG)): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks."}, {"id": "item-16", "title": "EvalResearchBench: Can AI Agents Build Their Own Feedback for Recursive Self-Improvement?", "url": "https://huggingface.co/papers/2610.04184", "source": "HF Daily Papers", "category": "Research Papers", "published_at": "2026-10-16", "score": 62, "tier": "General AI & Research", "func_tag": "🔬 Reasoning & Eval Paper", "summary": "[2 upvotes] Recursive self-improvement (RSI) relies on evaluation feedback to assess progress and guide further research, yet repeatedly running complex benchmarks is costly and slows iteration. Human experts reduce this cost by selecting benchmark subsets or designing compact suites. We…", "benefit": "Reasoning Benchmark (HF Daily Papers): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks."}, {"id": "item-17", "title": "Diffusion Language Models Change Speed Across Tasks and Languages", "url": "https://huggingface.co/papers/2610.25835", "source": "HF Daily Papers", "category": "Research Papers", "published_at": "2026-10-19", "score": 60, "tier": "General AI & Research", "func_tag": "🔬 Model Efficiency Paper", "summary": "[3 upvotes] Diffusion language models can write several tokens in one forward pass, and they decide during generation how many passes to spend. Two outputs of the same token length can therefore vary a lot in cost. To understand the underlying factors of this cost variation, we analyze two…", "benefit": "Inference Efficiency (HF Daily Papers): Explores quantization and token-generation speed to reduce enterprise LLM compute costs."}, {"id": "item-18", "title": "Different Tasks, Different Timesteps: Temporal Task-Aware Quantization for Diffusion Language Models", "url": "https://huggingface.co/papers/2610.31198", "source": "HF Daily Papers", "category": "Research Papers", "published_at": "2026-10-22", "score": 60, "tier": "General AI & Research", "func_tag": "🔬 Model Efficiency Paper", "summary": "[15 upvotes] Diffusion Language Models (DLMs) introduce unique quantization challenges due to their iterative denoising process. In this work, we reveal that quantization sensitivity is both taskand time-dependent, with different downstream tasks exhibiting distinct precision requirements…", "benefit": "Inference Efficiency (HF Daily Papers): Explores quantization and token-generation speed to reduce enterprise LLM compute costs."}, {"id": "item-9", "title": "Sensorimotor Alignment: A Platonic Proxy for Embodied Policy Success", "url": "https://arxiv.org/abs/2610.31670v1", "source": "ArXiv (cs.AI / cs.LG)", "category": "Research Papers", "published_at": "2026-10-22", "score": 56, "tier": "General AI & Research", "func_tag": "🔬 Research Paper", "summary": "Robotic foundation models are typically evaluated through costly closed-loop rollouts, which motivates cheap offline proxies for model capability. The Platonic Representation Hypothesis (PRH) suggests that as representations improve, different modalities…", "benefit": "Technical Research (ArXiv (cs.AI / cs.LG)): Early-stage academic research into foundation model architecture and alignment."}, {"id": "item-11", "title": "Phase Transition from Random Features to Fully Trainable Networks", "url": "https://arxiv.org/abs/2610.31663v1", "source": "ArXiv (cs.AI / cs.LG)", "category": "Research Papers", "published_at": "2026-10-22", "score": 56, "tier": "General AI & Research", "func_tag": "🔬 Research Paper", "summary": "Constructing accurate and computationally tractable approximation spaces is a fundamental task in scientific computing. Partially trainable neural networks bridge fixed random features and fully adaptive representations. This paper quantifies a phase…", "benefit": "Technical Research (ArXiv (cs.AI / cs.LG)): Early-stage academic research into foundation model architecture and alignment."}, {"id": "item-14", "title": "TARSphere: A Robot-Oriented Full-Stack Framework for Long-Horizon Embodied Agents in Evolving Physical and Social Environments", "url": "https://huggingface.co/papers/2610.30043", "source": "HF Daily Papers", "category": "Research Papers", "published_at": "2026-10-21", "score": 56, "tier": "General AI & Research", "func_tag": "🔬 Research Paper", "summary": "[2 upvotes] Robots must act under physical and social constraints while adapting to changes in their environment and human needs. Existing embodied-agent systems often focus on specified goals or abstract execution into symbolic actions, limiting evaluation in an evolving world. We…", "benefit": "Technical Research (HF Daily Papers): Early-stage academic research into foundation model architecture and alignment."}, {"id": "item-35", "title": "Increasing number of UG authors in A* conferences with no supervisor [D]", "url": "https://www.reddit.com/r/MachineLearning/comments/1xe9uoh/increasing_number_of_ug_authors_in_a_conferences/", "source": "r/MachineLearning", "category": "Hacker News & Reddit", "published_at": "Recent", "score": 50, "tier": "General AI & Research", "func_tag": "💬 Community Pulse", "summary": "", "benefit": "Practitioner Discussion (r/MachineLearning): Highlights community engineering insights and practical experimentation."}, {"id": "item-36", "title": "Got a pretrained music transformer to jam with me live, no fine-tuning, just steering the sampling [P]", "url": "https://www.reddit.com/r/MachineLearning/comments/1xe4pex/got_a_pretrained_music_transformer_to_jam_with_me/", "source": "r/MachineLearning", "category": "Hacker News & Reddit", "published_at": "Recent", "score": 50, "tier": "General AI & Research", "func_tag": "💬 Community Pulse", "summary": "", "benefit": "Practitioner Discussion (r/MachineLearning): Highlights community engineering insights and practical experimentation."}, {"id": "item-19", "title": "Southeast Asia’s digital economy to hit $368 billion", "url": "https://blog.google/company-news/inside-google/around-the-globe/google-asia/e-conomy-sea-report-2026/", "source": "Google AI & DeepMind Blog", "category": "AI Labs & Blogs", "published_at": "2026-10-21 04:00 UTC", "score": 48, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "Widespread AI adoption is propelling Southeast Asia's digital economy to a projected $368 billion in 2026 and $1 trillion by 2035.", "benefit": "General Industry Coverage (Google AI & DeepMind Blog): Keeps teams aware of broader consumer and technology developments."}, {"id": "item-22", "title": "Intel gets waiver after worries fuzzy US ban on foreign-made robots may hit fabs", "url": "https://arstechnica.com/ai/2026/10/intel-gets-waiver-after-worries-fuzzy-us-ban-on-foreign-made-robots-may-hit-fabs/", "source": "Ars Technica AI", "category": "Tech & AI News", "published_at": "2026-10-23 17:18 UTC", "score": 48, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "Company says foreign-made robotic vehicles are crucial to US chip production.", "benefit": "General Industry Coverage (Ars Technica AI): Keeps teams aware of broader consumer and technology developments."}, {"id": "item-24", "title": "Jack Dorsey’s Block made an AI model that talks to you like an awkward new friend", "url": "https://www.theverge.com/ai-artificial-intelligence/1017906/jack-dorsey-block-dessa-ai-voice-speech", "source": "The Verge AI", "category": "Tech & AI News", "published_at": "Recent", "score": 48, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "", "benefit": "General Industry Coverage (The Verge AI): Keeps teams aware of broader consumer and technology developments."}, {"id": "item-25", "title": "The iPhone Duo should have been an iPad", "url": "https://www.theverge.com/podcast/1017447/iphone-duo-ipad-review-score-vergecast", "source": "The Verge AI", "category": "Tech & AI News", "published_at": "Recent", "score": 48, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "", "benefit": "General Industry Coverage (The Verge AI): Keeps teams aware of broader consumer and technology developments."}, {"id": "item-33", "title": "LitPivot: Developing research ideas through dynamic contextualization within the literature landscape", "url": "https://huggingface.co/blog/allenai/litpivot", "source": "Hugging Face Blog", "category": "AI Labs & Blogs", "published_at": "2026-10-23 16:15 UTC", "score": 48, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "", "benefit": "General Industry Coverage (Hugging Face Blog): Keeps teams aware of broader consumer and technology developments."}];
+    const ITEMS = [{"id": "item-30", "title": "AI adoption and regulation: the latest FCA view", "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNaU1ZRE5WNzc2QjkySmpoQndVX3lVMjMtMUxxejhCdEZpVzJIZEo3d1NYSDk2cVZqbHdkZjNNaENkNGlEN3NwRW5LdnA2aGRTUm9fQkZPbHo1MFY0NGl2ZVl5NHNaZ21SbXgtM2YwU3JjZ19rN19lVTFSOGFfcTVNQ1N4RGc2RU9fZ3U5TkZMVFQ0eFhIV21JWQ?oc=5", "source": "Deloitte", "pub_domain": "deloitte.com", "category": "UK Finance & CFO AI", "published_at": "2026-10-22 14:51 UTC", "score": 99, "cfo_score": 98, "audit_score": 100, "fpa_score": 99, "tier": "High UK Finance Impact", "func_tag": "🏛️ FCA & Regulation", "summary": "", "benefit": "FCA AI Governance (Deloitte): Key briefing for UK finance and risk leaders aligning AI model oversight and senior accountability with FCA expectations.", "risk_angle": "High UK Regulatory Relevance: FCA oversight expects senior management accountability (SM&CR), outcome testing, and clear operational resilience when AI is used in financial services.", "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."}, {"id": "item-34", "title": "82% of UK and Irish Finance Leaders Feel Pressured to Adopt AI Faster Than They Are Comfortable With", "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNc0dOWmFZX2wzVTByazBEa0VySmFTMkhoblg5MF9tS0lYa2JhQzlWbXBmc3E4QW5UM0I0M2Q0RnduZUhiM0VGNkdQSXdVWFhWTlBxRVVtb19JbVlfVHVrQ21Vb1pRbEgwSkg1VGtGT3hCOXcwdWhxY3VHcE1VaEdwNDk4OTdpZk5zWnJpVzk0VTU0dzZLQVp2NGQ4NnVkLWlpZHBLeGZGM2xHQWFWOHJlWElYalVGZlFsVXJWZ3ZnWXV0b0N4M2RMcjA4VG5TMUhsY3F4SkI4MkhRcEFwRVE?oc=5", "source": "Enterprise Times", "pub_domain": "enterprisetimes.co.uk", "category": "UK Finance & CFO AI", "published_at": "2026-10-22 09:28 UTC", "score": 97, "cfo_score": 100, "audit_score": 97, "fpa_score": 96, "tier": "High UK Finance Impact", "func_tag": "📈 CFO Survey Benchmark", "summary": "", "benefit": "UK & Ireland CFO Pulse (82% stat via Enterprise Times): Quantifies boardroom pressure on finance leaders to accelerate AI adoption without compromising financial accuracy.", "risk_angle": "Highlights governance pressure vs. control maturity: deploying AI too quickly without reconciliation checks creates financial reporting and disclosure exposure.", "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."}, {"id": "item-33", "title": "U.K. FCA Draft Flags Rigid Crypto Tracing Limits Without Risk Measures", "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaU1BuLVFlbE1sRC10dlJYTE9vckxsdnltUzZIbXhmc2JlQmJXVDVzV1U2ZTVvUm4yR2hQaExvYi1MNXd1amQ5OEUyN2FxUmhrN054WDM0ZmVod2s?oc=5", "source": "TOKENPOST", "pub_domain": "tokenpost.com", "category": "UK Finance & CFO AI", "published_at": "2026-10-24 04:24 UTC", "score": 96, "cfo_score": 98, "audit_score": 100, "fpa_score": 96, "tier": "High UK Finance Impact", "func_tag": "🏛️ FCA & Compliance", "summary": "", "benefit": "FCA Digital Asset Rules (TOKENPOST): Flags where automated transaction tracing must be paired with proportionate risk-based compliance controls.", "risk_angle": "High UK Regulatory Relevance: FCA oversight expects senior management accountability (SM&CR), outcome testing, and clear operational resilience when AI is used in financial services.", "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."}, {"id": "item-35", "title": "UK finance leaders back AI but struggle to prove value", "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQYlpCNUtrbzNuMVRPc2Q0azR1QlZua3IzOHBkcGxVeWw5NVRSSFc5cl9YVS1oODdYWTRCQlF2aDFCdmdsVXFISFB0d1EzX2JiQ3NDd284LUhXakxrem9sNXlmTjlFUWR1amdjOTdIcGtrVktvYk9PdHA1RTJrZE10UHhCSGRMRGVUOHc?oc=5", "source": "IT Brief UK", "pub_domain": "itbrief.co.uk", "category": "UK Finance & CFO AI", "published_at": "2026-10-23 16:00 UTC", "score": 96, "cfo_score": 100, "audit_score": 96, "fpa_score": 96, "tier": "High UK Finance Impact", "func_tag": "📈 CFO ROI & Value", "summary": "", "benefit": "UK CFO Value Benchmark (IT Brief UK): Addresses the #1 hurdle for UK finance directors—moving AI projects from pilot enthusiasm to measurable P&L and time-saving ROI.", "risk_angle": "Highlights governance pressure vs. control maturity: deploying AI too quickly without reconciliation checks creates financial reporting and disclosure exposure.", "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."}, {"id": "item-31", "title": "AI’s biggest challenge in banking isn’t technology alone", "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNakJ2dmRBMGxDbDVqb25JaUJaVmZFanducE1tNXB1ODM0SkpUU1YteWt1SjRjQWZWTVkxUnhBYm5fLWxWNEFxUUR6Yjk3MnpvNFlmNTJ0R09OaGVhSkYzY0JyQ2kxaHlfV2N5U00yVDAxcWVZbjV5Y2wxUjR2YXZ3cDJrclpVT0o5VDNsWHZxQXZrQjZISlpNc2d6M3ZERE1GSDltTmhWZGg?oc=5", "source": "UK Finance", "pub_domain": "ukfinance.org.uk", "category": "UK Finance & CFO AI", "published_at": "2026-10-22 10:16 UTC", "score": 95, "cfo_score": 100, "audit_score": 95, "fpa_score": 96, "tier": "High UK Finance Impact", "func_tag": "🏦 UK Banking & Strategy", "summary": "", "benefit": "Sector Leadership View (UK Finance): Highlights why data quality, staff capability, and change management matter as much as model selection in UK financial services.", "risk_angle": "Highlights governance pressure vs. control maturity: deploying AI too quickly without reconciliation checks creates financial reporting and disclosure exposure.", "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."}, {"id": "item-32", "title": "Chief Ethics and Compliance Officer Survey 2026", "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOeU8wWmNMcElybGV6M2FlNk0wWFQxclh6WTNYMmZtNS1HWXBLckxKOEN2SkFrTkRpWmxQekFVa3V6RFp6MlM5QTdHeDF4cGVJZzk4eG91WVlPV1JUZHR5NXhxa29uc3Rfa21kd0NUMFd6cnBwVXRXeGZ6OXhDdno2RA?oc=5", "source": "KPMG International", "pub_domain": "kpmg.com", "category": "UK Finance & CFO AI", "published_at": "2026-10-23 22:54 UTC", "score": 95, "cfo_score": 98, "audit_score": 100, "fpa_score": 95, "tier": "High UK Finance Impact", "func_tag": "🛡️ Governance & Ethics", "summary": "", "benefit": "2026 Compliance Benchmark (KPMG International): Benchmarks how chief compliance and audit leaders are updating governance controls for generative AI.", "risk_angle": "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. Ensure any AI-assisted outputs have a documented human-in-the-loop review trail.", "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."}, {"id": "item-36", "title": "Barclays: AI-Driven Job Cuts And Overdone Bank Tax Fears (NYSE:BCS)", "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNVm5ZZUFkeXFQeDR3MHlOMF95SXpsMGVUb2c2UUN0bmNSbHNxeGNyZ0doUkJNMFR0MDNZbVg0ZXQxZjlDc20waElmYUNxOTAxdmJwSENtWlIwcVNOMUl0SVZtSGxMU2ZaQlRMUkRsbGhZcWJfcFhTSl95UTB6T3RTQUZtTlVNVzlJSC1UT2N2ZXZBZ3V6WS1PRW5qaEQ?oc=5", "source": "Seeking Alpha", "pub_domain": "seekingalpha.com", "category": "UK Finance & CFO AI", "published_at": "2026-10-24 14:41 UTC", "score": 93, "cfo_score": 100, "audit_score": 93, "fpa_score": 96, "tier": "High UK Finance Impact", "func_tag": "🏦 UK Banking & Workforce", "summary": "", "benefit": "UK Banking Sector Analysis (Seeking Alpha): Evaluates how major UK banks are balancing AI-driven cost efficiencies, headcount restructuring, and UK tax policy.", "risk_angle": "Highlights governance pressure vs. control maturity: deploying AI too quickly without reconciliation checks creates financial reporting and disclosure exposure.", "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."}, {"id": "item-21", "title": "Updated Google privacy policy says your Gmail might be used for advertising", "url": "https://arstechnica.com/gadgets/2026/10/updated-google-privacy-policy-says-your-gmail-might-be-used-for-advertising/", "source": "Ars Technica AI", "pub_domain": "arstechnica.com", "category": "Tech & AI News", "published_at": "2026-10-23 20:19 UTC", "score": 84, "cfo_score": 88, "audit_score": 96, "fpa_score": 84, "tier": "Finance Ops & Governance", "func_tag": "🔒 Workspace Data Privacy", "summary": "Turning on Personal Intelligence gives the company more data for ad targeting.", "benefit": "Cloud Privacy Alert (Ars Technica AI): Reminder for finance teams to verify enterprise workspace opt-outs so corporate email and documents are never used for ad targeting or model training.", "risk_angle": "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential management accounts, M&A drafts, or customer PII.", "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."}, {"id": "item-4", "title": "OpenAI says it will no longer train its AI models on the live internet, citing “significant risks”", "url": "https://techcrunch.com/2026/10/23/openai-says-it-will-no-longer-train-its-ai-models-on-the-live-internet-citing-significant-risks/", "source": "TechCrunch AI", "pub_domain": "techcrunch.com", "category": "Tech & AI News", "published_at": "2026-10-23 23:05 UTC", "score": 83, "cfo_score": 87, "audit_score": 95, "fpa_score": 83, "tier": "Finance Ops & Governance", "func_tag": "🔒 AI Security & Containment", "summary": "OpenAI will cut frontier models off from the internet weeks after one of its engineers said that solution wouldn't work.", "benefit": "Model Security Posture (TechCrunch AI): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks.", "risk_angle": "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. Ensure any AI-assisted outputs have a documented human-in-the-loop review trail.", "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."}, {"id": "item-6", "title": "Securing our frontier model training environment", "url": "https://openai.com/index/securing-our-frontier-model-training-environment", "source": "OpenAI News", "pub_domain": "openai.com", "category": "AI Labs & Blogs", "published_at": "2026-10-23 10:00 UTC", "score": 83, "cfo_score": 87, "audit_score": 95, "fpa_score": 83, "tier": "Finance Ops & Governance", "func_tag": "🔒 AI Security & Containment", "summary": "OpenAI explains how we strengthened containment for frontier model training and evaluation, including offline environments and high-compute red-teaming.", "benefit": "Model Security Posture (OpenAI News): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks.", "risk_angle": "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. Ensure any AI-assisted outputs have a documented human-in-the-loop review trail.", "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."}, {"id": "item-7", "title": "Designing an AI serving harness built to last", "url": "https://www.technologyreview.com/2026/10/22/1146109/designing-an-ai-serving-harness-built-to-last/", "source": "MIT Technology Review AI", "pub_domain": "technologyreview.com", "category": "Tech & AI News", "published_at": "2026-10-22 21:17 UTC", "score": 81, "cfo_score": 87, "audit_score": 81, "fpa_score": 99, "tier": "Finance Ops & Productivity", "func_tag": "⚙️ Enterprise AI Architecture", "summary": "The next competitive advantage in enterprise AI has less to do with which model you choose than with what you build around it. That’s an important shift. For the past several years, much of the AI conversation has centered on model capability: bigger models, better reasoning,…", "benefit": "Enterprise Deployment (MIT Technology Review AI): Explains why wrapping AI models in reliable data governance, audit logging, and workflow harnesses matters more than raw model size.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-8", "title": "The Foundations of Scalable AI", "url": "https://www.technologyreview.com/2026/10/22/1146103/the-foundations-of-scalable-ai/", "source": "MIT Technology Review AI", "pub_domain": "technologyreview.com", "category": "Tech & AI News", "published_at": "2026-10-22 18:48 UTC", "score": 81, "cfo_score": 87, "audit_score": 81, "fpa_score": 99, "tier": "Finance Ops & Productivity", "func_tag": "⚙️ Enterprise AI Architecture", "summary": "A scalable AI system requires a strong foundation. Data, engineering, platforms, operating models, and governance must converge to work as one. This session from MIT Technology Review’s EmTech Future conference explores what it takes to build that foundation in a highly…", "benefit": "Enterprise Deployment (MIT Technology Review AI): Explains why wrapping AI models in reliable data governance, audit logging, and workflow harnesses matters more than raw model size.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-3", "title": "Here are the top AI agents that can live in your text messages", "url": "https://techcrunch.com/2026/10/24/all-the-ai-agents-that-can-live-in-your-text-messages/", "source": "TechCrunch AI", "pub_domain": "techcrunch.com", "category": "Tech & AI News", "published_at": "2026-10-24 14:00 UTC", "score": 78, "cfo_score": 84, "audit_score": 78, "fpa_score": 96, "tier": "Finance Ops & Productivity", "func_tag": "🤖 AI Agents & Workflows", "summary": "We created a list of the most notable AI agents that can live in your text messages, from general assistants to agents designed for families, travel, and work.", "benefit": "Agentic Workflows (TechCrunch AI): Illustrates how lightweight AI agents are moving into everyday communication channels for rapid task execution.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-1", "title": "Block’s new voice model sounds eerily human", "url": "https://techcrunch.com/2026/10/24/blocks-new-voice-model-sounds-eerily-human/", "source": "TechCrunch AI", "pub_domain": "techcrunch.com", "category": "Tech & AI News", "published_at": "2026-10-24 16:00 UTC", "score": 76, "cfo_score": 82, "audit_score": 76, "fpa_score": 94, "tier": "Finance Ops & Productivity", "func_tag": "💻 Local & On-Device AI", "summary": "Block said that the voice model can run locally on a MacBook M4 Max", "benefit": "On-Device Privacy (TechCrunch AI): Running capable AI models locally on corporate hardware keeps sensitive financial discussions entirely off third-party clouds.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-5", "title": "Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II)", "url": "https://openai.com/index/scaling-storage-one-billion-users-part-two", "source": "OpenAI News", "pub_domain": "openai.com", "category": "AI Labs & Blogs", "published_at": "2026-10-23 17:00 UTC", "score": 75, "cfo_score": 81, "audit_score": 75, "fpa_score": 93, "tier": "Finance Ops & Productivity", "func_tag": "⚡ Cloud Infrastructure", "summary": "Learn how OpenAI scaled Habitat with reliable multi-tenancy, global caching, and Azure Cosmos DB to deliver 12× faster reads for ChatGPT.", "benefit": "Infrastructure Reliability (OpenAI News): Engineering look at how high-throughput enterprise AI platforms maintain low latency and multi-tenant data isolation at scale.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-0", "title": "The AI graveyard: a running list of projects and startups that didn’t make it", "url": "https://techcrunch.com/2026/10/24/the-ai-graveyard-a-running-list-of-projects-and-startups-that-didnt-make-it/", "source": "TechCrunch AI", "pub_domain": "techcrunch.com", "category": "Tech & AI News", "published_at": "2026-10-24 19:00 UTC", "score": 74, "cfo_score": 80, "audit_score": 74, "fpa_score": 92, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "From Apple's repeatedly delayed Siri AI to OpenAI's messy \"super app\" launch, here's a look at the AI projects that shut down or missed expectations.", "benefit": "Model Capability & Compute (TechCrunch AI): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-2", "title": "Forced to pick, Grok’s AI model chooses Republicans. OpenAI’s picks Democrats.", "url": "https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/", "source": "TechCrunch AI", "pub_domain": "techcrunch.com", "category": "Tech & AI News", "published_at": "2026-10-24 15:00 UTC", "score": 74, "cfo_score": 80, "audit_score": 74, "fpa_score": 92, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "A new study found Grok's AI overwhelmingly recommends Republican candidates while OpenAI's GPT favors Democrats, with the two AI models disagreeing in more than 90% of nearly 500 election races.", "benefit": "Model Capability & Compute (TechCrunch AI): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-20", "title": "Gemini 4 Argon: Built to solve your hardest problems", "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/", "source": "Google AI & DeepMind Blog", "pub_domain": "blog.google", "category": "AI Labs & Blogs", "published_at": "2026-10-13 16:00 UTC", "score": 74, "cfo_score": 80, "audit_score": 74, "fpa_score": 92, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "We’re giving developers, enterprises, scientists, and consumers access to Gemini 4 Argon, our latest frontier model.", "benefit": "Model Capability & Compute (Google AI & DeepMind Blog): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-27", "title": "Does Your Model Run on AWS Trainium? Look It Up", "url": "https://huggingface.co/blog/torch-neuronx-model-support", "source": "Hugging Face Blog", "pub_domain": "huggingface.co", "category": "AI Labs & Blogs", "published_at": "2026-10-23 00:00 UTC", "score": 74, "cfo_score": 80, "audit_score": 74, "fpa_score": 92, "tier": "Finance Ops & Productivity", "func_tag": "🧠 Frontier Models", "summary": "", "benefit": "Model Capability & Compute (Hugging Face Blog): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools.", "risk_angle": "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting new AI agents or models to ERP, FP&A, or payroll spreadsheets.", "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."}, {"id": "item-10", "title": "The LLM-Attacker: A Unified Red-Team Framework for Privacy Evaluation of Split and Distributed LLM Systems", "url": "https://huggingface.co/papers/2610.22722", "source": "HF Daily Papers", "pub_domain": "huggingface.co", "category": "Research Papers", "published_at": "2026-10-15", "score": 66, "cfo_score": 66, "audit_score": 66, "fpa_score": 74, "tier": "General AI & Research", "func_tag": "🔬 AI Governance Research", "summary": "[4 upvotes] Split language models keep input text on a client but send intermediate representations to a server. Attacks can reconstruct text from these messages. Comparing privacy evaluations is difficult when attackers see different messages, know different model weights or use different…", "benefit": "Academic Research (HF Daily Papers): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.", "risk_angle": "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential management accounts, M&A drafts, or customer PII.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-17", "title": "Reliable AI-Assisted Decisions via Selective Auditing", "url": "https://arxiv.org/abs/2610.31662v1", "source": "ArXiv (cs.AI / cs.LG)", "pub_domain": "arxiv.org", "category": "Research Papers", "published_at": "2026-10-22", "score": 66, "cfo_score": 66, "audit_score": 66, "fpa_score": 74, "tier": "General AI & Research", "func_tag": "🔬 AI Governance Research", "summary": "We consider online monitoring of an AI system that produces a sequence of decisions. At each round, the system outputs a proposed decision together with a confidence score estimating the trustworthiness of the decision. The decision and confidence score need…", "benefit": "Academic Research (ArXiv (cs.AI / cs.LG)): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-18", "title": "SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing", "url": "https://arxiv.org/abs/2610.31659v1", "source": "ArXiv (cs.AI / cs.LG)", "pub_domain": "arxiv.org", "category": "Research Papers", "published_at": "2026-10-22", "score": 66, "cfo_score": 66, "audit_score": 66, "fpa_score": 74, "tier": "General AI & Research", "func_tag": "🔬 AI Governance Research", "summary": "Auditing whether a text-to-image (T2I) model was fine-tuned on a particular image collection is difficult: a model can absorb collection-level visual characteristics without reproducing training images. Proactive dataset-use auditing plants a shared signal…", "benefit": "Academic Research (ArXiv (cs.AI / cs.LG)): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-23", "title": "Pennsylvania will require labels on AI-generated ads", "url": "https://www.theverge.com/ai-artificial-intelligence/1018187/pennsylvania-ai-deceptive-advertising-act", "source": "The Verge AI", "pub_domain": "theverge.com", "category": "Tech & AI News", "published_at": "Recent", "score": 65, "cfo_score": 65, "audit_score": 65, "fpa_score": 73, "tier": "General AI & Research", "func_tag": "⚖️ AI Transparency Law", "summary": "", "benefit": "Global AI Regulation (The Verge AI): Tracks mandatory disclosure and watermarking laws for AI-generated commercial communications.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-11", "title": "EvalResearchBench: Can AI Agents Build Their Own Feedback for Recursive Self-Improvement?", "url": "https://huggingface.co/papers/2610.04184", "source": "HF Daily Papers", "pub_domain": "huggingface.co", "category": "Research Papers", "published_at": "2026-10-16", "score": 62, "cfo_score": 62, "audit_score": 62, "fpa_score": 70, "tier": "General AI & Research", "func_tag": "🔬 Reasoning & Eval Paper", "summary": "[2 upvotes] Recursive self-improvement (RSI) relies on evaluation feedback to assess progress and guide further research, yet repeatedly running complex benchmarks is costly and slows iteration. Human experts reduce this cost by selecting benchmark subsets or designing compact suites. We…", "benefit": "Reasoning Benchmark (HF Daily Papers): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-15", "title": "Direct Pass@k Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning", "url": "https://arxiv.org/abs/2610.31667v1", "source": "ArXiv (cs.AI / cs.LG)", "pub_domain": "arxiv.org", "category": "Research Papers", "published_at": "2026-10-22", "score": 62, "cfo_score": 62, "audit_score": 62, "fpa_score": 70, "tier": "General AI & Research", "func_tag": "🔬 Reasoning & Eval Paper", "summary": "Test-time scaling has emerged as a key inference strategy for reasoning models, where a model generates a large number of candidate solutions in the hope of finding at least one correct solution. Running all candidate solutions to completion can be…", "benefit": "Reasoning Benchmark (ArXiv (cs.AI / cs.LG)): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-12", "title": "Diffusion Language Models Change Speed Across Tasks and Languages", "url": "https://huggingface.co/papers/2610.25835", "source": "HF Daily Papers", "pub_domain": "huggingface.co", "category": "Research Papers", "published_at": "2026-10-19", "score": 60, "cfo_score": 60, "audit_score": 60, "fpa_score": 68, "tier": "General AI & Research", "func_tag": "🔬 Model Efficiency Paper", "summary": "[3 upvotes] Diffusion language models can write several tokens in one forward pass, and they decide during generation how many passes to spend. Two outputs of the same token length can therefore vary a lot in cost. To understand the underlying factors of this cost variation, we analyze two…", "benefit": "Inference Efficiency (HF Daily Papers): Explores quantization and token-generation speed to reduce enterprise LLM compute costs.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-13", "title": "Different Tasks, Different Timesteps: Temporal Task-Aware Quantization for Diffusion Language Models", "url": "https://huggingface.co/papers/2610.31198", "source": "HF Daily Papers", "pub_domain": "huggingface.co", "category": "Research Papers", "published_at": "2026-10-22", "score": 60, "cfo_score": 60, "audit_score": 60, "fpa_score": 68, "tier": "General AI & Research", "func_tag": "🔬 Model Efficiency Paper", "summary": "[15 upvotes] Diffusion Language Models (DLMs) introduce unique quantization challenges due to their iterative denoising process. In this work, we reveal that quantization sensitivity is both taskand time-dependent, with different downstream tasks exhibiting distinct precision requirements…", "benefit": "Inference Efficiency (HF Daily Papers): Explores quantization and token-generation speed to reduce enterprise LLM compute costs.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-9", "title": "TARSphere: A Robot-Oriented Full-Stack Framework for Long-Horizon Embodied Agents in Evolving Physical and Social Environments", "url": "https://huggingface.co/papers/2610.30043", "source": "HF Daily Papers", "pub_domain": "huggingface.co", "category": "Research Papers", "published_at": "2026-10-21", "score": 56, "cfo_score": 56, "audit_score": 56, "fpa_score": 64, "tier": "General AI & Research", "func_tag": "🔬 Research Paper", "summary": "[2 upvotes] Robots must act under physical and social constraints while adapting to changes in their environment and human needs. Existing embodied-agent systems often focus on specified goals or abstract execution into symbolic actions, limiting evaluation in an evolving world. We…", "benefit": "Technical Research (HF Daily Papers): Early-stage academic research into foundation model architecture and alignment.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-14", "title": "Sensorimotor Alignment: A Platonic Proxy for Embodied Policy Success", "url": "https://arxiv.org/abs/2610.31670v1", "source": "ArXiv (cs.AI / cs.LG)", "pub_domain": "arxiv.org", "category": "Research Papers", "published_at": "2026-10-22", "score": 56, "cfo_score": 56, "audit_score": 56, "fpa_score": 64, "tier": "General AI & Research", "func_tag": "🔬 Research Paper", "summary": "Robotic foundation models are typically evaluated through costly closed-loop rollouts, which motivates cheap offline proxies for model capability. The Platonic Representation Hypothesis (PRH) suggests that as representations improve, different modalities…", "benefit": "Technical Research (ArXiv (cs.AI / cs.LG)): Early-stage academic research into foundation model architecture and alignment.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-16", "title": "Phase Transition from Random Features to Fully Trainable Networks", "url": "https://arxiv.org/abs/2610.31663v1", "source": "ArXiv (cs.AI / cs.LG)", "pub_domain": "arxiv.org", "category": "Research Papers", "published_at": "2026-10-22", "score": 56, "cfo_score": 56, "audit_score": 56, "fpa_score": 64, "tier": "General AI & Research", "func_tag": "🔬 Research Paper", "summary": "Constructing accurate and computationally tractable approximation spaces is a fundamental task in scientific computing. Partially trainable neural networks bridge fixed random features and fully adaptive representations. This paper quantifies a phase…", "benefit": "Technical Research (ArXiv (cs.AI / cs.LG)): Early-stage academic research into foundation model architecture and alignment.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-28", "title": "Increasing number of UG authors in A* conferences with no supervisor [D]", "url": "https://www.reddit.com/r/MachineLearning/comments/1xe9uoh/increasing_number_of_ug_authors_in_a_conferences/", "source": "r/MachineLearning", "pub_domain": "reddit.com", "category": "Hacker News & Reddit", "published_at": "Recent", "score": 50, "cfo_score": 50, "audit_score": 50, "fpa_score": 58, "tier": "General AI & Research", "func_tag": "💬 Community Pulse", "summary": "", "benefit": "Practitioner Discussion (r/MachineLearning): Highlights community engineering insights and practical experimentation.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-29", "title": "Got a pretrained music transformer to jam with me live, no fine-tuning, just steering the sampling [P]", "url": "https://www.reddit.com/r/MachineLearning/comments/1xe4pex/got_a_pretrained_music_transformer_to_jam_with_me/", "source": "r/MachineLearning", "pub_domain": "reddit.com", "category": "Hacker News & Reddit", "published_at": "Recent", "score": 50, "cfo_score": 50, "audit_score": 50, "fpa_score": 58, "tier": "General AI & Research", "func_tag": "💬 Community Pulse", "summary": "", "benefit": "Practitioner Discussion (r/MachineLearning): Highlights community engineering insights and practical experimentation.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-19", "title": "Southeast Asia’s digital economy to hit $368 billion", "url": "https://blog.google/company-news/inside-google/around-the-globe/google-asia/e-conomy-sea-report-2026/", "source": "Google AI & DeepMind Blog", "pub_domain": "blog.google", "category": "AI Labs & Blogs", "published_at": "2026-10-21 04:00 UTC", "score": 48, "cfo_score": 48, "audit_score": 48, "fpa_score": 56, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "Widespread AI adoption is propelling Southeast Asia's digital economy to a projected $368 billion in 2026 and $1 trillion by 2035.", "benefit": "General Industry Coverage (Google AI & DeepMind Blog): Keeps teams aware of broader consumer and technology developments.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-22", "title": "Intel gets waiver after worries fuzzy US ban on foreign-made robots may hit fabs", "url": "https://arstechnica.com/ai/2026/10/intel-gets-waiver-after-worries-fuzzy-us-ban-on-foreign-made-robots-may-hit-fabs/", "source": "Ars Technica AI", "pub_domain": "arstechnica.com", "category": "Tech & AI News", "published_at": "2026-10-23 17:18 UTC", "score": 48, "cfo_score": 48, "audit_score": 48, "fpa_score": 56, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "Company says foreign-made robotic vehicles are crucial to US chip production.", "benefit": "General Industry Coverage (Ars Technica AI): Keeps teams aware of broader consumer and technology developments.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-24", "title": "Jack Dorsey’s Block made an AI model that talks to you like an awkward new friend", "url": "https://www.theverge.com/ai-artificial-intelligence/1017906/jack-dorsey-block-dessa-ai-voice-speech", "source": "The Verge AI", "pub_domain": "theverge.com", "category": "Tech & AI News", "published_at": "Recent", "score": 48, "cfo_score": 48, "audit_score": 48, "fpa_score": 56, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "", "benefit": "General Industry Coverage (The Verge AI): Keeps teams aware of broader consumer and technology developments.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-25", "title": "The iPhone Duo should have been an iPad", "url": "https://www.theverge.com/podcast/1017447/iphone-duo-ipad-review-score-vergecast", "source": "The Verge AI", "pub_domain": "theverge.com", "category": "Tech & AI News", "published_at": "Recent", "score": 48, "cfo_score": 48, "audit_score": 48, "fpa_score": 56, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "", "benefit": "General Industry Coverage (The Verge AI): Keeps teams aware of broader consumer and technology developments.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}, {"id": "item-26", "title": "LitPivot: Developing research ideas through dynamic contextualization within the literature landscape", "url": "https://huggingface.co/blog/allenai/litpivot", "source": "Hugging Face Blog", "pub_domain": "huggingface.co", "category": "AI Labs & Blogs", "published_at": "2026-10-23 16:15 UTC", "score": 48, "cfo_score": 48, "audit_score": 48, "fpa_score": 56, "tier": "General AI & Research", "func_tag": "🌐 Tech & AI News", "summary": "", "benefit": "General Industry Coverage (Hugging Face Blog): Keeps teams aware of broader consumer and technology developments.", "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.", "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."}];
     const ITEM_MAP = new Map(ITEMS.map(it => [it.id, it]));
     let currentFilter = 'all';
+    let currentLens = 'default';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
+    let activeDrawerId = null;
+    let currentDisplayedIds = [];
     let revealObserver = null;
 
     function escapeHtml(str) {
@@ -991,6 +1272,21 @@
       t.classList.add('show');
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    function getActiveScore(item) {
+      if (currentLens === 'cfo') return item.cfo_score || item.score;
+      if (currentLens === 'audit') return item.audit_score || item.score;
+      if (currentLens === 'fpa') return item.fpa_score || item.score;
+      return item.score;
+    }
+
+    function getSortedItems() {
+      return [...ITEMS].sort((a, b) => getActiveScore(b) - getActiveScore(a));
+    }
+
+    function faviconUrl(domain) {
+      return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain || 'ukfinance.org.uk')}&sz=32`;
     }
 
     function formatRelativeTime(pubStr) {
@@ -1058,6 +1354,78 @@
       }
     }
 
+    function openDrawer(id, ev) {
+      if (ev && (ev.target.closest('a') || ev.target.closest('button.icon-btn'))) return;
+      const item = ITEM_MAP.get(id);
+      if (!item) return;
+      activeDrawerId = id;
+      const effScore = getActiveScore(item);
+      document.getElementById('drawerBadge').textContent = `${item.func_tag} · Priority ${effScore}/100`;
+      document.getElementById('drawerReadLink').href = item.url;
+
+      const summaryBlock = item.summary
+        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--blue-text);">📰 Article Summary</div><p class="drawer-sec-text">${escapeHtml(item.summary)}</p></div>`
+        : '';
+
+      document.getElementById('drawerBody').innerHTML = `
+        <div class="tag-group">
+          <span class="pub-pill">
+            <img class="pub-favicon" src="${faviconUrl(item.pub_domain)}" alt="" loading="lazy" />
+            ${escapeHtml(item.source)}
+          </span>
+          <span class="pub-pill">${escapeHtml(item.category)}</span>
+        </div>
+        <h2 class="drawer-title">${escapeHtml(item.title)}</h2>
+        <div class="drawer-meta">Published ${escapeHtml(formatRelativeTime(item.published_at))} (${escapeHtml(item.published_at)})</div>
+        ${summaryBlock}
+        <div class="drawer-section">
+          <div class="drawer-sec-title" style="color:var(--gold-text);">🎯 UK CFO & Strategic Impact</div>
+          <p class="drawer-sec-text">${escapeHtml(item.benefit)}</p>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-sec-title" style="color:var(--emerald-text);">🛡️ Audit, Risk & FCA Governance Angle</div>
+          <p class="drawer-sec-text">${escapeHtml(item.risk_angle)}</p>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-sec-title" style="color:var(--blue-text);">✅ Recommended Action for UK Finance Team</div>
+          <p class="drawer-sec-text">${escapeHtml(item.action_item)}</p>
+        </div>
+      `;
+
+      document.getElementById('drawerBackdrop').classList.add('open');
+      document.getElementById('drawerPanel').classList.add('open');
+    }
+
+    function closeDrawer() {
+      activeDrawerId = null;
+      document.getElementById('drawerBackdrop').classList.remove('open');
+      document.getElementById('drawerPanel').classList.remove('open');
+    }
+
+    function stepDrawer(delta) {
+      if (!activeDrawerId || !currentDisplayedIds.length) return;
+      const idx = currentDisplayedIds.indexOf(activeDrawerId);
+      if (idx === -1) return;
+      const nextIdx = (idx + delta + currentDisplayedIds.length) % currentDisplayedIds.length;
+      openDrawer(currentDisplayedIds[nextIdx]);
+    }
+
+    function setRoleLens(lens, btn) {
+      currentLens = lens;
+      document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const labels = {
+        default: '⚡ 60-Second UK Finance Morning Brief — Top 3 Today',
+        cfo: '👔 CFO & Strategy Lens — Top 3 Strategic Priorities',
+        audit: '🛡️ Audit, Risk & FCA Lens — Top 3 Governance Priorities',
+        fpa: '📊 FP&A & Systems Lens — Top 3 Automation & Model Priorities'
+      };
+      document.getElementById('heroTitle').textContent = labels[lens] || labels.default;
+      renderHero();
+      renderMain();
+      showToast(`Switched view to ${btn ? btn.textContent.trim() : lens}`);
+    }
+
     function setupScrollReveal() {
       if (revealObserver) revealObserver.disconnect();
       const cards = document.querySelectorAll('.news-card');
@@ -1091,7 +1459,8 @@
     }
 
     function renderHero() {
-      const top3 = ITEMS.filter(i => i.score >= 85).slice(0, 3);
+      const sorted = getSortedItems();
+      const top3 = sorted.slice(0, 3);
       const heroSec = document.getElementById('heroSection');
       const heroGrid = document.getElementById('heroGrid');
       if (!top3.length || currentFilter !== 'all') {
@@ -1102,13 +1471,17 @@
 
       heroGrid.innerHTML = top3.map((item, idx) => {
         const isSaved = savedUrls.has(item.url);
+        const effScore = getActiveScore(item);
         return `
-          <article class="hero-card">
+          <article class="hero-card" onclick="openDrawer('${item.id}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
-                  <span class="rank-pill">#${idx + 1} PRIORITY</span>
-                  <span class="pub-pill">${escapeHtml(item.source)}</span>
+                  <span class="rank-pill">#${idx + 1} · ${effScore}/100</span>
+                  <span class="pub-pill">
+                    <img class="pub-favicon" src="${faviconUrl(item.pub_domain)}" alt="" loading="lazy" />
+                    ${escapeHtml(item.source)}
+                  </span>
                 </div>
                 <div class="card-actions">
                   <button class="icon-btn" title="Copy story link" onclick="shareById('${item.id}', event)">🔗</button>
@@ -1124,7 +1497,7 @@
             </div>
             <div class="card-footer">
               <span>${escapeHtml(item.func_tag)} · <span title="${escapeHtml(item.published_at)}">${escapeHtml(formatRelativeTime(item.published_at))}</span></span>
-              <a class="read-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Read <span class="arrow">→</span></a>
+              <span class="read-link">Quick Brief <span class="arrow">→</span></span>
             </div>
           </article>
         `;
@@ -1161,8 +1534,9 @@
     function renderMain() {
       const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
       const container = document.getElementById('mainContainer');
+      const sorted = getSortedItems();
 
-      const filtered = ITEMS.filter(item => {
+      const filtered = sorted.filter(item => {
         if (currentFilter === 'high' && item.score < 85) return false;
         if (currentFilter === 'ops' && (item.score < 70 || item.score >= 85)) return false;
         if (currentFilter === 'general' && item.score >= 70) return false;
@@ -1173,6 +1547,8 @@
         }
         return true;
       });
+
+      currentDisplayedIds = filtered.map(i => i.id);
 
       if (!filtered.length) {
         container.className = '';
@@ -1197,20 +1573,26 @@
             <tbody>
               ${filtered.map(item => {
                 const isSaved = savedUrls.has(item.url);
+                const effScore = getActiveScore(item);
                 return `
-                  <tr>
+                  <tr onclick="openDrawer('${item.id}', event)">
                     <td>
                       <button class="icon-btn ${isSaved ? 'saved' : ''}" onclick="toggleSaveById('${item.id}', event)">
                         ${isSaved ? '⭐' : '☆'}
                       </button>
                     </td>
-                    <td><span class="badge ${badgeClass(item.score)}">${escapeHtml(item.func_tag)}</span></td>
+                    <td><span class="badge ${badgeClass(effScore)}">${escapeHtml(item.func_tag)}</span></td>
                     <td>
                       <a class="compact-headline" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
                       <div class="compact-takeaway">${escapeHtml(item.benefit)}</div>
                     </td>
-                    <td class="compact-hide-mobile"><span class="pub-pill">${escapeHtml(item.source)}</span></td>
-                    <td class="compact-hide-mobile"><strong>${item.score}</strong>/100</td>
+                    <td class="compact-hide-mobile">
+                      <span class="pub-pill">
+                        <img class="pub-favicon" src="${faviconUrl(item.pub_domain)}" alt="" loading="lazy" />
+                        ${escapeHtml(item.source)}
+                      </span>
+                    </td>
+                    <td class="compact-hide-mobile"><strong>${effScore}</strong>/100</td>
                     <td style="white-space:nowrap;" title="${escapeHtml(item.published_at)}">${escapeHtml(formatRelativeTime(item.published_at))}</td>
                   </tr>
                 `;
@@ -1224,16 +1606,20 @@
       container.className = 'cards-grid';
       container.innerHTML = filtered.map(item => {
         const isSaved = savedUrls.has(item.url);
+        const effScore = getActiveScore(item);
         const summaryHtml = item.summary
           ? `<p class="card-summary">${escapeHtml(item.summary)}</p>`
           : '';
         return `
-          <article class="news-card">
+          <article class="news-card" onclick="openDrawer('${item.id}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
-                  <span class="badge ${badgeClass(item.score)}">${escapeHtml(item.func_tag)}</span>
-                  <span class="pub-pill">${escapeHtml(item.source)}</span>
+                  <span class="badge ${badgeClass(effScore)}">${escapeHtml(item.func_tag)}</span>
+                  <span class="pub-pill">
+                    <img class="pub-favicon" src="${faviconUrl(item.pub_domain)}" alt="" loading="lazy" />
+                    ${escapeHtml(item.source)}
+                  </span>
                 </div>
                 <div class="card-actions">
                   <button class="icon-btn" title="Share / copy link" onclick="shareById('${item.id}', event)">🔗</button>
@@ -1248,19 +1634,22 @@
               ${summaryHtml}
             </div>
             <div>
-              <div class="benefit-box ${boxClass(item.score)}">
+              <div class="benefit-box ${boxClass(effScore)}">
                 <div class="benefit-header">
                   <span class="benefit-label">🇬🇧 UK Finance Team Takeaway</span>
                   <span class="score-meter-wrap">
-                    <span>${item.score}/100</span>
-                    <span class="score-bar"><span class="score-fill" style="width:${item.score}%"></span></span>
+                    <span>${effScore}/100</span>
+                    <span class="score-bar"><span class="score-fill" style="width:${effScore}%"></span></span>
                   </span>
                 </div>
                 ${escapeHtml(item.benefit)}
               </div>
               <div class="card-footer">
                 <span title="${escapeHtml(item.published_at)}">${escapeHtml(formatRelativeTime(item.published_at))}</span>
-                <a class="read-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Read article <span class="arrow">→</span></a>
+                <div class="footer-links">
+                  <button class="quick-brief-btn" onclick="openDrawer('${item.id}', event)">⚡ Quick Brief</button>
+                  <a class="read-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Source <span class="arrow">↗</span></a>
+                </div>
               </div>
             </div>
           </article>
@@ -1287,7 +1676,7 @@
     }
 
     function copyTeamBriefing() {
-      const top5 = ITEMS.slice(0, 5);
+      const top5 = getSortedItems().slice(0, 5);
       const lines = [
         `🇬🇧💷 *UK Finance & AI Morning Briefing (October 24, 2026)*`,
         `📊 Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
@@ -1320,6 +1709,18 @@
     }, { passive: true });
 
     window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && activeDrawerId) {
+        closeDrawer();
+        return;
+      }
+      if (activeDrawerId && e.key === 'ArrowRight') {
+        stepDrawer(1);
+        return;
+      }
+      if (activeDrawerId && e.key === 'ArrowLeft') {
+        stepDrawer(-1);
+        return;
+      }
       if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
         e.preventDefault();
         document.getElementById('searchInput').focus();
