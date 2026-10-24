@@ -1,6 +1,6 @@
 [
   {
-    "id": "item-30",
+    "id": "item-27",
     "title": "AI adoption and regulation: the latest FCA view",
     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNaU1ZRE5WNzc2QjkySmpoQndVX3lVMjMtMUxxejhCdEZpVzJIZEo3d1NYSDk2cVZqbHdkZjNNaENkNGlEN3NwRW5LdnA2aGRTUm9fQkZPbHo1MFY0NGl2ZVl5NHNaZ21SbXgtM2YwU3JjZ19rN19lVTFSOGFfcTVNQ1N4RGc2RU9fZ3U5TkZMVFQ0eFhIV21JWQ?oc=5",
     "source": "Deloitte",
@@ -13,7 +13,7 @@
     "benefit": "Regulatory Guidance (Deloitte): Essential reading for UK finance and compliance teams aligning AI governance, explainability, and risk controls with FCA expectations."
   },
   {
-    "id": "item-34",
+    "id": "item-30",
     "title": "U.K. FCA Draft Flags Rigid Crypto Tracing Limits Without Risk Measures",
     "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaU1BuLVFlbE1sRC10dlJYTE9vckxsdnltUzZIbXhmc2JlQmJXVDVzV1U2ZTVvUm4yR2hQaExvYi1MNXd1amQ5OEUyN2FxUmhrN054WDM0ZmVod2s?oc=5",
     "source": "TOKENPOST",
@@ -26,46 +26,7 @@
     "benefit": "Regulatory Guidance (TOKENPOST): Essential reading for UK finance and compliance teams aligning AI governance, explainability, and risk controls with FCA expectations."
   },
   {
-    "id": "item-21",
-    "title": "Reliable AI-Assisted Decisions via Selective Auditing",
-    "url": "http://arxiv.org/abs/2610.31662v1",
-    "source": "ArXiv (cs.AI / cs.LG)",
-    "category": "Research Papers",
-    "published_at": "2026-10-22",
-    "score": 96,
-    "tier": "High UK Finance Impact",
-    "func_tag": "🛡️ Audit & Assurance",
-    "summary": "We consider online monitoring of an AI system that produces a sequence of decisions. At each round, the system outputs a proposed decision together with a confidence score estimating the trustworthiness of the decision. The decision and confidence score need…",
-    "benefit": "AI Assurance & Controls (ArXiv (cs.AI / cs.LG)): Practical framework for using SOC reporting, independent attestation, and selective auditing to verify AI outputs in financial workflows."
-  },
-  {
-    "id": "item-22",
-    "title": "SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing",
-    "url": "http://arxiv.org/abs/2610.31659v1",
-    "source": "ArXiv (cs.AI / cs.LG)",
-    "category": "Research Papers",
-    "published_at": "2026-10-22",
-    "score": 96,
-    "tier": "High UK Finance Impact",
-    "func_tag": "🛡️ Audit & Assurance",
-    "summary": "Auditing whether a text-to-image (T2I) model was fine-tuned on a particular image collection is difficult: a model can absorb collection-level visual characteristics without reproducing training images. Proactive dataset-use auditing plants a shared signal…",
-    "benefit": "AI Assurance & Controls (ArXiv (cs.AI / cs.LG)): Practical framework for using SOC reporting, independent attestation, and selective auditing to verify AI outputs in financial workflows."
-  },
-  {
-    "id": "item-31",
-    "title": "AI’s biggest challenge in banking isn’t technology alone",
-    "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNakJ2dmRBMGxDbDVqb25JaUJaVmZFanducE1tNXB1ODM0SkpUU1YteWt1SjRjQWZWTVkxUnhBYm5fLWxWNEFxUUR6Yjk3MnpvNFlmNTJ0R09OaGVhSkYzY0JyQ2kxaHlfV2N5U00yVDAxcWVZbjV5Y2wxUjR2YXZ3cDJrclpVT0o5VDNsWHZxQXZrQjZISlpNc2d6M3ZERE1GSDltTmhWZGg?oc=5",
-    "source": "UK Finance",
-    "category": "UK Finance & CFO AI",
-    "published_at": "2026-10-22 10:16 UTC",
-    "score": 96,
-    "tier": "High UK Finance Impact",
-    "func_tag": "📈 CFO & Strategy",
-    "summary": "",
-    "benefit": "CFO & Finance Operations (UK Finance): Directly applicable to UK finance leaders prioritising ROI, month-end automation, and team upskilling."
-  },
-  {
-    "id": "item-35",
+    "id": "item-23",
     "title": "82% of UK and Irish Finance Leaders Feel Pressured to Adopt AI Faster Than They Are Comfortable With",
     "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNc0dOWmFZX2wzVTByazBEa0VySmFTMkhoblg5MF9tS0lYa2JhQzlWbXBmc3E4QW5UM0I0M2Q0RnduZUhiM0VGNkdQSXdVWFhWTlBxRVVtb19JbVlfVHVrQ21Vb1pRbEgwSkg1VGtGT3hCOXcwdWhxY3VHcE1VaEdwNDk4OTdpZk5zWnJpVzk0VTU0dzZLQVp2NGQ4NnVkLWlpZHBLeGZGM2xHQWFWOHJlWElYalVGZlFsVXJWZ3ZnWXV0b0N4M2RMcjA4VG5TMUhsY3F4SkI4MkhRcEFwRVE?oc=5",
     "source": "Enterprise Times",
@@ -78,7 +39,7 @@
     "benefit": "CFO Benchmark (82% headline stat via Enterprise Times): Highlights the tension between rapid AI rollout pressure and the need for controlled, accurate finance workflows."
   },
   {
-    "id": "item-36",
+    "id": "item-24",
     "title": "UK finance leaders back AI but struggle to prove value",
     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQYlpCNUtrbzNuMVRPc2Q0azR1QlZua3IzOHBkcGxVeWw5NVRSSFc5cl9YVS1oODdYWTRCQlF2aDFCdmdsVXFISFB0d1EzX2JiQ3NDd284LUhXakxrem9sNXlmTjlFUWR1amdjOTdIcGtrVktvYk9PdHA1RTJrZE10UHhCSGRMRGVUOHc?oc=5",
     "source": "IT Brief UK",
@@ -91,7 +52,7 @@
     "benefit": "CFO & Finance Operations (IT Brief UK): Directly applicable to UK finance leaders prioritising ROI, month-end automation, and team upskilling."
   },
   {
-    "id": "item-37",
+    "id": "item-26",
     "title": "Barclays: AI-Driven Job Cuts And Overdone Bank Tax Fears (NYSE:BCS)",
     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNVm5ZZUFkeXFQeDR3MHlOMF95SXpsMGVUb2c2UUN0bmNSbHNxeGNyZ0doUkJNMFR0MDNZbVg0ZXQxZjlDc20waElmYUNxOTAxdmJwSENtWlIwcVNOMUl0SVZtSGxMU2ZaQlRMUkRsbGhZcWJfcFhTSl95UTB6T3RTQUZtTlVNVzlJSC1UT2N2ZXZBZ3V6WS1PRW5qaEQ?oc=5",
     "source": "Seeking Alpha",
@@ -104,20 +65,46 @@
     "benefit": "CFO & Finance Operations (Seeking Alpha): Directly applicable to UK finance leaders prioritising ROI, month-end automation, and team upskilling."
   },
   {
-    "id": "item-32",
-    "title": "Chief Ethics and Compliance Officer Survey 2026",
-    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOeU8wWmNMcElybGV6M2FlNk0wWFQxclh6WTNYMmZtNS1HWXBLckxKOEN2SkFrTkRpWmxQekFVa3V6RFp6MlM5QTdHeDF4cGVJZzk4eG91WVlPV1JUZHR5NXhxa29uc3Rfa21kd0NUMFd6cnBwVXRXeGZ6OXhDdno2RA?oc=5",
-    "source": "KPMG International",
+    "id": "item-28",
+    "title": "AI’s biggest challenge in banking isn’t technology alone",
+    "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNakJ2dmRBMGxDbDVqb25JaUJaVmZFanducE1tNXB1ODM0SkpUU1YteWt1SjRjQWZWTVkxUnhBYm5fLWxWNEFxUUR6Yjk3MnpvNFlmNTJ0R09OaGVhSkYzY0JyQ2kxaHlfV2N5U00yVDAxcWVZbjV5Y2wxUjR2YXZ3cDJrclpVT0o5VDNsWHZxQXZrQjZISlpNc2d6M3ZERE1GSDltTmhWZGg?oc=5",
+    "source": "UK Finance",
     "category": "UK Finance & CFO AI",
-    "published_at": "2026-10-23 22:54 UTC",
-    "score": 94,
+    "published_at": "2026-10-22 10:16 UTC",
+    "score": 96,
     "tier": "High UK Finance Impact",
-    "func_tag": "🛡️ Audit & Big Four",
+    "func_tag": "📈 CFO & Strategy",
     "summary": "",
-    "benefit": "Audit Practice Benchmark (KPMG International): Tracks how internal audit teams and Big Four advisors are adopting AI for risk testing, sampling, and control validation."
+    "benefit": "CFO & Finance Operations (UK Finance): Directly applicable to UK finance leaders prioritising ROI, month-end automation, and team upskilling."
   },
   {
-    "id": "item-33",
+    "id": "item-34",
+    "title": "Reliable AI-Assisted Decisions via Selective Auditing",
+    "url": "http://arxiv.org/abs/2610.31662v1",
+    "source": "ArXiv (cs.AI / cs.LG)",
+    "category": "Research Papers",
+    "published_at": "2026-10-22",
+    "score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "🛡️ Audit & Assurance",
+    "summary": "We consider online monitoring of an AI system that produces a sequence of decisions. At each round, the system outputs a proposed decision together with a confidence score estimating the trustworthiness of the decision. The decision and confidence score need…",
+    "benefit": "AI Assurance & Controls (ArXiv (cs.AI / cs.LG)): Practical framework for using SOC reporting, independent attestation, and selective auditing to verify AI outputs in financial workflows."
+  },
+  {
+    "id": "item-35",
+    "title": "SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing",
+    "url": "http://arxiv.org/abs/2610.31659v1",
+    "source": "ArXiv (cs.AI / cs.LG)",
+    "category": "Research Papers",
+    "published_at": "2026-10-22",
+    "score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "🛡️ Audit & Assurance",
+    "summary": "Auditing whether a text-to-image (T2I) model was fine-tuned on a particular image collection is difficult: a model can absorb collection-level visual characteristics without reproducing training images. Proactive dataset-use auditing plants a shared signal…",
+    "benefit": "AI Assurance & Controls (ArXiv (cs.AI / cs.LG)): Practical framework for using SOC reporting, independent attestation, and selective auditing to verify AI outputs in financial workflows."
+  },
+  {
+    "id": "item-25",
     "title": "Friday Footnotes: Internal Auditors Are All In on AI; KPMG Australia Takes a Few More Ls | 10.23.26",
     "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPQm0tNEN0OXN2MVRwalduendpSUx5T1liWWhLcGZObkVlTU5lb21qd1o5SlA3WVFpRGpsMXp1Q1prUWZvV3lkajlzRDNXRklJUUxMZ3d0OXpjRW1ZYUYwVVZwRE52a1E5anR0N21lQmo2Y2JEQkhCZ05mYm5PemZKZ3VmNVZMSUl4QnhWU3VabkxoV0puaW41WklYdTBoUnNJbWJhZ0xaZkhqdWdxZmljUGEyVU02UEpDbW1aWmUxdFY4bUE?oc=5",
     "source": "Going Concern",
@@ -128,6 +115,19 @@
     "func_tag": "🛡️ Audit & Big Four",
     "summary": "",
     "benefit": "Audit Practice Benchmark (Going Concern): Tracks how internal audit teams and Big Four advisors are adopting AI for risk testing, sampling, and control validation."
+  },
+  {
+    "id": "item-29",
+    "title": "Chief Ethics and Compliance Officer Survey 2026",
+    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOeU8wWmNMcElybGV6M2FlNk0wWFQxclh6WTNYMmZtNS1HWXBLckxKOEN2SkFrTkRpWmxQekFVa3V6RFp6MlM5QTdHeDF4cGVJZzk4eG91WVlPV1JUZHR5NXhxa29uc3Rfa21kd0NUMFd6cnBwVXRXeGZ6OXhDdno2RA?oc=5",
+    "source": "KPMG International",
+    "category": "UK Finance & CFO AI",
+    "published_at": "2026-10-23 22:54 UTC",
+    "score": 94,
+    "tier": "High UK Finance Impact",
+    "func_tag": "🛡️ Audit & Big Four",
+    "summary": "",
+    "benefit": "Audit Practice Benchmark (KPMG International): Tracks how internal audit teams and Big Four advisors are adopting AI for risk testing, sampling, and control validation."
   },
   {
     "id": "item-1",
@@ -195,7 +195,7 @@
     "benefit": "Data Governance Alert (MIT Technology Review AI): Important context for finance teams evaluating model containment, cloud privacy settings, and protecting confidential financial data."
   },
   {
-    "id": "item-26",
+    "id": "item-19",
     "title": "The LLM-Attacker: A Unified Red-Team Framework for Privacy Evaluation of Split and Distributed LLM Systems",
     "url": "https://huggingface.co/papers/2610.22722",
     "source": "HF Daily Papers",
@@ -273,20 +273,7 @@
     "benefit": "Enterprise AI Infrastructure (MIT Technology Review AI): Demonstrates how production AI harnesses, local models, and messaging agents are maturing for day-to-day business workflows."
   },
   {
-    "id": "item-19",
-    "title": "Direct Pass@$k$ Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning",
-    "url": "http://arxiv.org/abs/2610.31667v1",
-    "source": "ArXiv (cs.AI / cs.LG)",
-    "category": "Research Papers",
-    "published_at": "2026-10-22",
-    "score": 78,
-    "tier": "Finance Ops & Productivity",
-    "func_tag": "🤖 AI Agents & Ops",
-    "summary": "Test-time scaling has emerged as a key inference strategy for reasoning models, where a model generates a large number of candidate solutions in the hope of finding at least one correct solution. Running all candidate solutions to completion can be…",
-    "benefit": "Enterprise AI Infrastructure (ArXiv (cs.AI / cs.LG)): Demonstrates how production AI harnesses, local models, and messaging agents are maturing for day-to-day business workflows."
-  },
-  {
-    "id": "item-25",
+    "id": "item-18",
     "title": "TARSphere: A Robot-Oriented Full-Stack Framework for Long-Horizon Embodied Agents in Evolving Physical and Social Environments",
     "url": "https://huggingface.co/papers/2610.30043",
     "source": "HF Daily Papers",
@@ -299,7 +286,7 @@
     "benefit": "Enterprise AI Infrastructure (HF Daily Papers): Demonstrates how production AI harnesses, local models, and messaging agents are maturing for day-to-day business workflows."
   },
   {
-    "id": "item-27",
+    "id": "item-20",
     "title": "EvalResearchBench: Can AI Agents Build Their Own Feedback for Recursive Self-Improvement?",
     "url": "https://huggingface.co/papers/2610.04184",
     "source": "HF Daily Papers",
@@ -310,6 +297,19 @@
     "func_tag": "🤖 AI Agents & Ops",
     "summary": "[2 upvotes] Recursive self-improvement (RSI) relies on evaluation feedback to assess progress and guide further research, yet repeatedly running complex benchmarks is costly and slows iteration. Human experts reduce this cost by selecting benchmark subsets or designing compact suites. We…",
     "benefit": "Enterprise AI Infrastructure (HF Daily Papers): Demonstrates how production AI harnesses, local models, and messaging agents are maturing for day-to-day business workflows."
+  },
+  {
+    "id": "item-32",
+    "title": "Direct Pass@$k$ Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning",
+    "url": "http://arxiv.org/abs/2610.31667v1",
+    "source": "ArXiv (cs.AI / cs.LG)",
+    "category": "Research Papers",
+    "published_at": "2026-10-22",
+    "score": 78,
+    "tier": "Finance Ops & Productivity",
+    "func_tag": "🤖 AI Agents & Ops",
+    "summary": "Test-time scaling has emerged as a key inference strategy for reasoning models, where a model generates a large number of candidate solutions in the hope of finding at least one correct solution. Running all candidate solutions to completion can be…",
+    "benefit": "Enterprise AI Infrastructure (ArXiv (cs.AI / cs.LG)): Demonstrates how production AI harnesses, local models, and messaging agents are maturing for day-to-day business workflows."
   },
   {
     "id": "item-5",
@@ -351,7 +351,7 @@
     "benefit": "Model Capability Update (Hugging Face Blog): Tracks frontier model releases, reliability, and compute economics that underpin enterprise copilot and analytics tools."
   },
   {
-    "id": "item-23",
+    "id": "item-36",
     "title": "Southeast Asia’s digital economy to hit $368 billion",
     "url": "https://blog.google/company-news/inside-google/around-the-globe/google-asia/e-conomy-sea-report-2026/",
     "source": "Google AI & DeepMind Blog",
@@ -364,7 +364,7 @@
     "benefit": "Model Capability Update (Google AI & DeepMind Blog): Tracks frontier model releases, reliability, and compute economics that underpin enterprise copilot and analytics tools."
   },
   {
-    "id": "item-24",
+    "id": "item-37",
     "title": "Gemini 4 Argon: Built to solve your hardest problems",
     "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
     "source": "Google AI & DeepMind Blog",
@@ -377,33 +377,7 @@
     "benefit": "Model Capability Update (Google AI & DeepMind Blog): Tracks frontier model releases, reliability, and compute economics that underpin enterprise copilot and analytics tools."
   },
   {
-    "id": "item-18",
-    "title": "Sensorimotor Alignment: A Platonic Proxy for Embodied Policy Success",
-    "url": "http://arxiv.org/abs/2610.31670v1",
-    "source": "ArXiv (cs.AI / cs.LG)",
-    "category": "Research Papers",
-    "published_at": "2026-10-22",
-    "score": 58,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Research Paper",
-    "summary": "Robotic foundation models are typically evaluated through costly closed-loop rollouts, which motivates cheap offline proxies for model capability. The Platonic Representation Hypothesis (PRH) suggests that as representations improve, different modalities…",
-    "benefit": "Early Research Signal (ArXiv (cs.AI / cs.LG)): Technical paper on model efficiency, reasoning, or evaluation benchmarks that will influence next-generation enterprise AI."
-  },
-  {
-    "id": "item-20",
-    "title": "Phase Transition from Random Features to Fully Trainable Networks",
-    "url": "http://arxiv.org/abs/2610.31663v1",
-    "source": "ArXiv (cs.AI / cs.LG)",
-    "category": "Research Papers",
-    "published_at": "2026-10-22",
-    "score": 58,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Research Paper",
-    "summary": "Constructing accurate and computationally tractable approximation spaces is a fundamental task in scientific computing. Partially trainable neural networks bridge fixed random features and fully adaptive representations. This paper quantifies a phase…",
-    "benefit": "Early Research Signal (ArXiv (cs.AI / cs.LG)): Technical paper on model efficiency, reasoning, or evaluation benchmarks that will influence next-generation enterprise AI."
-  },
-  {
-    "id": "item-28",
+    "id": "item-21",
     "title": "Diffusion Language Models Change Speed Across Tasks and Languages",
     "url": "https://huggingface.co/papers/2610.25835",
     "source": "HF Daily Papers",
@@ -416,7 +390,7 @@
     "benefit": "Early Research Signal (HF Daily Papers): Technical paper on model efficiency, reasoning, or evaluation benchmarks that will influence next-generation enterprise AI."
   },
   {
-    "id": "item-29",
+    "id": "item-22",
     "title": "Different Tasks, Different Timesteps: Temporal Task-Aware Quantization for Diffusion Language Models",
     "url": "https://huggingface.co/papers/2610.31198",
     "source": "HF Daily Papers",
@@ -427,6 +401,32 @@
     "func_tag": "🔬 Research Paper",
     "summary": "[15 upvotes] Diffusion Language Models (DLMs) introduce unique quantization challenges due to their iterative denoising process. In this work, we reveal that quantization sensitivity is both taskand time-dependent, with different downstream tasks exhibiting distinct precision requirements…",
     "benefit": "Early Research Signal (HF Daily Papers): Technical paper on model efficiency, reasoning, or evaluation benchmarks that will influence next-generation enterprise AI."
+  },
+  {
+    "id": "item-31",
+    "title": "Sensorimotor Alignment: A Platonic Proxy for Embodied Policy Success",
+    "url": "http://arxiv.org/abs/2610.31670v1",
+    "source": "ArXiv (cs.AI / cs.LG)",
+    "category": "Research Papers",
+    "published_at": "2026-10-22",
+    "score": 58,
+    "tier": "General AI & Research",
+    "func_tag": "🔬 Research Paper",
+    "summary": "Robotic foundation models are typically evaluated through costly closed-loop rollouts, which motivates cheap offline proxies for model capability. The Platonic Representation Hypothesis (PRH) suggests that as representations improve, different modalities…",
+    "benefit": "Early Research Signal (ArXiv (cs.AI / cs.LG)): Technical paper on model efficiency, reasoning, or evaluation benchmarks that will influence next-generation enterprise AI."
+  },
+  {
+    "id": "item-33",
+    "title": "Phase Transition from Random Features to Fully Trainable Networks",
+    "url": "http://arxiv.org/abs/2610.31663v1",
+    "source": "ArXiv (cs.AI / cs.LG)",
+    "category": "Research Papers",
+    "published_at": "2026-10-22",
+    "score": 58,
+    "tier": "General AI & Research",
+    "func_tag": "🔬 Research Paper",
+    "summary": "Constructing accurate and computationally tractable approximation spaces is a fundamental task in scientific computing. Partially trainable neural networks bridge fixed random features and fully adaptive representations. This paper quantifies a phase…",
+    "benefit": "Early Research Signal (ArXiv (cs.AI / cs.LG)): Technical paper on model efficiency, reasoning, or evaluation benchmarks that will influence next-generation enterprise AI."
   },
   {
     "id": "item-16",
