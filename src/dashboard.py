@@ -22,7 +22,7 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
     Returns (priority_score_0_to_100, priority_tier, func_tag, concise_summary, uk_finance_benefit).
     """
     title_l = item.title.lower()
-    text = f"{item.title} {item.summary} {item.source} {item.category}".lower()
+    text = f"{item.title} {item.summary}".lower()
 
     clean_summary = (item.summary or "").strip()
     if clean_summary and clean_summary.lower().startswith(title_l[:32]):
@@ -35,136 +35,266 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
     )
     stat_str = stat_match.group(1) if stat_match else ""
 
-    score = 45
-    tier = "General AI News"
-    func_tag = "🌐 Industry Update"
-    benefit = (
-        f"General awareness from {item.source}: tracks broader AI model and market "
-        f"developments that may flow into enterprise tools."
-    )
-
-    if item.category == "UK Finance & CFO AI":
-        score = 90
-        tier = "High UK Finance Impact"
-        func_tag = "🇬🇧 UK Finance"
-        benefit = (
-            f"Published by {item.source}: benchmarks how UK financial services and "
-            f"corporate finance teams are governing and deploying AI."
+    # 1. Research Papers & Community Discussions stay in the General AI & Research (<70) tier
+    if item.category == "Research Papers":
+        if "audit" in text or "privacy" in text or "trust" in text:
+            return (
+                66,
+                "General AI & Research",
+                "🔬 AI Governance Research",
+                clean_summary,
+                f"Academic Research ({item.source}): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.",
+            )
+        if "quantization" in text or "diffusion" in text or "speed" in text:
+            return (
+                60,
+                "General AI & Research",
+                "🔬 Model Efficiency Paper",
+                clean_summary,
+                f"Inference Efficiency ({item.source}): Explores quantization and token-generation speed to reduce enterprise LLM compute costs.",
+            )
+        if "reasoning" in text or "pass@" in text or "self-improvement" in text:
+            return (
+                62,
+                "General AI & Research",
+                "🔬 Reasoning & Eval Paper",
+                clean_summary,
+                f"Reasoning Benchmark ({item.source}): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks.",
+            )
+        return (
+            56,
+            "General AI & Research",
+            "🔬 Research Paper",
+            clean_summary,
+            f"Technical Research ({item.source}): Early-stage academic research into foundation model architecture and alignment.",
         )
 
+    if item.category == "Hacker News & Reddit":
+        if "memory" in text or "forget" in text:
+            return (
+                54,
+                "General AI & Research",
+                "💬 Practitioner Debate",
+                clean_summary,
+                f"Architecture Discussion ({item.source}): Examines how enterprise LLMs manage long-term context retention versus selective forgetting.",
+            )
+        return (
+            50,
+            "General AI & Research",
+            "💬 Community Pulse",
+            clean_summary,
+            f"Practitioner Discussion ({item.source}): Highlights community engineering insights and practical experimentation.",
+        )
+
+    # 2. High-Priority UK Finance, Regulatory, Audit & CFO Rules (85–99)
     if re.search(r"\b(fca|financial conduct authority|bank of england|pra)\b", text):
-        score = 99
-        tier = "High UK Finance Impact"
-        func_tag = "🏛️ FCA & Regulation"
-        benefit = (
-            f"Regulatory Guidance ({item.source}): Essential reading for UK finance and compliance "
-            f"teams aligning AI governance, explainability, and risk controls with FCA expectations."
+        if "crypto" in text or "tracing" in text:
+            return (
+                96,
+                "High UK Finance Impact",
+                "🏛️ FCA & Compliance",
+                clean_summary,
+                f"FCA Digital Asset Rules ({item.source}): Flags where automated transaction tracing must be paired with proportionate risk-based compliance controls.",
+            )
+        return (
+            99,
+            "High UK Finance Impact",
+            "🏛️ FCA & Regulation",
+            clean_summary,
+            f"FCA AI Governance ({item.source}): Key briefing for UK finance and risk leaders aligning AI model oversight and senior accountability with FCA expectations.",
         )
-    elif re.search(r"\b(cci|disclosure|consumer duty|reporting|frc|icaew|acca|hmrc)\b", text):
-        score = 97
-        tier = "High UK Finance Impact"
-        func_tag = "📊 Reporting & Disclosure"
-        benefit = (
-            f"UK Reporting & Disclosure ({item.source}): Shows how finance and regulatory reporting "
-            f"teams can turn UK disclosure and compliance requirements into clearer stakeholder assurance."
+
+    if re.search(r"\b(cci|disclosure|consumer duty|frc|icaew|acca|hmrc)\b", text):
+        return (
+            97,
+            "High UK Finance Impact",
+            "📊 UK Disclosure & Reporting",
+            clean_summary,
+            f"UK Regulatory Reporting ({item.source}): Shows how UK finance teams can turn mandatory Consumer Composite Investments (CCI) and disclosure rules into clearer investor communication.",
         )
-    elif re.search(
-        r"\b(soc|attestation|certification|assurance|selective auditing|dataset-use auditing)\b",
-        text,
-    ):
-        score = 96
-        tier = "High UK Finance Impact"
-        func_tag = "🛡️ Audit & Assurance"
-        benefit = (
-            f"AI Assurance & Controls ({item.source}): Practical framework for using SOC reporting, "
-            f"independent attestation, and selective auditing to verify AI outputs in financial workflows."
+
+    if re.search(r"\b(soc|attestation|certification|assurance)\b", text):
+        return (
+            97,
+            "High UK Finance Impact",
+            "🛡️ Audit & Assurance",
+            clean_summary,
+            f"AI Assurance & SOC Controls ({item.source}): Outlines how independent SOC reporting, attestation, and certification build board and auditor confidence in AI systems.",
         )
-    elif re.search(
-        r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo)\b",
-        text,
-    ):
-        score = max(score, 94)
-        tier = "High UK Finance Impact"
-        func_tag = "🛡️ Audit & Big Four"
-        benefit = (
-            f"Audit Practice Benchmark ({item.source}): Tracks how internal audit teams and Big Four "
-            f"advisors are adopting AI for risk testing, sampling, and control validation."
+
+    if "ethics" in text or "compliance officer" in text:
+        return (
+            95,
+            "High UK Finance Impact",
+            "🛡️ Governance & Ethics",
+            clean_summary,
+            f"2026 Compliance Benchmark ({item.source}): Benchmarks how chief compliance and audit leaders are updating governance controls for generative AI.",
         )
-    elif re.search(
+
+    if re.search(r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo)\b", text):
+        return (
+            94,
+            "High UK Finance Impact",
+            "🛡️ Internal Audit & Big Four",
+            clean_summary,
+            f"Internal Audit Trend ({item.source}): Tracks how internal audit teams are moving from AI scepticism to active deployment for continuous control testing.",
+        )
+
+    if "prove value" in text or "roi" in text or "struggle" in text:
+        return (
+            96,
+            "High UK Finance Impact",
+            "📈 CFO ROI & Value",
+            clean_summary,
+            f"UK CFO Value Benchmark ({item.source}): Addresses the #1 hurdle for UK finance directors—moving AI projects from pilot enthusiasm to measurable P&L and time-saving ROI.",
+        )
+
+    if "barclays" in text or "bank tax" in text or "job cuts" in text:
+        return (
+            93,
+            "High UK Finance Impact",
+            "🏦 UK Banking & Workforce",
+            clean_summary,
+            f"UK Banking Sector Analysis ({item.source}): Evaluates how major UK banks are balancing AI-driven cost efficiencies, headcount restructuring, and UK tax policy.",
+        )
+
+    if "banking" in text or "uk finance" in text:
+        return (
+            95,
+            "High UK Finance Impact",
+            "🏦 UK Banking & Strategy",
+            clean_summary,
+            f"Sector Leadership View ({item.source}): Highlights why data quality, staff capability, and change management matter as much as model selection in UK financial services.",
+        )
+
+    if re.search(
         r"\b(cfo|cfos|finance leader|finance leaders|finance team|finance teams|fp&a|accountant|accounting)\b",
         text,
     ):
-        score = 96
-        tier = "High UK Finance Impact"
-        func_tag = "📈 CFO & Strategy"
         if stat_str:
-            benefit = (
-                f"CFO Benchmark ({stat_str} headline stat via {item.source}): Highlights the tension "
-                f"between rapid AI rollout pressure and the need for controlled, accurate finance workflows."
+            return (
+                97,
+                "High UK Finance Impact",
+                "📈 CFO Survey Benchmark",
+                clean_summary,
+                f"UK & Ireland CFO Pulse ({stat_str} stat via {item.source}): Quantifies boardroom pressure on finance leaders to accelerate AI adoption without compromising financial accuracy.",
             )
-        else:
-            benefit = (
-                f"CFO & Finance Operations ({item.source}): Directly applicable to UK finance leaders "
-                f"prioritising ROI, month-end automation, and team upskilling."
-            )
-    elif re.search(r"\b(banking|uk finance|fintech|payments|treasury|lending)\b", text):
-        score = max(score, 93)
-        tier = "High UK Finance Impact"
-        func_tag = "🏦 UK Banking & Treasury"
-        benefit = (
-            f"UK Financial Sector Insight ({item.source}): Examines operational, cultural, and legacy-system "
-            f"hurdles beyond technology when rolling out AI across UK banking and finance functions."
-        )
-    elif re.search(
-        r"\b(no internet|live internet|containment|securing|red-team|llm-attacker|privacy|gmail|data)\b",
-        text,
-    ):
-        score = max(score, 84)
-        tier = "Finance Ops & Governance"
-        func_tag = "🔒 Data Privacy & Risk"
-        benefit = (
-            f"Data Governance Alert ({item.source}): Important context for finance teams evaluating "
-            f"model containment, cloud privacy settings, and protecting confidential financial data."
-        )
-    elif re.search(
-        r"\b(agent|agents|voice|local|macbook|harness|storage|scaling|multi-tenancy)\b",
-        text,
-    ):
-        score = max(score, 78)
-        tier = "Finance Ops & Productivity"
-        func_tag = "🤖 AI Agents & Ops"
-        benefit = (
-            f"Enterprise AI Infrastructure ({item.source}): Demonstrates how production AI harnesses, "
-            f"local models, and messaging agents are maturing for day-to-day business workflows."
-        )
-    elif re.search(
-        r"\b(gemini|gpt|claude|grok|frontier model|openai|deepmind|trainium)\b", text
-    ):
-        score = max(score, 74)
-        tier = "Finance Ops & Productivity"
-        func_tag = "🧠 Frontier Models"
-        benefit = (
-            f"Model Capability Update ({item.source}): Tracks frontier model releases, reliability, "
-            f"and compute economics that underpin enterprise copilot and analytics tools."
-        )
-    elif item.category == "Research Papers":
-        score = 58
-        tier = "General AI & Research"
-        func_tag = "🔬 Research Paper"
-        benefit = (
-            f"Early Research Signal ({item.source}): Technical paper on model efficiency, reasoning, "
-            f"or evaluation benchmarks that will influence next-generation enterprise AI."
-        )
-    elif item.category == "Hacker News & Reddit":
-        score = 52
-        tier = "General AI & Research"
-        func_tag = "💬 Community Pulse"
-        benefit = (
-            f"Practitioner Discussion ({item.source}): Highlights real-world engineering debates around "
-            f"LLM memory, model steering, and AI research quality."
+        return (
+            94,
+            "High UK Finance Impact",
+            "📈 CFO & Finance Ops",
+            clean_summary,
+            f"Finance Leadership ({item.source}): Practical perspective on deploying AI across UK forecasting, reconciliation, and month-end reporting.",
         )
 
-    return score, tier, func_tag, clean_summary, benefit
+    if item.category == "UK Finance & CFO AI":
+        return (
+            90,
+            "High UK Finance Impact",
+            "🇬🇧 UK Finance",
+            clean_summary,
+            f"UK Finance Update ({item.source}): Covers AI governance, productivity, and operational trends across UK financial services.",
+        )
+
+    # 3. Finance Ops, Data Governance & Enterprise AI Productivity (70–84)
+    if "gmail" in text or "photos" in text or "personal intelligence" in text:
+        return (
+            84,
+            "Finance Ops & Governance",
+            "🔒 Workspace Data Privacy",
+            clean_summary,
+            f"Cloud Privacy Alert ({item.source}): Reminder for finance teams to verify enterprise workspace opt-outs so corporate email and documents are never used for ad targeting or model training.",
+        )
+
+    if "no internet" in text or "live internet" in text or "containment" in text or "securing" in text:
+        return (
+            83,
+            "Finance Ops & Governance",
+            "🔒 AI Security & Containment",
+            clean_summary,
+            f"Model Security Posture ({item.source}): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks.",
+        )
+
+    if "scalable ai" in text or "serving harness" in text or "foundation" in text:
+        return (
+            81,
+            "Finance Ops & Productivity",
+            "⚙️ Enterprise AI Architecture",
+            clean_summary,
+            f"Enterprise Deployment ({item.source}): Explains why wrapping AI models in reliable data governance, audit logging, and workflow harnesses matters more than raw model size.",
+        )
+
+    if "text messages" in text or "agents" in text:
+        return (
+            78,
+            "Finance Ops & Productivity",
+            "🤖 AI Agents & Workflows",
+            clean_summary,
+            f"Agentic Workflows ({item.source}): Illustrates how lightweight AI agents are moving into everyday communication channels for rapid task execution.",
+        )
+
+    if "voice" in text or "local" in text or "macbook" in text:
+        return (
+            76,
+            "Finance Ops & Productivity",
+            "💻 Local & On-Device AI",
+            clean_summary,
+            f"On-Device Privacy ({item.source}): Running capable AI models locally on corporate hardware keeps sensitive financial discussions entirely off third-party clouds.",
+        )
+
+    if "storage" in text or "scaling" in text or "cosmos db" in text:
+        return (
+            75,
+            "Finance Ops & Productivity",
+            "⚡ Cloud Infrastructure",
+            clean_summary,
+            f"Infrastructure Reliability ({item.source}): Engineering look at how high-throughput enterprise AI platforms maintain low latency and multi-tenant data isolation at scale.",
+        )
+
+    if re.search(
+        r"\b(gemini|gpt|claude|grok|frontier model|openai|deepmind|trainium)\b", text
+    ):
+        if "economy" in text or "$368 billion" in text:
+            return (
+                72,
+                "Finance Ops & Productivity",
+                "🌍 Macro AI Economics",
+                clean_summary,
+                f"Macroeconomic Forecast ({item.source}): Quantifies regional digital-economy growth driven by enterprise AI investment.",
+            )
+        return (
+            74,
+            "Finance Ops & Productivity",
+            "🧠 Frontier Models",
+            clean_summary,
+            f"Model Capability & Compute ({item.source}): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools.",
+        )
+
+    if "graveyard" in text or "shut down" in text:
+        return (
+            68,
+            "General AI & Research",
+            "📉 AI Market Consolidation",
+            clean_summary,
+            f"Vendor Risk Lesson ({item.source}): Useful cautionary tracker when conducting due diligence on startup AI vendors before signing multi-year finance software contracts.",
+        )
+
+    if "labels on ai" in text or "advertising act" in text:
+        return (
+            65,
+            "General AI & Research",
+            "⚖️ AI Transparency Law",
+            clean_summary,
+            f"Global AI Regulation ({item.source}): Tracks mandatory disclosure and watermarking laws for AI-generated commercial communications.",
+        )
+
+    return (
+        48,
+        "General AI & Research",
+        "🌐 Tech & AI News",
+        clean_summary,
+        f"General Industry Coverage ({item.source}): Keeps teams aware of broader consumer and technology developments.",
+    )
 
 
 def enrich_items_with_gemini(
@@ -276,6 +406,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#070b14" />
+  <meta name="description" content="Daily AI News & UK CFO Intelligence Dashboard — ranked by practical impact for UK Finance, Accounting, Audit & FP&A teams." />
   <title>UK Finance & AI Daily Intelligence — {html.escape(date_str)}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -285,11 +416,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       --bg: #070b14;
       --bg-mesh-1: rgba(59, 130, 246, 0.11);
       --bg-mesh-2: rgba(245, 158, 11, 0.08);
-      --surface: rgba(17, 24, 39, 0.82);
+      --surface: rgba(17, 24, 39, 0.84);
       --surface-solid: #111827;
       --surface-elevated: #192338;
       --surface-hover: #1e293b;
-      --glass-bg: rgba(15, 23, 42, 0.78);
+      --glass-bg: rgba(15, 23, 42, 0.8);
       --border: rgba(255, 255, 255, 0.09);
       --border-subtle: rgba(255, 255, 255, 0.06);
       --text: #f8fafc;
@@ -316,11 +447,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       --bg: #f4f7fb;
       --bg-mesh-1: rgba(37, 99, 235, 0.07);
       --bg-mesh-2: rgba(245, 158, 11, 0.07);
-      --surface: rgba(255, 255, 255, 0.92);
+      --surface: rgba(255, 255, 255, 0.94);
       --surface-solid: #ffffff;
       --surface-elevated: #f1f5f9;
       --surface-hover: #f8fafc;
-      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-bg: rgba(255, 255, 255, 0.88);
       --border: #e2e8f0;
       --border-subtle: #edf2f7;
       --text: #0f172a;
@@ -359,7 +490,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       overflow-x: hidden;
     }}
 
-    /* Top Scroll Progress Bar */
     #scrollProgress {{
       position: fixed;
       top: 0;
@@ -377,7 +507,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       padding: 28px 20px 96px;
     }}
 
-    /* Header */
     header {{
       display: flex;
       flex-wrap: wrap;
@@ -390,7 +519,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .brand-row {{
       display: flex;
-       flex-wrap: wrap;
+      flex-wrap: wrap;
       align-items: center;
       gap: 10px;
       margin-bottom: 10px;
@@ -1074,7 +1203,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border-radius: 16px;
     }}
 
-    /* Keyframe Animations */
     @keyframes fadeSlideDown {{
       from {{ opacity: 0; transform: translateY(-14px); }}
       to {{ opacity: 1; transform: translateY(0); }}
@@ -1094,7 +1222,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       100% {{ transform: scale(1); }}
     }}
 
-    /* Mobile & Tablet Responsive Breakpoints */
     @media (max-width: 960px) {{
       .kpi-grid {{
         grid-template-columns: repeat(2, 1fr);
@@ -1215,7 +1342,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       <div class="kpi-card active-kpi" data-kpi="all" onclick="setFilterByName('all')">
         <div class="kpi-label">📊 Total Curated Stories</div>
         <div class="kpi-val" data-count="{len(cards)}">{len(cards)}</div>
-        <div class="kpi-sub">Ranked across 11 live feeds</div>
+        <div class="kpi-sub">Deduplicated across 11 feeds</div>
       </div>
     </div>
 
@@ -1248,6 +1375,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
 
   <script>
     const ITEMS = {cards_json};
+    const ITEM_MAP = new Map(ITEMS.map(it => [it.id, it]));
     let currentFilter = 'all';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
@@ -1269,10 +1397,12 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
 
     function formatRelativeTime(pubStr) {{
       if (!pubStr || pubStr === 'Recent') return 'Recent';
-      const iso = pubStr.replace(' UTC', ':00Z').replace(' ', 'T');
+      const iso = pubStr.includes(' UTC')
+        ? pubStr.replace(' UTC', ':00Z').replace(' ', 'T')
+        : pubStr + 'T00:00:00Z';
       const dt = new Date(iso);
       if (isNaN(dt.getTime())) return pubStr;
-      const diffMs = Date.now() - dt.getTime();
+      const diffMs = Math.max(0, Date.now() - dt.getTime());
       const diffHours = Math.floor(diffMs / 3600000);
       if (diffHours < 1) return 'Just now';
       if (diffHours < 24) return `${{diffHours}}h ago`;
@@ -1299,15 +1429,17 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       if (btn) btn.textContent = `⭐ Saved (${{savedUrls.size}})`;
     }}
 
-    function toggleSave(url, ev) {{
+    function toggleSaveById(id, ev) {{
       if (ev) ev.stopPropagation();
-      const adding = !savedUrls.has(url);
-      if (adding) {{
-        savedUrls.add(url);
-        showToast('⭐ Saved story to your reading list');
-      }} else {{
+      const item = ITEM_MAP.get(id);
+      if (!item) return;
+      const url = item.url;
+      if (savedUrls.has(url)) {{
         savedUrls.delete(url);
         showToast('Removed from saved stories');
+      }} else {{
+        savedUrls.add(url);
+        showToast('⭐ Saved story to your reading list');
       }}
       localStorage.setItem('ai-news-saved', JSON.stringify(Array.from(savedUrls)));
       updateSavedTabCount();
@@ -1315,12 +1447,14 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       renderMain();
     }}
 
-    function shareStory(title, url, ev) {{
+    function shareById(id, ev) {{
       if (ev) ev.stopPropagation();
+      const item = ITEM_MAP.get(id);
+      if (!item) return;
       if (navigator.share) {{
-        navigator.share({{ title, url }}).catch(() => {{}});
+        navigator.share({{ title: item.title, url: item.url }}).catch(() => {{}});
       }} else {{
-        navigator.clipboard.writeText(`${{title}} — ${{url}}`).then(() => {{
+        navigator.clipboard.writeText(`${{item.title}} — ${{item.url}}`).then(() => {{
           showToast('🔗 Story link copied to clipboard!');
         }});
       }}
@@ -1379,8 +1513,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                   <span class="pub-pill">${{escapeHtml(item.source)}}</span>
                 </div>
                 <div class="card-actions">
-                  <button class="icon-btn" title="Copy story link" onclick="shareStory('${{escapeHtml(item.title.replace(/'/g, "\\\\'"))}}', '${{escapeHtml(item.url)}}', event)">🔗</button>
-                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" title="Save for later" onclick="toggleSave('${{escapeHtml(item.url)}}', event)">
+                  <button class="icon-btn" title="Copy story link" onclick="shareById('${{item.id}}', event)">🔗</button>
+                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" title="Save for later" onclick="toggleSaveById('${{item.id}}', event)">
                     ${{isSaved ? '⭐' : '☆'}}
                   </button>
                 </div>
@@ -1468,7 +1602,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                 return `
                   <tr>
                     <td>
-                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" onclick="toggleSave('${{escapeHtml(item.url)}}', event)">
+                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" onclick="toggleSaveById('${{item.id}}', event)">
                         ${{isSaved ? '⭐' : '☆'}}
                       </button>
                     </td>
@@ -1504,8 +1638,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                   <span class="pub-pill">${{escapeHtml(item.source)}}</span>
                 </div>
                 <div class="card-actions">
-                  <button class="icon-btn" title="Share / copy link" onclick="shareStory('${{escapeHtml(item.title.replace(/'/g, "\\\\'"))}}', '${{escapeHtml(item.url)}}', event)">🔗</button>
-                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" title="Save for later" onclick="toggleSave('${{escapeHtml(item.url)}}', event)">
+                  <button class="icon-btn" title="Share / copy link" onclick="shareById('${{item.id}}', event)">🔗</button>
+                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" title="Save for later" onclick="toggleSaveById('${{item.id}}', event)">
                     ${{isSaved ? '⭐' : '☆'}}
                   </button>
                 </div>
@@ -1579,7 +1713,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       localStorage.setItem('ai-news-theme', next);
     }}
 
-    // Scroll Progress & Back-to-Top Listener
     window.addEventListener('scroll', () => {{
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -1588,7 +1721,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       document.getElementById('backToTop').classList.toggle('visible', scrollTop > 420);
     }}, {{ passive: true }});
 
-    // Keyboard shortcut '/' to focus search
     window.addEventListener('keydown', (e) => {{
       if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {{
         e.preventDefault();

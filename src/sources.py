@@ -100,11 +100,13 @@ RSS_FEEDS: list[dict[str, str]] = [
 
 
 def _clean_html(raw_text: str, max_len: int = 280) -> str:
-    """Strip HTML tags, decode entities, and truncate cleanly."""
+    """Strip HTML tags, decode entities, clean raw LaTeX inline markers, and truncate cleanly."""
     if not raw_text:
         return ""
     text = re.sub(r"<[^>]+>", " ", raw_text)
     text = html.unescape(text)
+    # Clean raw ArXiv inline LaTeX like Pass@$k$ -> Pass@k
+    text = re.sub(r"\$([^$]{1,15})\$", r"\1", text)
     text = re.sub(r"\s+", " ", text).strip()
     if len(text) > max_len:
         return text[: max_len - 1].rsplit(" ", 1)[0] + "…"
@@ -324,7 +326,7 @@ def fetch_arxiv_papers(max_items: int = 5) -> list[NewsItem]:
     items: list[NewsItem] = []
     for entry in root.findall("atom:entry", ns)[:max_items]:
         title = _clean_html(entry.findtext("atom:title", default="", namespaces=ns), 220)
-        link = entry.findtext("atom:id", default="", namespaces=ns).strip()
+        link = entry.findtext("atom:id", default="", namespaces=ns).strip().replace("http://arxiv.org/", "https://arxiv.org/")
         summary = _clean_html(entry.findtext("atom:summary", default="", namespaces=ns), 260)
         pub_raw = entry.findtext("atom:published", default="", namespaces=ns)
         dt = _parse_datetime(pub_raw)
@@ -365,13 +367,46 @@ def fetch_all_news(lookback_hours: int = 24, max_items_per_source: int = 5) -> l
             except Exception as exc:
                 print(f"[warn] Failed to fetch {source_name}: {exc}")
 
-    # Deduplicate by normalized title
+    # Sort items with summaries first so near-duplicate filtering keeps the richest version
+    all_items.sort(key=lambda x: (1 if x.summary else 0), reverse=True)
+
+    stop_words = {
+        "the", "and", "for", "with", "that", "from", "this", "its", "are",
+        "will", "new", "now", "says", "how", "can", "into", "over", "more",
+        "your", "you", "might", "use", "used", "models", "model", "ai",
+    }
+
+    def _title_tokens(t: str) -> set[str]:
+        normalized = (
+            t.lower()
+            .replace("advertising", "ads")
+            .replace("trains", "train")
+            .replace("training", "train")
+        )
+        words = re.findall(r"[a-z0-9]{3,}", normalized)
+        return {w for w in words if w not in stop_words}
+
     seen_titles: set[str] = set()
+    seen_token_sets: list[set[str]] = []
     unique_items: list[NewsItem] = []
+
     for item in all_items:
         norm = re.sub(r"\W+", "", item.title.lower())
-        if norm and norm not in seen_titles:
-            seen_titles.add(norm)
-            unique_items.append(item)
+        if not norm or norm in seen_titles:
+            continue
+        tokens = _title_tokens(item.title)
+        is_near_dup = False
+        if len(tokens) >= 3:
+            for existing in seen_token_sets:
+                overlap = len(tokens & existing) / min(len(tokens), len(existing))
+                if overlap >= 0.5:
+                    is_near_dup = True
+                    break
+        if is_near_dup:
+            continue
+        seen_titles.add(norm)
+        if len(tokens) >= 3:
+            seen_token_sets.append(tokens)
+        unique_items.append(item)
 
     return unique_items
