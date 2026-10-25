@@ -1806,6 +1806,199 @@ def build_dashboard_html(
       display: inline-flex;
       align-items: center;
     }}
+    .urgency-badge {{
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #f87171;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }}
+    .time-chip {{
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }}
+    .news-card.target-highlight, .hero-card.target-highlight {{
+      animation: targetGlow 2.4s ease-out;
+      border-color: var(--accent) !important;
+    }}
+    .news-card.kbd-selected, .hero-card.kbd-selected {{
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }}
+    .compact-table tr.kbd-selected td {{
+      background: var(--surface-hover);
+      outline: 1px solid var(--accent);
+    }}
+    @keyframes targetGlow {{
+      0% {{ box-shadow: 0 0 0 5px var(--accent-glow), 0 16px 36px rgba(59, 130, 246, 0.4); }}
+      70% {{ box-shadow: 0 0 0 5px var(--accent-glow), 0 16px 36px rgba(59, 130, 246, 0.4); }}
+      100% {{ box-shadow: var(--card-shadow); }}
+    }}
+
+    /* Interactive Topic Bar */
+    .topic-bar {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      width: 100%;
+    }}
+    .topic-pill {{
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 11px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all var(--dur-fast) ease;
+      user-select: none;
+    }}
+    .topic-pill:hover {{
+      color: var(--text);
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }}
+    .topic-pill.active {{
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+      color: var(--blue-text);
+      font-weight: 700;
+    }}
+
+    /* Share & Keyboard Shortcuts Modals */
+    .modal-backdrop {{
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur) var(--ease-in-out);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }}
+    .modal-backdrop.open {{
+      opacity: 1;
+      pointer-events: auto;
+    }}
+    .modal-dialog {{
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+      transform: translateY(16px) scale(0.97);
+      transition: transform var(--dur-slow) var(--spring);
+      overflow: hidden;
+    }}
+    .modal-backdrop.open .modal-dialog {{
+      transform: translateY(0) scale(1);
+    }}
+    .modal-header {{
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .modal-title {{
+      font-size: 16px;
+      font-weight: 800;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .modal-body {{
+      padding: 22px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }}
+    .share-channel-grid {{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }}
+    .share-channel-card {{
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: all var(--dur-fast) ease;
+    }}
+    .share-channel-card:hover {{
+      border-color: var(--accent);
+      background: var(--surface-hover);
+      transform: translateY(-1px);
+    }}
+    .share-channel-info {{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }}
+    .share-icon-wrap {{
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }}
+    .kbd-shortcut-row {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 13px;
+    }}
+    .kbd-shortcut-row:last-child {{
+      border-bottom: none;
+    }}
+    kbd {{
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }}
+
     .dashboard-footer {{
       margin-top: 56px;
       padding-top: 28px;
@@ -1880,15 +2073,21 @@ def build_dashboard_html(
       body {{
         background: #ffffff !important;
         color: #0f172a !important;
-        font-size: 11pt;
+        font-size: 10.5pt;
       }}
-      #scrollProgress, .header-actions, .lens-bar, .controls, .card-actions,
-      .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel {{
+      #scrollProgress, .header-actions, .lens-bar, .controls, .topic-bar, .card-actions,
+      .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel, .modal-backdrop {{
         display: none !important;
       }}
       .container {{
         max-width: 100% !important;
         padding: 0 !important;
+      }}
+      .print-memo-header {{
+        display: block !important;
+        border-bottom: 2px solid #0f172a;
+        padding-bottom: 10px;
+        margin-bottom: 18px;
       }}
       .hero-section, .news-card, .kpi-card, .signal-mix-card {{
         background: #ffffff !important;
@@ -1898,6 +2097,7 @@ def build_dashboard_html(
         opacity: 1 !important;
         transform: none !important;
         break-inside: avoid;
+        page-break-inside: avoid;
       }}
       .cards-grid {{
         grid-template-columns: repeat(2, 1fr) !important;
@@ -1934,19 +2134,36 @@ def build_dashboard_html(
         <p class="subtitle">Curated & ranked by practical benefit for UK Finance, Accounting, Audit & FP&A teams alongside global AI breakthroughs.</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-primary" onclick="copyTeamBriefing()">
+        <button class="btn btn-primary" onclick="openShareModal()" title="Share executive briefing via Email, Teams or Slack">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-          Copy Team Summary
+          Share Briefing
+        </button>
+        <button class="btn" onclick="exportToCsv()" title="Export intelligence register to CSV (Excel compatible)">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
         </button>
         <button class="btn" onclick="window.print()" title="Print or save as Boardroom PDF">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
           Export PDF
+        </button>
+        <button class="btn btn-icon-only" onclick="toggleKbdModal()" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/><line x1="14" y1="8" x2="14" y2="8"/><line x1="18" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="14" y2="12"/><line x1="18" y1="12" x2="18" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
         </button>
         <button class="btn btn-icon-only" onclick="toggleTheme()" aria-label="Toggle colour theme" title="Toggle light / dark theme">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         </button>
       </div>
     </header>
+
+    <div class="print-memo-header" style="display:none;">
+      <h2 style="margin:0 0 4px;font-size:18pt;font-weight:800;">EXECUTIVE BRIEFING: UK FINANCE & AI INTELLIGENCE</h2>
+      <div style="font-size:10pt;color:#334155;margin-bottom:8px;">
+        <strong>Date:</strong> {html.escape(date_str)} · {updated_str} | <strong>Coverage:</strong> CFO Strategy, FCA/PRA Compliance, Internal Audit, FP&A Automation
+      </div>
+      <div style="font-size:8.5pt;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">
+        STRICTLY CONFIDENTIAL — PREPARED FOR UK FINANCE EXECUTIVE LEADERSHIP
+      </div>
+    </div>
 
     <!-- UK Finance Role Lens Switcher -->
     <div class="lens-bar">
@@ -2011,30 +2228,43 @@ def build_dashboard_html(
 
     <!-- Glassmorphic Sticky Filter & View Bar -->
     <div class="controls">
-      <div class="tabs" role="tablist" id="filterTabs">
-        <span class="seg-indicator" aria-hidden="true"></span>
-        <button class="tab active" data-filter="all" role="tab" aria-selected="true" onclick="setFilter('all', this)">All Prioritised ({len(cards)})</button>
-        <button class="tab" data-filter="high" role="tab" aria-selected="false" onclick="setFilter('high', this)"><span id="tabFlagSlot"></span> High UK Finance ({high_impact_count})</button>
-        <button class="tab" data-filter="ops" role="tab" aria-selected="false" onclick="setFilter('ops', this)">⚡ Ops & Security ({ops_count})</button>
-        <button class="tab" data-filter="general" role="tab" aria-selected="false" onclick="setFilter('general', this)">🌐 General AI ({general_count})</button>
-        <button class="tab" data-filter="saved" id="savedTabBtn" role="tab" aria-selected="false" onclick="setFilter('saved', this)">⭐ Saved (0)</button>
-      </div>
-      <div class="right-controls">
-        <div class="search-wrap">
-          <input type="search" id="searchInput" class="search-input" placeholder="Search FCA, Deloitte, audit, OpenAI..." oninput="onSearchInput()" />
-          <span class="kbd-hint">/</span>
-        </div>
-        <div class="view-toggle" role="group" aria-label="View mode" id="viewToggle">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;width:100%;gap:12px;">
+        <div class="tabs" role="tablist" id="filterTabs">
           <span class="seg-indicator" aria-hidden="true"></span>
-          <button class="view-btn active" id="viewCardsBtn" onclick="setViewMode('cards')">
-            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-            Cards
-          </button>
-          <button class="view-btn" id="viewTableBtn" onclick="setViewMode('table')">
-            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            Compact
-          </button>
+          <button class="tab active" data-filter="all" role="tab" aria-selected="true" onclick="setFilter('all', this)">All Prioritised ({len(cards)})</button>
+          <button class="tab" data-filter="high" role="tab" aria-selected="false" onclick="setFilter('high', this)"><span id="tabFlagSlot"></span> High UK Finance ({high_impact_count})</button>
+          <button class="tab" data-filter="ops" role="tab" aria-selected="false" onclick="setFilter('ops', this)">⚡ Ops & Security ({ops_count})</button>
+          <button class="tab" data-filter="general" role="tab" aria-selected="false" onclick="setFilter('general', this)">🌐 General AI ({general_count})</button>
+          <button class="tab" data-filter="saved" id="savedTabBtn" role="tab" aria-selected="false" onclick="setFilter('saved', this)">⭐ Saved (0)</button>
         </div>
+        <div class="right-controls">
+          <div class="search-wrap">
+            <input type="search" id="searchInput" class="search-input" placeholder="Search FCA, Deloitte, audit, OpenAI..." oninput="onSearchInput()" />
+            <span class="kbd-hint">/</span>
+          </div>
+          <div class="view-toggle" role="group" aria-label="View mode" id="viewToggle">
+            <span class="seg-indicator" aria-hidden="true"></span>
+            <button class="view-btn active" id="viewCardsBtn" onclick="setViewMode('cards')">
+              <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              Cards
+            </button>
+            <button class="view-btn" id="viewTableBtn" onclick="setViewMode('table')">
+              <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              Compact
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Interactive Topic Filter Pills -->
+      <div class="topic-bar" id="topicBar" role="group" aria-label="Filter by Topic">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-right:2px;">Topic:</span>
+        <button class="topic-pill active" data-topic="all" onclick="setTopic('all', this)">All Topics</button>
+        <button class="topic-pill" data-topic="fca" onclick="setTopic('fca', this)">🏛️ FCA & Regulation</button>
+        <button class="topic-pill" data-topic="audit" onclick="setTopic('audit', this)">🛡️ Audit & Risk</button>
+        <button class="topic-pill" data-topic="cfo" onclick="setTopic('cfo', this)">📈 CFO Strategy</button>
+        <button class="topic-pill" data-topic="privacy" onclick="setTopic('privacy', this)">🔒 Data Privacy</button>
+        <button class="topic-pill" data-topic="agents" onclick="setTopic('agents', this)">🤖 AI Agents</button>
+        <button class="topic-pill" data-topic="models" onclick="setTopic('models', this)">🧠 Frontier Models</button>
       </div>
     </div>
 
@@ -2084,6 +2314,120 @@ def build_dashboard_html(
     </div>
   </aside>
 
+  <!-- Share Briefing Modal -->
+  <div class="modal-backdrop" id="shareModalBackdrop" onclick="closeShareModal()">
+    <div class="modal-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="shareModalTitle">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+          Share Executive Briefing
+        </h3>
+        <button class="icon-btn" onclick="closeShareModal()" aria-label="Close modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="share-channel-grid">
+          <div class="share-channel-card" onclick="copyTeamBriefing(); closeShareModal();">
+            <div class="share-channel-info">
+              <div class="share-icon-wrap" style="color:#60a5fa;">💬</div>
+              <div>
+                <strong style="display:block;font-size:13.5px;color:var(--text);">Copy MS Teams & Slack Markdown</strong>
+                <span style="font-size:12px;color:var(--muted);">Formatted top 5 priorities ready to paste directly into channel chats</span>
+              </div>
+            </div>
+            <span class="read-link">Copy <span class="arrow">→</span></span>
+          </div>
+
+          <div class="share-channel-card" onclick="openEmailDraft(); closeShareModal();">
+            <div class="share-channel-info">
+              <div class="share-icon-wrap" style="color:#fbbf24;">✉️</div>
+              <div>
+                <strong style="display:block;font-size:13.5px;color:var(--text);">Draft Outlook / Email Memo</strong>
+                <span style="font-size:12px;color:var(--muted);">Opens pre-filled email draft with subject line and executive takeaways</span>
+              </div>
+            </div>
+            <span class="read-link">Open <span class="arrow">→</span></span>
+          </div>
+
+          <div class="share-channel-card" onclick="copyDashboardUrl(); closeShareModal();">
+            <div class="share-channel-info">
+              <div class="share-icon-wrap" style="color:#34d399;">🔗</div>
+              <div>
+                <strong style="display:block;font-size:13.5px;color:var(--text);">Copy Live Dashboard URL</strong>
+                <span style="font-size:12px;color:var(--muted);">Direct public dashboard link with current role lens preference</span>
+              </div>
+            </div>
+            <span class="read-link">Copy <span class="arrow">→</span></span>
+          </div>
+
+          <div class="share-channel-card" onclick="exportToCsv(); closeShareModal();">
+            <div class="share-channel-info">
+              <div class="share-icon-wrap" style="color:#10b981;">📊</div>
+              <div>
+                <strong style="display:block;font-size:13.5px;color:var(--text);">Export CSV Risk Register</strong>
+                <span style="font-size:12px;color:var(--muted);">Full structured dataset for Excel, audit scoping, and FP&A tools</span>
+              </div>
+            </div>
+            <span class="read-link">Download <span class="arrow">↓</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div class="modal-backdrop" id="kbdModalBackdrop" onclick="closeKbdModal()">
+    <div class="modal-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="kbdModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="kbdModalTitle">
+          ⌨️ Keyboard Navigation & Shortcuts
+        </h3>
+        <button class="icon-btn" onclick="closeKbdModal()" aria-label="Close modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="kbd-shortcut-row">
+          <span>Focus Search</span>
+          <kbd>/</kbd>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Next / Previous Story</span>
+          <span><kbd>j</kbd> / <kbd>k</kbd> or <kbd>↓</kbd> / <kbd>↑</kbd></span>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Open Quick-Brief Drawer</span>
+          <span><kbd>Enter</kbd> or <kbd>o</kbd></span>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Close Drawer or Modal</span>
+          <kbd>Esc</kbd>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Share Briefing Options</span>
+          <kbd>s</kbd>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Copy Team Briefing</span>
+          <kbd>c</kbd>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Export CSV</span>
+          <kbd>e</kbd>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Toggle Light / Dark Theme</span>
+          <kbd>t</kbd>
+        </div>
+        <div class="kbd-shortcut-row">
+          <span>Toggle This Help Modal</span>
+          <kbd>?</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <button id="backToTop" onclick="window.scrollTo({{top: 0, behavior: 'smooth'}})" aria-label="Back to top" title="Back to top">
     <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
@@ -2092,8 +2436,10 @@ def build_dashboard_html(
   <script>
     const ITEMS = {cards_json};
     const ITEM_MAP = new Map(ITEMS.map(it => [it.id, it]));
+    const DATE_STR = "{html.escape(date_str)}";
     let currentFilter = 'all';
     let currentLens = 'default';
+    let currentTopic = 'all';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
     let activeDrawerId = null;
@@ -2101,6 +2447,7 @@ def build_dashboard_html(
     let revealObserver = null;
     let lastFocusedEl = null;
     let searchTimer = null;
+    let selectedCardIndex = -1;
     const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ICON_LINK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
@@ -2139,6 +2486,7 @@ def build_dashboard_html(
     function onSearchInput() {{
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => {{
+        selectedCardIndex = -1;
         renderHero();
         renderMain({{ animate: false }});
       }}, 100);
@@ -2260,6 +2608,22 @@ def build_dashboard_html(
       return 'gen-box';
     }}
 
+    function urgencyBadgeHtml(effScore, item) {{
+      const text = ((item.func_tag || '') + ' ' + (item.title || '') + ' ' + (item.summary || '')).toLowerCase();
+      const isCritical = effScore >= 88 && (
+        text.includes('fca') ||
+        text.includes('pra') ||
+        text.includes('audit') ||
+        text.includes('regulation') ||
+        text.includes('privacy') ||
+        text.includes('governance')
+      );
+      if (isCritical) {{
+        return '<span class="urgency-badge" title="High Governance & Regulatory Relevance">🔴 High Urgency</span>';
+      }}
+      return '';
+    }}
+
     function updateSavedTabCount() {{
       const btn = document.getElementById('savedTabBtn');
       if (btn) btn.textContent = `⭐ Saved (${{savedUrls.size}})`;
@@ -2286,7 +2650,6 @@ def build_dashboard_html(
         swapContent(() => {{ renderHero(); renderMain(); }});
         return;
       }}
-      /* Update in place so the page never flickers or re-animates */
       document.querySelectorAll(`[data-save-id="${{id}}"]`).forEach(b => {{
         b.classList.toggle('saved', nowSaved);
         b.setAttribute('aria-pressed', String(nowSaved));
@@ -2299,13 +2662,15 @@ def build_dashboard_html(
       if (ev) ev.stopPropagation();
       const item = ITEM_MAP.get(id);
       if (!item) return;
-      if (navigator.share) {{
-        navigator.share({{ title: item.title, url: item.url }}).catch(() => {{}});
-      }} else {{
-        navigator.clipboard.writeText(`${{item.title}} — ${{item.url}}`).then(() => {{
-          showToast('Link copied to clipboard');
+      const shareUrl = `${{window.location.origin}}${{window.location.pathname}}#${{id}}`;
+      if (navigator.clipboard) {{
+        navigator.clipboard.writeText(shareUrl).then(() => {{
+          showToast(`Direct story link copied (${{id}})`);
         }});
       }}
+      try {{
+        history.replaceState(null, '', '#' + id);
+      }} catch (e) {{}}
     }}
 
     function openDrawer(id, ev, direction) {{
@@ -2317,6 +2682,10 @@ def build_dashboard_html(
       const alreadyOpen = panel.classList.contains('open');
       if (!alreadyOpen) lastFocusedEl = document.activeElement;
       activeDrawerId = id;
+
+      try {{
+        history.replaceState(null, '', '#' + id);
+      }} catch (e) {{}}
 
       const paint = () => {{
         fillDrawer(item);
@@ -2359,6 +2728,7 @@ def build_dashboard_html(
             ${{escapeHtml(item.source)}}
           </span>
           <span class="pub-pill">${{escapeHtml(item.category)}}</span>
+          ${{urgencyBadgeHtml(effScore, item)}}
         </div>
         <h2 class="drawer-title">${{escapeHtml(item.title)}}</h2>
         <div class="drawer-meta">Published ${{escapeHtml(formatRelativeTime(item.published_at))}} (${{escapeHtml(item.published_at)}})</div>
@@ -2386,6 +2756,9 @@ def build_dashboard_html(
       if (lastFocusedEl && document.contains(lastFocusedEl)) {{
         lastFocusedEl.focus({{ preventScroll: true }});
       }}
+      try {{
+        history.replaceState(null, '', window.location.pathname);
+      }} catch (e) {{}}
     }}
 
     function stepDrawer(delta) {{
@@ -2399,6 +2772,7 @@ def build_dashboard_html(
     function setRoleLens(lens, btn) {{
       if (lens === currentLens) return;
       currentLens = lens;
+      selectedCardIndex = -1;
       document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       const labels = {{
@@ -2413,6 +2787,15 @@ def build_dashboard_html(
         renderHero();
         renderMain();
       }});
+    }}
+
+    function setTopic(topic, btn) {{
+      if (topic === currentTopic) return;
+      currentTopic = topic;
+      selectedCardIndex = -1;
+      document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      swapContent(() => renderMain());
     }}
 
     function setupScrollReveal() {{
@@ -2460,7 +2843,7 @@ def build_dashboard_html(
       const top3 = sorted.slice(0, 3);
       const heroSec = document.getElementById('heroSection');
       const heroGrid = document.getElementById('heroGrid');
-      if (!top3.length || currentFilter !== 'all' || q) {{
+      if (!top3.length || currentFilter !== 'all' || currentTopic !== 'all' || q) {{
         heroSec.style.display = 'none';
         return;
       }}
@@ -2470,12 +2853,14 @@ def build_dashboard_html(
         const isSaved = savedUrls.has(item.url);
         const effScore = getActiveScore(item);
         const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
+        const urgencyBadge = urgencyBadgeHtml(effScore, item);
         return `
-          <article class="hero-card" onclick="openDrawer('${{item.id}}', event)">
+          <article class="hero-card" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
                   <span class="rank-pill">#${{idx + 1}} · ${{effScore}}/100</span>
+                  ${{urgencyBadge}}
                   ${{newBadge}}
                   <span class="pub-pill">
                     <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
@@ -2504,6 +2889,7 @@ def build_dashboard_html(
     function setFilter(filter, btn) {{
       if (filter === currentFilter) return;
       currentFilter = filter;
+      selectedCardIndex = -1;
       document.querySelectorAll('.tab').forEach(t => {{
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
@@ -2528,6 +2914,7 @@ def build_dashboard_html(
     function setViewMode(mode) {{
       if (mode === currentView) return;
       currentView = mode;
+      selectedCardIndex = -1;
       localStorage.setItem('ai-news-view', mode);
       document.getElementById('viewCardsBtn').classList.toggle('active', mode === 'cards');
       document.getElementById('viewTableBtn').classList.toggle('active', mode === 'table');
@@ -2547,6 +2934,18 @@ def build_dashboard_html(
         if (currentFilter === 'ops' && (effScore < 70 || effScore >= 85)) return false;
         if (currentFilter === 'general' && effScore >= 70) return false;
         if (currentFilter === 'saved' && !savedUrls.has(item.url)) return false;
+
+        if (currentTopic !== 'all') {{
+          const tag = (item.func_tag || '').toLowerCase();
+          const txt = (item.title + ' ' + (item.summary || '') + ' ' + (item.benefit || '')).toLowerCase();
+          if (currentTopic === 'fca' && !(tag.includes('fca') || tag.includes('regulation') || txt.includes('fca') || txt.includes('pra') || txt.includes('regulatory'))) return false;
+          if (currentTopic === 'audit' && !(tag.includes('audit') || tag.includes('risk') || txt.includes('audit') || txt.includes('internal audit') || txt.includes('sox'))) return false;
+          if (currentTopic === 'cfo' && !(tag.includes('cfo') || tag.includes('strategy') || txt.includes('cfo') || txt.includes('finance ops') || txt.includes('forecasting'))) return false;
+          if (currentTopic === 'privacy' && !(tag.includes('privacy') || tag.includes('security') || txt.includes('privacy') || txt.includes('gdpr') || txt.includes('confidential'))) return false;
+          if (currentTopic === 'agents' && !(tag.includes('agent') || tag.includes('workflow') || tag.includes('architecture') || txt.includes('agent'))) return false;
+          if (currentTopic === 'models' && !(tag.includes('frontier') || tag.includes('model') || txt.includes('gpt') || txt.includes('gemini') || txt.includes('claude') || txt.includes('deepmind'))) return false;
+        }}
+
         if (q) {{
           const hay = (item.title + ' ' + item.summary + ' ' + item.benefit + ' ' + item.source + ' ' + item.func_tag).toLowerCase();
           if (!hay.includes(q)) return false;
@@ -2558,7 +2957,7 @@ def build_dashboard_html(
 
       if (!filtered.length) {{
         container.className = 'swap-target';
-        container.innerHTML = '<div class="empty-state">No stories match your current filter or search query.</div>';
+        container.innerHTML = '<div class="empty-state">No stories match your current filter, topic, or search query.</div>';
         return;
       }}
 
@@ -2581,12 +2980,16 @@ def build_dashboard_html(
                 const isSaved = savedUrls.has(item.url);
                 const effScore = getActiveScore(item);
                 const newBadge = item.is_new ? '<span class="new-badge" style="margin-right:6px;">NEW</span>' : '';
+                const urgencyBadge = urgencyBadgeHtml(effScore, item);
                 return `
-                  <tr class="${{animate ? 'row-in' : ''}}" style="--i:${{Math.min(rowIdx, 20)}}" onclick="openDrawer('${{item.id}}', event)">
+                  <tr class="${{animate ? 'row-in' : ''}}" style="--i:${{Math.min(rowIdx, 20)}}" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
                     <td>
                       <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
                     </td>
-                    <td><span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span></td>
+                    <td>
+                      <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span>
+                      ${{urgencyBadge}}
+                    </td>
                     <td>
                       <a class="compact-headline" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">
                         ${{newBadge}}${{escapeHtml(item.title)}}
@@ -2615,15 +3018,17 @@ def build_dashboard_html(
         const isSaved = savedUrls.has(item.url);
         const effScore = getActiveScore(item);
         const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
+        const urgencyBadge = urgencyBadgeHtml(effScore, item);
         const summaryHtml = item.summary
           ? `<p class="card-summary">${{escapeHtml(item.summary)}}</p>`
           : '';
         return `
-          <article class="news-card ${{animate ? 'pre-reveal' : ''}}" onclick="openDrawer('${{item.id}}', event)">
+          <article class="news-card ${{animate ? 'pre-reveal' : ''}}" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
                   <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span>
+                  ${{urgencyBadge}}
                   ${{newBadge}}
                   <span class="pub-pill">
                     <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
@@ -2653,7 +3058,10 @@ def build_dashboard_html(
                 ${{escapeHtml(item.benefit)}}
               </div>
               <div class="card-footer">
-                <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
+                <div style="display:inline-flex;align-items:center;gap:8px;">
+                  <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
+                  <span class="time-chip" title="Executive takeaway read time">⚡ 30s brief</span>
+                </div>
                 <div class="footer-links">
                   <button class="quick-brief-btn" onclick="openDrawer('${{item.id}}', event)">⚡ Quick Brief</button>
                   <a class="read-link" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">Source <span class="arrow">↗</span></a>
@@ -2686,19 +3094,145 @@ def build_dashboard_html(
     function copyTeamBriefing() {{
       const top5 = getSortedItems().slice(0, 5);
       const lines = [
-        `*UK Finance & AI Morning Briefing ({html.escape(date_str)})*`,
+        `*UK Finance & AI Morning Briefing (${{DATE_STR}})*`,
         `Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
         ``
       ];
       top5.forEach((it, idx) => {{
         lines.push(`${{idx + 1}}. *${{it.title}}* (${{it.source}} — ${{it.func_tag}})`);
-        lines.push(`   ↳ ${{(it.benefit || '')}}`);
+        lines.push(`   ↳ Takeaway: ${{(it.benefit || '')}}`);
+        lines.push(`   ↳ Recommended Action: ${{(it.action_item || '')}}`);
         lines.push(`   ${{it.url}}`);
         lines.push(``);
       }});
       navigator.clipboard.writeText(lines.join('\\n')).then(() => {{
-        showToast('Copied Top 5 briefing to clipboard');
+        showToast('✓ Copied Top 5 briefing for Teams / Slack');
       }});
+    }}
+
+    function openEmailDraft() {{
+      const top5 = getSortedItems().slice(0, 5);
+      const subject = encodeURIComponent(`Executive AI Briefing for UK Finance — ${{DATE_STR}}`);
+      let body = `UK FINANCE & CFO AI INTELLIGENCE BRIEFING\\nDate: ${{DATE_STR}}\\nLive Dashboard: https://mhutt97.github.io/ai-news-daily/\\n\\n` +
+        `TOP 5 PRIORITIES & ACTION ITEMS FOR UK FINANCE LEADERSHIP:\\n\\n`;
+      top5.forEach((it, idx) => {{
+        body += `${{idx + 1}}. ${{it.title}} [${{it.func_tag}}]\\n`;
+        body += `Takeaway: ${{it.benefit}}\\n`;
+        body += `Action: ${{it.action_item}}\\n`;
+        body += `Link: ${{it.url}}\\n\\n`;
+      }});
+      body += `Note: Algorithmic executive aggregation curated for internal management discussion.`;
+      window.location.href = `mailto:?subject=${{subject}}&body=${{encodeURIComponent(body)}}`;
+    }}
+
+    function copyDashboardUrl() {{
+      const shareUrl = `${{window.location.origin}}${{window.location.pathname}}`;
+      if (navigator.clipboard) {{
+        navigator.clipboard.writeText(shareUrl).then(() => {{
+          showToast('✓ Live Dashboard URL copied to clipboard');
+        }});
+      }}
+    }}
+
+    function exportToCsv() {{
+      const sorted = getSortedItems();
+      const headers = [
+        "Rank",
+        "Priority Score",
+        "Tier",
+        "Area / Tag",
+        "Title",
+        "Summary",
+        "UK Finance Takeaway",
+        "Audit & FCA Governance Risk",
+        "Recommended Action",
+        "Publisher",
+        "Category",
+        "Published At",
+        "URL"
+      ];
+      const rows = [headers.map(h => `"${{h.replace(/"/g, '""')}}"`).join(",")];
+      sorted.forEach((it, idx) => {{
+        const effScore = getActiveScore(it);
+        const row = [
+          idx + 1,
+          effScore,
+          it.tier || "",
+          it.func_tag || "",
+          it.title || "",
+          it.summary || "",
+          it.benefit || "",
+          it.risk_angle || "",
+          it.action_item || "",
+          it.source || "",
+          it.category || "",
+          it.published_at || "",
+          it.url || ""
+        ];
+        rows.push(row.map(val => `"${{String(val || '').replace(/"/g, '""')}}"`).join(","));
+      }});
+      const csvContent = "\\uFEFF" + rows.join("\\r\\n");
+      const blob = new Blob([csvContent], {{ type: "text/csv;charset=utf-8;" }});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const datePart = new Date().toISOString().slice(0, 10);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `UK_Finance_AI_Briefing_${{datePart}}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast("✓ Exported CSV for Excel & Risk Registers");
+    }}
+
+    function openShareModal() {{
+      lastFocusedEl = document.activeElement;
+      document.getElementById('shareModalBackdrop').classList.add('open');
+    }}
+    function closeShareModal() {{
+      document.getElementById('shareModalBackdrop').classList.remove('open');
+      if (lastFocusedEl && document.contains(lastFocusedEl)) lastFocusedEl.focus({{ preventScroll: true }});
+    }}
+
+    function toggleKbdModal() {{
+      const modal = document.getElementById('kbdModalBackdrop');
+      if (modal.classList.contains('open')) {{
+        closeKbdModal();
+      }} else {{
+        lastFocusedEl = document.activeElement;
+        modal.classList.add('open');
+      }}
+    }}
+    function closeKbdModal() {{
+      document.getElementById('kbdModalBackdrop').classList.remove('open');
+      if (lastFocusedEl && document.contains(lastFocusedEl)) lastFocusedEl.focus({{ preventScroll: true }});
+    }}
+
+    function checkUrlHash() {{
+      const hash = (window.location.hash || '').replace('#', '').trim();
+      if (!hash) return;
+      const item = ITEM_MAP.get(hash);
+      if (!item) return;
+
+      if (currentFilter !== 'all' || currentTopic !== 'all') {{
+        currentFilter = 'all';
+        currentTopic = 'all';
+        document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-filter') === 'all'));
+        document.querySelectorAll('.topic-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-topic') === 'all'));
+        moveIndicator(document.getElementById('filterTabs'));
+        renderMain({{ animate: false }});
+      }}
+
+      setTimeout(() => {{
+        const cardEl = document.querySelector(`[data-card-id="${{hash}}"]`);
+        if (cardEl) {{
+          cardEl.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+          cardEl.classList.remove('target-highlight');
+          void cardEl.offsetWidth;
+          cardEl.classList.add('target-highlight');
+        }}
+        openDrawer(hash);
+      }}, 120);
     }}
 
     function toggleTheme() {{
@@ -2738,11 +3272,32 @@ def build_dashboard_html(
       resizeTimer = setTimeout(() => moveAllIndicators(false), 100);
     }});
 
+    window.addEventListener('hashchange', checkUrlHash);
+
     window.addEventListener('keydown', (e) => {{
-      if (e.key === 'Escape' && activeDrawerId) {{
-        closeDrawer();
-        return;
+      const isInput = document.activeElement === document.getElementById('searchInput') ||
+                      document.activeElement.tagName === 'INPUT' ||
+                      document.activeElement.tagName === 'TEXTAREA';
+
+      if (e.key === 'Escape') {{
+        if (document.getElementById('shareModalBackdrop').classList.contains('open')) {{
+          closeShareModal();
+          return;
+        }}
+        if (document.getElementById('kbdModalBackdrop').classList.contains('open')) {{
+          closeKbdModal();
+          return;
+        }}
+        if (activeDrawerId) {{
+          closeDrawer();
+          return;
+        }}
+        if (isInput) {{
+          document.activeElement.blur();
+          return;
+        }}
       }}
+
       if (activeDrawerId && e.key === 'ArrowRight') {{
         stepDrawer(1);
         return;
@@ -2751,9 +3306,75 @@ def build_dashboard_html(
         stepDrawer(-1);
         return;
       }}
-      if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {{
+
+      if (isInput) return;
+
+      if (e.key === '/') {{
         e.preventDefault();
-        document.getElementById('searchInput').focus();
+        const inp = document.getElementById('searchInput');
+        if (inp) inp.focus();
+        return;
+      }}
+
+      if (e.key === '?' || (e.key === '/' && e.shiftKey)) {{
+        e.preventDefault();
+        toggleKbdModal();
+        return;
+      }}
+
+      if (e.key === 's' || e.key === 'S') {{
+        e.preventDefault();
+        openShareModal();
+        return;
+      }}
+
+      if (e.key === 'c' || e.key === 'C') {{
+        e.preventDefault();
+        copyTeamBriefing();
+        return;
+      }}
+
+      if (e.key === 'e' || e.key === 'E') {{
+        e.preventDefault();
+        exportToCsv();
+        return;
+      }}
+
+      if (e.key === 't' || e.key === 'T') {{
+        e.preventDefault();
+        toggleTheme();
+        return;
+      }}
+
+      // Keyboard navigation through list of cards
+      const navigableCards = Array.from(document.querySelectorAll('.cards-grid .news-card, .compact-table tbody tr'));
+      if (!navigableCards.length) return;
+
+      if (e.key === 'j' || e.key === 'ArrowDown') {{
+        e.preventDefault();
+        selectedCardIndex = Math.min(selectedCardIndex + 1, navigableCards.length - 1);
+        navigableCards.forEach((c, idx) => c.classList.toggle('kbd-selected', idx === selectedCardIndex));
+        if (navigableCards[selectedCardIndex]) {{
+          navigableCards[selectedCardIndex].scrollIntoView({{ behavior: 'smooth', block: 'nearest' }});
+        }}
+        return;
+      }}
+
+      if (e.key === 'k' || e.key === 'ArrowUp') {{
+        e.preventDefault();
+        selectedCardIndex = Math.max(selectedCardIndex - 1, 0);
+        navigableCards.forEach((c, idx) => c.classList.toggle('kbd-selected', idx === selectedCardIndex));
+        if (navigableCards[selectedCardIndex]) {{
+          navigableCards[selectedCardIndex].scrollIntoView({{ behavior: 'smooth', block: 'nearest' }});
+        }}
+        return;
+      }}
+
+      if (e.key === 'Enter' || e.key === 'o') {{
+        if (selectedCardIndex >= 0 && navigableCards[selectedCardIndex]) {{
+          e.preventDefault();
+          navigableCards[selectedCardIndex].click();
+        }}
       }}
     }});
 
@@ -2778,6 +3399,7 @@ def build_dashboard_html(
       animateKpiCounters();
       requestAnimationFrame(() => moveAllIndicators(false));
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => moveAllIndicators(false));
+      setTimeout(checkUrlHash, 250);
     }})();
   </script>
 </body>
