@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 import html
 import json
 from pathlib import Path
@@ -481,6 +481,18 @@ def prepare_prioritized_cards(
     gemini_map = enrich_items_with_gemini(items, settings)
     cards: list[dict[str, object]] = []
 
+    previous_urls: set[str] = set()
+    prev_data_path = DOCS_DIR / "data.json"
+    if prev_data_path.exists():
+        try:
+            prev_data = json.loads(prev_data_path.read_text(encoding="utf-8"))
+            if isinstance(prev_data, list):
+                previous_urls = {
+                    str(r.get("url")) for r in prev_data if isinstance(r, dict) and r.get("url")
+                }
+        except Exception:
+            pass
+
     for idx, item in enumerate(items):
         score, tier, func_tag, summary, benefit = analyze_uk_finance_benefit(item)
         if idx in gemini_map:
@@ -498,6 +510,7 @@ def prepare_prioritized_cards(
 
         breakdown = build_executive_breakdown(item, score, func_tag, benefit)
         pub_domain = resolve_publisher_domain(item.source, item.url)
+        is_new = bool(previous_urls and item.url not in previous_urls)
 
         cards.append(
             {
@@ -518,6 +531,7 @@ def prepare_prioritized_cards(
                 "benefit": benefit,
                 "risk_angle": breakdown["risk_angle"],
                 "action_item": breakdown["action_item"],
+                "is_new": is_new,
             }
         )
 
@@ -525,7 +539,9 @@ def prepare_prioritized_cards(
     return cards
 
 
-def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
+def build_dashboard_html(
+    cards: list[dict[str, object]], date_str: str, updated_at: str = ""
+) -> str:
     """Render a modern, mobile-first, animated UK Finance & AI Intelligence Dashboard."""
     total = max(len(cards), 1)
     high_impact_count = sum(1 for c in cards if int(c["score"]) >= 85)
@@ -535,6 +551,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     high_pct = round((high_impact_count / total) * 100, 1)
     ops_pct = round((ops_count / total) * 100, 1)
     gen_pct = max(0.0, round(100.0 - high_pct - ops_pct, 1))
+    sources_count = len({str(c.get("source", "")) for c in cards if c.get("source")})
+    updated_str = updated_at or datetime.now(timezone.utc).strftime("%d %b %Y · %H:%M UTC")
 
     cards_json = json.dumps(cards, ensure_ascii=False)
 
@@ -545,6 +563,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#070b14" />
   <meta name="description" content="Daily AI News & UK CFO Intelligence Dashboard — ranked by practical impact for UK Finance, Accounting, Audit & FP&A teams." />
+  <meta property="og:title" content="UK Finance & AI Daily Intelligence — {html.escape(date_str)}" />
+  <meta property="og:description" content="Executive AI intelligence curated daily for UK CFOs, Audit Directors, and FCA Compliance teams." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mhutt97.github.io/ai-news-daily/" />
+  <meta name="robots" content="index, follow" />
   <title>UK Finance & AI Daily Intelligence — {html.escape(date_str)}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -898,7 +921,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .hero-card {{
       background: var(--surface);
-      backdrop-filter: blur(10px);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 18px 20px;
@@ -935,7 +957,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .kpi-card {{
       background: var(--surface);
-      backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 16px 18px;
@@ -1197,7 +1218,6 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .news-card {{
       background: var(--surface);
-      backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 22px 24px;
@@ -1743,6 +1763,96 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       animation-timing-function: var(--ease-in-out);
     }}
 
+    .uk-flag {{
+      width: 15px;
+      height: 10px;
+      border-radius: 2px;
+      vertical-align: -1px;
+      display: inline-block;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
+      flex-shrink: 0;
+    }}
+    .score-info-trigger {{
+      cursor: help;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      margin-left: 2px;
+      margin-right: 2px;
+      transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+    }}
+    .score-info-trigger:hover {{
+      color: var(--text);
+      border-color: var(--accent);
+    }}
+    .new-badge {{
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #34d399;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+    }}
+    .dashboard-footer {{
+      margin-top: 56px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12.5px;
+      animation: fadeSlideUp 0.6s var(--spring) both;
+    }}
+    .footer-inner {{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }}
+    .footer-brand {{
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }}
+    .footer-meta {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 6px;
+    }}
+    .footer-meta strong {{
+      color: var(--text-secondary);
+    }}
+    .footer-meta a {{
+      color: var(--accent);
+      text-decoration: none;
+    }}
+    .footer-meta a:hover {{
+      text-decoration: underline;
+    }}
+    .footer-disclaimer {{
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0;
+      max-width: 72ch;
+      line-height: 1.5;
+    }}
+
     @media (max-width: 960px) {{
       .kpi-grid {{ grid-template-columns: repeat(2, 1fr); }}
     }}
@@ -1817,8 +1927,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     <header>
       <div>
         <div class="brand-row">
-          <div class="brand-badge"><span class="live-dot"></span> 🇬🇧💷 UK Finance Team Priority Edition</div>
-          <span class="date-chip">{html.escape(date_str)}</span>
+          <div class="brand-badge"><span class="live-dot"></span> <span id="brandFlagSlot"></span> UK Finance & CFO Priority Edition</div>
+          <span class="date-chip" title="Refreshed daily">{html.escape(date_str)} · {updated_str}</span>
         </div>
         <h1>Daily AI News & CFO Intelligence</h1>
         <p class="subtitle">Curated & ranked by practical benefit for UK Finance, Accounting, Audit & FP&A teams alongside global AI breakthroughs.</p>
@@ -1861,7 +1971,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     <!-- Interactive KPI Cards with Animated Count-Up -->
     <div class="kpi-grid">
       <div class="kpi-card" data-kpi="high" onclick="setFilterByName('high')">
-        <div class="kpi-label">🇬🇧 High UK Finance Impact</div>
+        <div class="kpi-label"><span id="kpiFlagSlot"></span> High UK Finance Impact</div>
         <div class="kpi-val" style="color: var(--gold-text);" data-count="{high_impact_count}">{high_impact_count}</div>
         <div class="kpi-sub">FCA, CFO, Audit & UK Regulation</div>
       </div>
@@ -1878,7 +1988,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       <div class="kpi-card active-kpi" data-kpi="all" onclick="setFilterByName('all')">
         <div class="kpi-label">📊 Total Curated Stories</div>
         <div class="kpi-val" data-count="{len(cards)}">{len(cards)}</div>
-        <div class="kpi-sub">Deduplicated across 11 feeds</div>
+        <div class="kpi-sub">Deduplicated across {sources_count} verified feeds</div>
       </div>
     </div>
 
@@ -1887,9 +1997,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       <div class="signal-mix-top">
         <span>TODAY'S INTELLIGENCE SIGNAL MIX</span>
         <div class="signal-legend">
-          <span class="legend-item"><span class="legend-dot" style="background:var(--gold-text);"></span> UK Finance & FCA ({high_pct}%)</span>
-          <span class="legend-item"><span class="legend-dot" style="background:var(--emerald-text);"></span> Ops & Data Security ({ops_pct}%)</span>
-          <span class="legend-item"><span class="legend-dot" style="background:var(--blue-text);"></span> Global AI & Research ({gen_pct}%)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--gold-text);"></span> UK Finance & FCA <span class="sig-pct-high">({high_pct}%)</span></span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--emerald-text);"></span> Ops & Data Security <span class="sig-pct-ops">({ops_pct}%)</span></span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--blue-text);"></span> Global AI & Research <span class="sig-pct-gen">({gen_pct}%)</span></span>
         </div>
       </div>
       <div class="signal-track">
@@ -1903,11 +2013,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     <div class="controls">
       <div class="tabs" role="tablist" id="filterTabs">
         <span class="seg-indicator" aria-hidden="true"></span>
-        <button class="tab active" data-filter="all" onclick="setFilter('all', this)">All Prioritised ({len(cards)})</button>
-        <button class="tab" data-filter="high" onclick="setFilter('high', this)">🇬🇧💷 UK Finance & CFO ({high_impact_count})</button>
-        <button class="tab" data-filter="ops" onclick="setFilter('ops', this)">⚡ Ops & Security ({ops_count})</button>
-        <button class="tab" data-filter="general" onclick="setFilter('general', this)">🌐 General AI ({general_count})</button>
-        <button class="tab" data-filter="saved" id="savedTabBtn" onclick="setFilter('saved', this)">⭐ Saved (0)</button>
+        <button class="tab active" data-filter="all" role="tab" aria-selected="true" onclick="setFilter('all', this)">All Prioritised ({len(cards)})</button>
+        <button class="tab" data-filter="high" role="tab" aria-selected="false" onclick="setFilter('high', this)"><span id="tabFlagSlot"></span> High UK Finance ({high_impact_count})</button>
+        <button class="tab" data-filter="ops" role="tab" aria-selected="false" onclick="setFilter('ops', this)">⚡ Ops & Security ({ops_count})</button>
+        <button class="tab" data-filter="general" role="tab" aria-selected="false" onclick="setFilter('general', this)">🌐 General AI ({general_count})</button>
+        <button class="tab" data-filter="saved" id="savedTabBtn" role="tab" aria-selected="false" onclick="setFilter('saved', this)">⭐ Saved (0)</button>
       </div>
       <div class="right-controls">
         <div class="search-wrap">
@@ -1929,11 +2039,27 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     </div>
 
     <div id="mainContainer" class="swap-target"></div>
+
+    <footer class="dashboard-footer">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-brand"><span id="footerFlagSlot"></span> UK Finance & CFO AI Intelligence</div>
+          <p class="footer-disclaimer">Algorithmic intelligence aggregation curated for UK CFOs, Audit Partners, and FCA compliance leaders. Informational summary only; does not constitute regulatory, legal, or investment advice.</p>
+        </div>
+        <div style="text-align: right;">
+          <div class="footer-meta">
+            <span>Verified Sources: <strong>{sources_count} Feeds</strong></span>
+            <span>Refreshed: <strong>{updated_str}</strong></span>
+            <span><a href="https://github.com/Mhutt97/ai-news-daily" target="_blank" rel="noopener noreferrer">Source Code & Archive ↗</a></span>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <!-- Slide-Over Executive Quick-Brief Drawer -->
   <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
-  <aside class="drawer-panel" id="drawerPanel" aria-label="Executive Quick-Brief Drawer">
+  <aside class="drawer-panel" id="drawerPanel" role="dialog" aria-modal="true" aria-labelledby="drawerBadge" aria-label="Executive Quick-Brief Drawer">
     <div class="drawer-header">
       <span class="brand-badge" id="drawerBadge">⚡ Executive Quick-Brief</span>
       <button class="icon-btn" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">
@@ -1979,6 +2105,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
 
     const ICON_LINK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
     const ICON_BOOKMARK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+    const FLAG_SVG = '<svg class="uk-flag" viewBox="0 0 60 30" width="16" height="11" aria-hidden="true"><clipPath id="flag-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="diag-clip"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#flag-clip)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#diag-clip)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
 
     /* Slide the shared pill indicator under the active tab / view button */
     function moveIndicator(container, animate = true) {{
@@ -2011,13 +2138,74 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
 
     function onSearchInput() {{
       clearTimeout(searchTimer);
-      searchTimer = setTimeout(() => renderMain({{ animate: false }}), 120);
+      searchTimer = setTimeout(() => {{
+        renderHero();
+        renderMain({{ animate: false }});
+      }}, 100);
     }}
 
     function escapeHtml(str) {{
-      const d = document.createElement('div');
-      d.textContent = str || '';
-      return d.innerHTML;
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }}
+
+    function safeUrl(url) {{
+      if (!url) return '#';
+      try {{
+        const u = new URL(url, window.location.origin);
+        if (u.protocol === 'https:' || u.protocol === 'http:') return u.href;
+      }} catch (e) {{}}
+      return '#';
+    }}
+
+    function updateDynamicMetrics() {{
+      const sorted = getSortedItems();
+      const total = Math.max(sorted.length, 1);
+      let high = 0, ops = 0, gen = 0;
+      sorted.forEach(it => {{
+        const s = getActiveScore(it);
+        if (s >= 85) high++;
+        else if (s >= 70) ops++;
+        else gen++;
+      }});
+      const tAll = document.querySelector('.tab[data-filter="all"]');
+      const tHigh = document.querySelector('.tab[data-filter="high"]');
+      const tOps = document.querySelector('.tab[data-filter="ops"]');
+      const tGen = document.querySelector('.tab[data-filter="general"]');
+      if (tAll) tAll.textContent = `All Prioritised (${{total}})`;
+      if (tHigh) tHigh.innerHTML = `${{FLAG_SVG}} High UK Finance (${{high}})`;
+      if (tOps) tOps.textContent = `⚡ Ops & Security (${{ops}})`;
+      if (tGen) tGen.textContent = `🌐 General AI (${{gen}})`;
+
+      const kHigh = document.querySelector('.kpi-card[data-kpi="high"] .kpi-val');
+      const kOps = document.querySelector('.kpi-card[data-kpi="ops"] .kpi-val');
+      const kGen = document.querySelector('.kpi-card[data-kpi="general"] .kpi-val');
+      if (kHigh) kHigh.textContent = high;
+      if (kOps) kOps.textContent = ops;
+      if (kGen) kGen.textContent = gen;
+
+      const pHigh = ((high / total) * 100).toFixed(1);
+      const pOps = ((ops / total) * 100).toFixed(1);
+      const pGen = Math.max(0, (100 - parseFloat(pHigh) - parseFloat(pOps))).toFixed(1);
+      const segs = document.querySelectorAll('.signal-seg');
+      if (segs.length >= 3) {{
+        segs[0].style.width = pHigh + '%';
+        segs[1].style.width = pOps + '%';
+        segs[2].style.width = pGen + '%';
+      }}
+      const lHigh = document.querySelector('.sig-pct-high');
+      const lOps = document.querySelector('.sig-pct-ops');
+      const lGen = document.querySelector('.sig-pct-gen');
+      if (lHigh) lHigh.textContent = `(${{pHigh}}%)`;
+      if (lOps) lOps.textContent = `(${{pOps}}%)`;
+      if (lGen) lGen.textContent = `(${{pGen}}%)`;
+
+      moveIndicator(document.getElementById('filterTabs'));
     }}
 
     function showToast(msg) {{
@@ -2221,6 +2409,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       }};
       swapContent(() => {{
         document.getElementById('heroTitle').textContent = labels[lens] || labels.default;
+        updateDynamicMetrics();
         renderHero();
         renderMain();
       }});
@@ -2266,11 +2455,12 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
 
     function renderHero() {{
+      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
       const sorted = getSortedItems();
       const top3 = sorted.slice(0, 3);
       const heroSec = document.getElementById('heroSection');
       const heroGrid = document.getElementById('heroGrid');
-      if (!top3.length || currentFilter !== 'all') {{
+      if (!top3.length || currentFilter !== 'all' || q) {{
         heroSec.style.display = 'none';
         return;
       }}
@@ -2279,12 +2469,14 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       heroGrid.innerHTML = top3.map((item, idx) => {{
         const isSaved = savedUrls.has(item.url);
         const effScore = getActiveScore(item);
+        const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
         return `
           <article class="hero-card" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
                   <span class="rank-pill">#${{idx + 1}} · ${{effScore}}/100</span>
+                  ${{newBadge}}
                   <span class="pub-pill">
                     <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
                     ${{escapeHtml(item.source)}}
@@ -2296,7 +2488,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                 </div>
               </div>
               <h3 class="card-title">
-                <a href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
+                <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
               </h3>
               <p class="card-summary" style="margin-bottom: 12px;">${{escapeHtml(item.benefit)}}</p>
             </div>
@@ -2312,9 +2504,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     function setFilter(filter, btn) {{
       if (filter === currentFilter) return;
       currentFilter = filter;
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => {{
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      }});
       if (btn) {{
         btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
         btn.scrollIntoView({{ behavior: 'smooth', inline: 'center', block: 'nearest' }});
       }}
       moveIndicator(document.getElementById('filterTabs'));
@@ -2346,9 +2542,10 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       const sorted = getSortedItems();
 
       const filtered = sorted.filter(item => {{
-        if (currentFilter === 'high' && item.score < 85) return false;
-        if (currentFilter === 'ops' && (item.score < 70 || item.score >= 85)) return false;
-        if (currentFilter === 'general' && item.score >= 70) return false;
+        const effScore = getActiveScore(item);
+        if (currentFilter === 'high' && effScore < 85) return false;
+        if (currentFilter === 'ops' && (effScore < 70 || effScore >= 85)) return false;
+        if (currentFilter === 'general' && effScore >= 70) return false;
         if (currentFilter === 'saved' && !savedUrls.has(item.url)) return false;
         if (q) {{
           const hay = (item.title + ' ' + item.summary + ' ' + item.benefit + ' ' + item.source + ' ' + item.func_tag).toLowerCase();
@@ -2383,6 +2580,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
               ${{filtered.map((item, rowIdx) => {{
                 const isSaved = savedUrls.has(item.url);
                 const effScore = getActiveScore(item);
+                const newBadge = item.is_new ? '<span class="new-badge" style="margin-right:6px;">NEW</span>' : '';
                 return `
                   <tr class="${{animate ? 'row-in' : ''}}" style="--i:${{Math.min(rowIdx, 20)}}" onclick="openDrawer('${{item.id}}', event)">
                     <td>
@@ -2390,7 +2588,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                     </td>
                     <td><span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span></td>
                     <td>
-                      <a class="compact-headline" href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
+                      <a class="compact-headline" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">
+                        ${{newBadge}}${{escapeHtml(item.title)}}
+                      </a>
                       <div class="compact-takeaway">${{escapeHtml(item.benefit)}}</div>
                     </td>
                     <td class="compact-hide-mobile">
@@ -2414,6 +2614,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       container.innerHTML = filtered.map(item => {{
         const isSaved = savedUrls.has(item.url);
         const effScore = getActiveScore(item);
+        const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
         const summaryHtml = item.summary
           ? `<p class="card-summary">${{escapeHtml(item.summary)}}</p>`
           : '';
@@ -2423,6 +2624,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
               <div class="card-top">
                 <div class="tag-group">
                   <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span>
+                  ${{newBadge}}
                   <span class="pub-pill">
                     <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
                     ${{escapeHtml(item.source)}}
@@ -2434,16 +2636,17 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                 </div>
               </div>
               <h3 class="card-title">
-                <a href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
+                <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
               </h3>
               ${{summaryHtml}}
             </div>
             <div>
               <div class="benefit-box ${{boxClass(effScore)}}">
                 <div class="benefit-header">
-                  <span class="benefit-label">🇬🇧 UK Finance Team Takeaway</span>
+                  <span class="benefit-label">${{FLAG_SVG}} UK Finance Team Takeaway</span>
                   <span class="score-meter-wrap">
                     <span>${{effScore}}/100</span>
+                    <span class="score-info-trigger" title="Priority Score (1-100) measures direct relevance to UK CFOs, FCA regulatory adherence, and FP&A impact.">ⓘ</span>
                     <span class="score-bar"><span class="score-fill" style="width:${{effScore}}%"></span></span>
                   </span>
                 </div>
@@ -2453,7 +2656,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                 <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
                 <div class="footer-links">
                   <button class="quick-brief-btn" onclick="openDrawer('${{item.id}}', event)">⚡ Quick Brief</button>
-                  <a class="read-link" href="${{escapeHtml(item.url)}}" target="_blank" rel="noopener noreferrer">Source <span class="arrow">↗</span></a>
+                  <a class="read-link" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">Source <span class="arrow">↗</span></a>
                 </div>
               </div>
             </div>
@@ -2483,18 +2686,18 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     function copyTeamBriefing() {{
       const top5 = getSortedItems().slice(0, 5);
       const lines = [
-        `🇬🇧💷 *UK Finance & AI Morning Briefing ({html.escape(date_str)})*`,
-        `📊 Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
+        `*UK Finance & AI Morning Briefing ({html.escape(date_str)})*`,
+        `Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
         ``
       ];
       top5.forEach((it, idx) => {{
         lines.push(`${{idx + 1}}. *${{it.title}}* (${{it.source}} — ${{it.func_tag}})`);
         lines.push(`   ↳ ${{(it.benefit || '')}}`);
-        lines.push(`   🔗 ${{it.url}}`);
+        lines.push(`   ${{it.url}}`);
         lines.push(``);
       }});
       navigator.clipboard.writeText(lines.join('\\n')).then(() => {{
-        showToast('✓ Copied Top 5 UK Finance Briefing to clipboard!');
+        showToast('Copied Top 5 briefing to clipboard');
       }});
     }}
 
@@ -2555,11 +2758,21 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }});
 
     (function init() {{
+      const bFlag = document.getElementById('brandFlagSlot');
+      if (bFlag) bFlag.innerHTML = FLAG_SVG;
+      const kFlag = document.getElementById('kpiFlagSlot');
+      if (kFlag) kFlag.innerHTML = FLAG_SVG;
+      const tFlag = document.getElementById('tabFlagSlot');
+      if (tFlag) tFlag.innerHTML = FLAG_SVG;
+      const fFlag = document.getElementById('footerFlagSlot');
+      if (fFlag) fFlag.innerHTML = FLAG_SVG;
+
       const savedTheme = localStorage.getItem('ai-news-theme');
       if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
       document.getElementById('viewCardsBtn').classList.toggle('active', currentView === 'cards');
       document.getElementById('viewTableBtn').classList.toggle('active', currentView === 'table');
       updateSavedTabCount();
+      updateDynamicMetrics();
       renderHero();
       renderMain();
       animateKpiCounters();
@@ -2576,9 +2789,11 @@ def generate_dashboard_files(
 ) -> tuple[Path, list[dict[str, object]]]:
     """Generate docs/index.html and docs/data.json for the web dashboard."""
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    today_str = datetime.now().strftime("%B %d, %Y")
     cards = prepare_prioritized_cards(items, settings)
-    dashboard_html = build_dashboard_html(cards, today_str)
+    now_utc = datetime.now(timezone.utc)
+    today_str = now_utc.strftime("%B %d, %Y")
+    updated_at_str = now_utc.strftime("%d %b %Y · %H:%M UTC")
+    dashboard_html = build_dashboard_html(cards, today_str, updated_at=updated_at_str)
 
     index_path = DOCS_DIR / "index.html"
     data_path = DOCS_DIR / "data.json"

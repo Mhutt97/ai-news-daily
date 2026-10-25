@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AINewsDailyBot/1.0 (+https://github.com/ai-news-daily)"
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
 )
 
 
@@ -84,17 +84,6 @@ RSS_FEEDS: list[dict[str, str]] = [
         "name": "MIT Technology Review AI",
         "category": "Tech & AI News",
         "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed",
-    },
-    # Category 4 (part): Reddit AI Communities
-    {
-        "name": "r/MachineLearning",
-        "category": "Hacker News & Reddit",
-        "url": "https://www.reddit.com/r/MachineLearning/top/.rss?t=day",
-    },
-    {
-        "name": "r/LocalLLaMA",
-        "category": "Hacker News & Reddit",
-        "url": "https://www.reddit.com/r/LocalLLaMA/top/.rss?t=day",
     },
 ]
 
@@ -185,7 +174,7 @@ def fetch_rss_feed(
                 or ""
             )
             dt = _parse_datetime(pub_raw)
-            if dt and dt < cutoff and len(items) >= 2:
+            if dt and dt < cutoff:
                 continue
             if title and link:
                 items.append(
@@ -236,7 +225,7 @@ def fetch_rss_feed(
         )
         pub_raw = pub_el.text if pub_el is not None and pub_el.text else ""
         dt = _parse_datetime(pub_raw)
-        if dt and dt < cutoff and len(items) >= 2:
+        if dt and dt < cutoff:
             continue
 
         if title and link:

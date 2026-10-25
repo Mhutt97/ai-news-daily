@@ -67,6 +67,13 @@ def main() -> int:
         )
         print(f"[info] Retrieved {len(items)} unique AI news items across all categories.")
 
+        if len(items) < 5:
+            print(
+                f"[warn] Only retrieved {len(items)} items (<5 minimum threshold). "
+                f"Preserving existing live dashboard to prevent blanking public site."
+            )
+            return 0
+
         md_digest, html_digest, md_path, html_path = generate_and_save_digest(
             items, settings
         )
