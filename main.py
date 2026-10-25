@@ -75,9 +75,53 @@ def main() -> int:
         print(f"[ok] Saved HTML email digest: {html_path}")
         print(f"[ok] Saved Web Dashboard:     {dashboard_path}")
         if os.getenv("GITHUB_ACTIONS") == "true":
-            subprocess.run(
-                ["git", "add", "docs/index.html", "docs/data.json"], check=False
-            )
+            try:
+                subprocess.run(
+                    ["git", "config", "user.name", "github-actions[bot]"],
+                    check=False,
+                )
+                subprocess.run(
+                    [
+                        "git",
+                        "config",
+                        "user.email",
+                        "41898282+github-actions[bot]@users.noreply.github.com",
+                    ],
+                    check=False,
+                )
+                subprocess.run(
+                    [
+                        "git",
+                        "add",
+                        str(md_path),
+                        str(html_path),
+                        "docs/index.html",
+                        "docs/data.json",
+                    ],
+                    check=False,
+                )
+                diff_check = subprocess.run(
+                    ["git", "diff", "--staged", "--quiet"], check=False
+                )
+                if diff_check.returncode != 0:
+                    from datetime import datetime, timezone
+
+                    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+                    subprocess.run(
+                        [
+                            "git",
+                            "commit",
+                            "-m",
+                            f"chore(digest): update daily AI news briefing and dashboard for {today_str}",
+                        ],
+                        check=True,
+                    )
+                    subprocess.run(["git", "push", "origin", "HEAD:main"], check=True)
+                    print(
+                        "[ok] Committed and pushed updated digests and dashboard to GitHub Pages."
+                    )
+            except Exception as exc:
+                print(f"[warn] GitHub Actions auto-commit/push failed: {exc}")
 
     if args.dry_run:
         print("\n--- DRY RUN PREVIEW (First 45 lines) ---")

@@ -171,6 +171,10 @@ def fetch_rss_feed(
                      title = main_t.strip()
                      publisher = source_tag or tail_pub.strip()
 
+            # Skip generic stock ticker quote landing pages
+            if "stock price, news, quote" in title.lower():
+                continue
+
             # If description just repeats the title (common in Google News RSS), clear it
             if desc and title and desc.lower().startswith(title[:35].lower()):
                 desc = ""

@@ -1,6 +1,6 @@
 [
   {
-    "id": "item-30",
+    "id": "item-27",
     "title": "AI adoption and regulation: the latest FCA view",
     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNaU1ZRE5WNzc2QjkySmpoQndVX3lVMjMtMUxxejhCdEZpVzJIZEo3d1NYSDk2cVZqbHdkZjNNaENkNGlEN3NwRW5LdnA2aGRTUm9fQkZPbHo1MFY0NGl2ZVl5NHNaZ21SbXgtM2YwU3JjZ19rN19lVTFSOGFfcTVNQ1N4RGc2RU9fZ3U5TkZMVFQ0eFhIV21JWQ?oc=5",
     "source": "Deloitte",
@@ -19,7 +19,7 @@
     "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
   },
   {
-    "id": "item-34",
+    "id": "item-29",
     "title": "82% of UK and Irish Finance Leaders Feel Pressured to Adopt AI Faster Than They Are Comfortable With",
     "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNc0dOWmFZX2wzVTByazBEa0VySmFTMkhoblg5MF9tS0lYa2JhQzlWbXBmc3E4QW5UM0I0M2Q0RnduZUhiM0VGNkdQSXdVWFhWTlBxRVVtb19JbVlfVHVrQ21Vb1pRbEgwSkg1VGtGT3hCOXcwdWhxY3VHcE1VaEdwNDk4OTdpZk5zWnJpVzk0VTU0dzZLQVp2NGQ4NnVkLWlpZHBLeGZGM2xHQWFWOHJlWElYalVGZlFsVXJWZ3ZnWXV0b0N4M2RMcjA4VG5TMUhsY3F4SkI4MkhRcEFwRVE?oc=5",
     "source": "Enterprise Times",
@@ -38,26 +38,7 @@
     "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."
   },
   {
-    "id": "item-33",
-    "title": "U.K. FCA Draft Flags Rigid Crypto Tracing Limits Without Risk Measures",
-    "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBaU1BuLVFlbE1sRC10dlJYTE9vckxsdnltUzZIbXhmc2JlQmJXVDVzV1U2ZTVvUm4yR2hQaExvYi1MNXd1amQ5OEUyN2FxUmhrN054WDM0ZmVod2s?oc=5",
-    "source": "TOKENPOST",
-    "pub_domain": "tokenpost.com",
-    "category": "UK Finance & CFO AI",
-    "published_at": "2026-10-24 04:24 UTC",
-    "score": 96,
-    "cfo_score": 98,
-    "audit_score": 100,
-    "fpa_score": 96,
-    "tier": "High UK Finance Impact",
-    "func_tag": "🏛️ FCA & Compliance",
-    "summary": "",
-    "benefit": "FCA Digital Asset Rules (TOKENPOST): Flags where automated transaction tracing must be paired with proportionate risk-based compliance controls.",
-    "risk_angle": "High UK Regulatory Relevance: FCA oversight expects senior management accountability (SM&CR), outcome testing, and clear operational resilience when AI is used in financial services.",
-    "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
-  },
-  {
-    "id": "item-35",
+    "id": "item-30",
     "title": "UK finance leaders back AI but struggle to prove value",
     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQYlpCNUtrbzNuMVRPc2Q0azR1QlZua3IzOHBkcGxVeWw5NVRSSFc5cl9YVS1oODdYWTRCQlF2aDFCdmdsVXFISFB0d1EzX2JiQ3NDd284LUhXakxrem9sNXlmTjlFUWR1amdjOTdIcGtrVktvYk9PdHA1RTJrZE10UHhCSGRMRGVUOHc?oc=5",
     "source": "IT Brief UK",
@@ -76,7 +57,7 @@
     "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."
   },
   {
-    "id": "item-31",
+    "id": "item-28",
     "title": "AI’s biggest challenge in banking isn’t technology alone",
     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNakJ2dmRBMGxDbDVqb25JaUJaVmZFanducE1tNXB1ODM0SkpUU1YteWt1SjRjQWZWTVkxUnhBYm5fLWxWNEFxUUR6Yjk3MnpvNFlmNTJ0R09OaGVhSkYzY0JyQ2kxaHlfV2N5U00yVDAxcWVZbjV5Y2wxUjR2YXZ3cDJrclpVT0o5VDNsWHZxQXZrQjZISlpNc2d6M3ZERE1GSDltTmhWZGg?oc=5",
     "source": "UK Finance",
@@ -95,26 +76,7 @@
     "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."
   },
   {
-    "id": "item-32",
-    "title": "Chief Ethics and Compliance Officer Survey 2026",
-    "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOeU8wWmNMcElybGV6M2FlNk0wWFQxclh6WTNYMmZtNS1HWXBLckxKOEN2SkFrTkRpWmxQekFVa3V6RFp6MlM5QTdHeDF4cGVJZzk4eG91WVlPV1JUZHR5NXhxa29uc3Rfa21kd0NUMFd6cnBwVXRXeGZ6OXhDdno2RA?oc=5",
-    "source": "KPMG International",
-    "pub_domain": "kpmg.com",
-    "category": "UK Finance & CFO AI",
-    "published_at": "2026-10-23 22:54 UTC",
-    "score": 95,
-    "cfo_score": 98,
-    "audit_score": 100,
-    "fpa_score": 95,
-    "tier": "High UK Finance Impact",
-    "func_tag": "🛡️ Governance & Ethics",
-    "summary": "",
-    "benefit": "2026 Compliance Benchmark (KPMG International): Benchmarks how chief compliance and audit leaders are updating governance controls for generative AI.",
-    "risk_angle": "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. Ensure any AI-assisted outputs have a documented human-in-the-loop review trail.",
-    "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
-  },
-  {
-    "id": "item-36",
+    "id": "item-31",
     "title": "Barclays: AI-Driven Job Cuts And Overdone Bank Tax Fears (NYSE:BCS)",
     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNVm5ZZUFkeXFQeDR3MHlOMF95SXpsMGVUb2c2UUN0bmNSbHNxeGNyZ0doUkJNMFR0MDNZbVg0ZXQxZjlDc20waElmYUNxOTAxdmJwSENtWlIwcVNOMUl0SVZtSGxMU2ZaQlRMUkRsbGhZcWJfcFhTSl95UTB6T3RTQUZtTlVNVzlJSC1UT2N2ZXZBZ3V6WS1PRW5qaEQ?oc=5",
     "source": "Seeking Alpha",
@@ -133,7 +95,7 @@
     "action_item": "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy metrics before expanding software spend."
   },
   {
-    "id": "item-21",
+    "id": "item-20",
     "title": "Updated Google privacy policy says your Gmail might be used for advertising",
     "url": "https://arstechnica.com/gadgets/2026/10/updated-google-privacy-policy-says-your-gmail-might-be-used-for-advertising/",
     "source": "Ars Technica AI",
@@ -152,26 +114,7 @@
     "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
   },
   {
-    "id": "item-4",
-    "title": "OpenAI says it will no longer train its AI models on the live internet, citing “significant risks”",
-    "url": "https://techcrunch.com/2026/10/23/openai-says-it-will-no-longer-train-its-ai-models-on-the-live-internet-citing-significant-risks/",
-    "source": "TechCrunch AI",
-    "pub_domain": "techcrunch.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-10-23 23:05 UTC",
-    "score": 83,
-    "cfo_score": 87,
-    "audit_score": 95,
-    "fpa_score": 83,
-    "tier": "Finance Ops & Governance",
-    "func_tag": "🔒 AI Security & Containment",
-    "summary": "OpenAI will cut frontier models off from the internet weeks after one of its engineers said that solution wouldn't work.",
-    "benefit": "Model Security Posture (TechCrunch AI): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks.",
-    "risk_angle": "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. Ensure any AI-assisted outputs have a documented human-in-the-loop review trail.",
-    "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
-  },
-  {
-    "id": "item-6",
+    "id": "item-5",
     "title": "Securing our frontier model training environment",
     "url": "https://openai.com/index/securing-our-frontier-model-training-environment",
     "source": "OpenAI News",
@@ -190,7 +133,26 @@
     "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
   },
   {
-    "id": "item-7",
+    "id": "item-24",
+    "title": "OpenAI now trains its frontier AI models with no internet access",
+    "url": "https://www.theverge.com/ai-artificial-intelligence/1018021/openai-training-top-ai-models-no-internet",
+    "source": "The Verge AI",
+    "pub_domain": "theverge.com",
+    "category": "Tech & AI News",
+    "published_at": "Recent",
+    "score": 83,
+    "cfo_score": 87,
+    "audit_score": 95,
+    "fpa_score": 83,
+    "tier": "Finance Ops & Governance",
+    "func_tag": "🔒 AI Security & Containment",
+    "summary": "",
+    "benefit": "Model Security Posture (The Verge AI): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks.",
+    "risk_angle": "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential management accounts, M&A drafts, or customer PII.",
+    "action_item": "Log this update in your AI Risk & Governance register and review current workspace/vendor controls against FCA and internal audit standards."
+  },
+  {
+    "id": "item-6",
     "title": "Designing an AI serving harness built to last",
     "url": "https://www.technologyreview.com/2026/10/22/1146109/designing-an-ai-serving-harness-built-to-last/",
     "source": "MIT Technology Review AI",
@@ -209,7 +171,7 @@
     "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."
   },
   {
-    "id": "item-8",
+    "id": "item-7",
     "title": "The Foundations of Scalable AI",
     "url": "https://www.technologyreview.com/2026/10/22/1146103/the-foundations-of-scalable-ai/",
     "source": "MIT Technology Review AI",
@@ -266,7 +228,7 @@
     "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."
   },
   {
-    "id": "item-5",
+    "id": "item-4",
     "title": "Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II)",
     "url": "https://openai.com/index/scaling-storage-one-billion-users-part-two",
     "source": "OpenAI News",
@@ -323,7 +285,7 @@
     "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."
   },
   {
-    "id": "item-20",
+    "id": "item-14",
     "title": "Gemini 4 Argon: Built to solve your hardest problems",
     "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
     "source": "Google AI & DeepMind Blog",
@@ -342,7 +304,7 @@
     "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."
   },
   {
-    "id": "item-27",
+    "id": "item-33",
     "title": "Does Your Model Run on AWS Trainium? Look It Up",
     "url": "https://huggingface.co/blog/torch-neuronx-model-support",
     "source": "Hugging Face Blog",
@@ -361,26 +323,7 @@
     "action_item": "Evaluate whether this capability can automate repetitive month-end close, variance commentary, or data extraction workflows in a sandboxed pilot."
   },
   {
-    "id": "item-10",
-    "title": "The LLM-Attacker: A Unified Red-Team Framework for Privacy Evaluation of Split and Distributed LLM Systems",
-    "url": "https://huggingface.co/papers/2610.22722",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-10-15",
-    "score": 66,
-    "cfo_score": 66,
-    "audit_score": 66,
-    "fpa_score": 74,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 AI Governance Research",
-    "summary": "[4 upvotes] Split language models keep input text on a client but send intermediate representations to a server. Attacks can reconstruct text from these messages. Comparing privacy evaluations is difficult when attackers see different messages, know different model weights or use different…",
-    "benefit": "Academic Research (HF Daily Papers): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.",
-    "risk_angle": "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential management accounts, M&A drafts, or customer PII.",
-    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
-  },
-  {
-    "id": "item-17",
+    "id": "item-11",
     "title": "Reliable AI-Assisted Decisions via Selective Auditing",
     "url": "https://arxiv.org/abs/2610.31662v1",
     "source": "ArXiv (cs.AI / cs.LG)",
@@ -399,7 +342,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-18",
+    "id": "item-12",
     "title": "SpectralCanary: Embarrassingly Simple Low-Frequency Traces for T2I Dataset-Use Auditing",
     "url": "https://arxiv.org/abs/2610.31659v1",
     "source": "ArXiv (cs.AI / cs.LG)",
@@ -415,6 +358,25 @@
     "summary": "Auditing whether a text-to-image (T2I) model was fine-tuned on a particular image collection is difficult: a model can absorb collection-level visual characteristics without reproducing training images. Proactive dataset-use auditing plants a shared signal…",
     "benefit": "Academic Research (ArXiv (cs.AI / cs.LG)): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.",
     "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
+    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+  },
+  {
+    "id": "item-16",
+    "title": "The LLM-Attacker: A Unified Red-Team Framework for Privacy Evaluation of Split and Distributed LLM Systems",
+    "url": "https://huggingface.co/papers/2610.22722",
+    "source": "HF Daily Papers",
+    "pub_domain": "huggingface.co",
+    "category": "Research Papers",
+    "published_at": "2026-10-15",
+    "score": 66,
+    "cfo_score": 66,
+    "audit_score": 66,
+    "fpa_score": 74,
+    "tier": "General AI & Research",
+    "func_tag": "🔬 AI Governance Research",
+    "summary": "[9 upvotes] Split language models keep input text on a client but send intermediate representations to a server. Attacks can reconstruct text from these messages. Comparing privacy evaluations is difficult when attackers see different messages, know different model weights or use different…",
+    "benefit": "Academic Research (HF Daily Papers): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.",
+    "risk_angle": "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential management accounts, M&A drafts, or customer PII.",
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
@@ -437,26 +399,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-11",
-    "title": "EvalResearchBench: Can AI Agents Build Their Own Feedback for Recursive Self-Improvement?",
-    "url": "https://huggingface.co/papers/2610.04184",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-10-16",
-    "score": 62,
-    "cfo_score": 62,
-    "audit_score": 62,
-    "fpa_score": 70,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Reasoning & Eval Paper",
-    "summary": "[2 upvotes] Recursive self-improvement (RSI) relies on evaluation feedback to assess progress and guide further research, yet repeatedly running complex benchmarks is costly and slows iteration. Human experts reduce this cost by selecting benchmark subsets or designing compact suites. We…",
-    "benefit": "Reasoning Benchmark (HF Daily Papers): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks.",
-    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
-    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
-  },
-  {
-    "id": "item-15",
+    "id": "item-9",
     "title": "Direct Pass@k Optimization for Thought Pruning: Balancing Quality and Diversity in Test-Time Reasoning",
     "url": "https://arxiv.org/abs/2610.31667v1",
     "source": "ArXiv (cs.AI / cs.LG)",
@@ -475,7 +418,26 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-12",
+    "id": "item-17",
+    "title": "EvalResearchBench: Can AI Agents Build Their Own Feedback for Recursive Self-Improvement?",
+    "url": "https://huggingface.co/papers/2610.04184",
+    "source": "HF Daily Papers",
+    "pub_domain": "huggingface.co",
+    "category": "Research Papers",
+    "published_at": "2026-10-16",
+    "score": 62,
+    "cfo_score": 62,
+    "audit_score": 62,
+    "fpa_score": 70,
+    "tier": "General AI & Research",
+    "func_tag": "🔬 Reasoning & Eval Paper",
+    "summary": "[19 upvotes] Recursive self-improvement (RSI) relies on evaluation feedback to assess progress and guide further research, yet repeatedly running complex benchmarks is costly and slows iteration. Human experts reduce this cost by selecting benchmark subsets or designing compact suites. We…",
+    "benefit": "Reasoning Benchmark (HF Daily Papers): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks.",
+    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
+    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+  },
+  {
+    "id": "item-18",
     "title": "Diffusion Language Models Change Speed Across Tasks and Languages",
     "url": "https://huggingface.co/papers/2610.25835",
     "source": "HF Daily Papers",
@@ -488,13 +450,13 @@
     "fpa_score": 68,
     "tier": "General AI & Research",
     "func_tag": "🔬 Model Efficiency Paper",
-    "summary": "[3 upvotes] Diffusion language models can write several tokens in one forward pass, and they decide during generation how many passes to spend. Two outputs of the same token length can therefore vary a lot in cost. To understand the underlying factors of this cost variation, we analyze two…",
+    "summary": "[9 upvotes] Diffusion language models can write several tokens in one forward pass, and they decide during generation how many passes to spend. Two outputs of the same token length can therefore vary a lot in cost. To understand the underlying factors of this cost variation, we analyze two…",
     "benefit": "Inference Efficiency (HF Daily Papers): Explores quantization and token-generation speed to reduce enterprise LLM compute costs.",
     "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-13",
+    "id": "item-19",
     "title": "Different Tasks, Different Timesteps: Temporal Task-Aware Quantization for Diffusion Language Models",
     "url": "https://huggingface.co/papers/2610.31198",
     "source": "HF Daily Papers",
@@ -507,32 +469,13 @@
     "fpa_score": 68,
     "tier": "General AI & Research",
     "func_tag": "🔬 Model Efficiency Paper",
-    "summary": "[15 upvotes] Diffusion Language Models (DLMs) introduce unique quantization challenges due to their iterative denoising process. In this work, we reveal that quantization sensitivity is both taskand time-dependent, with different downstream tasks exhibiting distinct precision requirements…",
+    "summary": "[23 upvotes] Diffusion Language Models (DLMs) introduce unique quantization challenges due to their iterative denoising process. In this work, we reveal that quantization sensitivity is both taskand time-dependent, with different downstream tasks exhibiting distinct precision requirements…",
     "benefit": "Inference Efficiency (HF Daily Papers): Explores quantization and token-generation speed to reduce enterprise LLM compute costs.",
     "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-9",
-    "title": "TARSphere: A Robot-Oriented Full-Stack Framework for Long-Horizon Embodied Agents in Evolving Physical and Social Environments",
-    "url": "https://huggingface.co/papers/2610.30043",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-10-21",
-    "score": 56,
-    "cfo_score": 56,
-    "audit_score": 56,
-    "fpa_score": 64,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Research Paper",
-    "summary": "[2 upvotes] Robots must act under physical and social constraints while adapting to changes in their environment and human needs. Existing embodied-agent systems often focus on specified goals or abstract execution into symbolic actions, limiting evaluation in an evolving world. We…",
-    "benefit": "Technical Research (HF Daily Papers): Early-stage academic research into foundation model architecture and alignment.",
-    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
-    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
-  },
-  {
-    "id": "item-14",
+    "id": "item-8",
     "title": "Sensorimotor Alignment: A Platonic Proxy for Embodied Policy Success",
     "url": "https://arxiv.org/abs/2610.31670v1",
     "source": "ArXiv (cs.AI / cs.LG)",
@@ -551,7 +494,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-16",
+    "id": "item-10",
     "title": "Phase Transition from Random Features to Fully Trainable Networks",
     "url": "https://arxiv.org/abs/2610.31663v1",
     "source": "ArXiv (cs.AI / cs.LG)",
@@ -570,7 +513,45 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-28",
+    "id": "item-15",
+    "title": "TARSphere: A Robot-Oriented Full-Stack Framework for Long-Horizon Embodied Agents in Evolving Physical and Social Environments",
+    "url": "https://huggingface.co/papers/2610.30043",
+    "source": "HF Daily Papers",
+    "pub_domain": "huggingface.co",
+    "category": "Research Papers",
+    "published_at": "2026-10-21",
+    "score": 56,
+    "cfo_score": 56,
+    "audit_score": 56,
+    "fpa_score": 64,
+    "tier": "General AI & Research",
+    "func_tag": "🔬 Research Paper",
+    "summary": "[8 upvotes] Robots must act under physical and social constraints while adapting to changes in their environment and human needs. Existing embodied-agent systems often focus on specified goals or abstract execution into symbolic actions, limiting evaluation in an evolving world. We…",
+    "benefit": "Technical Research (HF Daily Papers): Early-stage academic research into foundation model architecture and alignment.",
+    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
+    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+  },
+  {
+    "id": "item-36",
+    "title": "memt-1.0 architecture breakdown gated deltanet-2, mixture-of-storage, and 66x smaller storage footprint for agent memory [D]",
+    "url": "https://www.reddit.com/r/MachineLearning/comments/1xeu0ht/memt10_architecture_breakdown_gated_deltanet2/",
+    "source": "r/MachineLearning",
+    "pub_domain": "reddit.com",
+    "category": "Hacker News & Reddit",
+    "published_at": "Recent",
+    "score": 54,
+    "cfo_score": 54,
+    "audit_score": 54,
+    "fpa_score": 62,
+    "tier": "General AI & Research",
+    "func_tag": "💬 Practitioner Debate",
+    "summary": "",
+    "benefit": "Architecture Discussion (r/MachineLearning): Examines how enterprise LLMs manage long-term context retention versus selective forgetting.",
+    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
+    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+  },
+  {
+    "id": "item-34",
     "title": "Increasing number of UG authors in A* conferences with no supervisor [D]",
     "url": "https://www.reddit.com/r/MachineLearning/comments/1xe9uoh/increasing_number_of_ug_authors_in_a_conferences/",
     "source": "r/MachineLearning",
@@ -589,7 +570,26 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-29",
+    "id": "item-35",
+    "title": "ICLR 2027 is still handing out desk rejects [N]",
+    "url": "https://www.reddit.com/r/MachineLearning/comments/1xeu2z1/iclr_2027_is_still_handing_out_desk_rejects_n/",
+    "source": "r/MachineLearning",
+    "pub_domain": "reddit.com",
+    "category": "Hacker News & Reddit",
+    "published_at": "Recent",
+    "score": 50,
+    "cfo_score": 50,
+    "audit_score": 50,
+    "fpa_score": 58,
+    "tier": "General AI & Research",
+    "func_tag": "💬 Community Pulse",
+    "summary": "",
+    "benefit": "Practitioner Discussion (r/MachineLearning): Highlights community engineering insights and practical experimentation.",
+    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
+    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+  },
+  {
+    "id": "item-37",
     "title": "Got a pretrained music transformer to jam with me live, no fine-tuning, just steering the sampling [P]",
     "url": "https://www.reddit.com/r/MachineLearning/comments/1xe4pex/got_a_pretrained_music_transformer_to_jam_with_me/",
     "source": "r/MachineLearning",
@@ -608,7 +608,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-19",
+    "id": "item-13",
     "title": "Southeast Asia’s digital economy to hit $368 billion",
     "url": "https://blog.google/company-news/inside-google/around-the-globe/google-asia/e-conomy-sea-report-2026/",
     "source": "Google AI & DeepMind Blog",
@@ -627,7 +627,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-22",
+    "id": "item-21",
     "title": "Intel gets waiver after worries fuzzy US ban on foreign-made robots may hit fabs",
     "url": "https://arstechnica.com/ai/2026/10/intel-gets-waiver-after-worries-fuzzy-us-ban-on-foreign-made-robots-may-hit-fabs/",
     "source": "Ars Technica AI",
@@ -646,7 +646,26 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-24",
+    "id": "item-22",
+    "title": "Blue Planet III is keeping the rough edges in the age of AI",
+    "url": "https://www.theverge.com/ai-artificial-intelligence/1018205/blue-planet-iii-authentic-organic-ai",
+    "source": "The Verge AI",
+    "pub_domain": "theverge.com",
+    "category": "Tech & AI News",
+    "published_at": "Recent",
+    "score": 48,
+    "cfo_score": 48,
+    "audit_score": 48,
+    "fpa_score": 56,
+    "tier": "General AI & Research",
+    "func_tag": "🌐 Tech & AI News",
+    "summary": "",
+    "benefit": "General Industry Coverage (The Verge AI): Keeps teams aware of broader consumer and technology developments.",
+    "risk_angle": "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability that will influence enterprise software over the next 6–12 months.",
+    "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
+  },
+  {
+    "id": "item-25",
     "title": "Jack Dorsey’s Block made an AI model that talks to you like an awkward new friend",
     "url": "https://www.theverge.com/ai-artificial-intelligence/1017906/jack-dorsey-block-dessa-ai-voice-speech",
     "source": "The Verge AI",
@@ -665,7 +684,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-25",
+    "id": "item-26",
     "title": "The iPhone Duo should have been an iPad",
     "url": "https://www.theverge.com/podcast/1017447/iphone-duo-ipad-review-score-vergecast",
     "source": "The Verge AI",
@@ -684,7 +703,7 @@
     "action_item": "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
   },
   {
-    "id": "item-26",
+    "id": "item-32",
     "title": "LitPivot: Developing research ideas through dynamic contextualization within the literature landscape",
     "url": "https://huggingface.co/blog/allenai/litpivot",
     "source": "Hugging Face Blog",
