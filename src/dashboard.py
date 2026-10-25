@@ -580,7 +580,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       --benefit-bg: rgba(9, 14, 26, 0.68);
       --hero-gradient: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.94) 100%);
       --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
-      --spring: cubic-bezier(0.22, 1, 0.36, 1);
+      /* Motion system: one easing family, three durations */
+      --spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --drawer-ease: cubic-bezier(0.32, 0.72, 0, 1);
+      --dur-fast: 160ms;
+      --dur: 260ms;
+      --dur-slow: 520ms;
     }}
     [data-theme="light"] {{
       --bg: #f4f7fb;
@@ -642,11 +648,46 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       position: fixed;
       top: 0;
       left: 0;
-      height: 3px;
-      width: 0%;
+      right: 0;
+      height: 2px;
+      transform-origin: 0 50%;
+      transform: scaleX(0);
       background: linear-gradient(90deg, #f59e0b 0%, #3b82f6 55%, #10b981 100%);
       z-index: 999;
-      transition: width 0.08s linear;
+      will-change: transform;
+    }}
+
+    /* Accessible, understated focus rings */
+    :focus-visible {{
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 8px;
+    }}
+    :focus:not(:focus-visible) {{ outline: none; }}
+
+    /* Smooth theme cross-fade (fallback when View Transitions unsupported) */
+    html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {{
+      transition: background-color var(--dur) var(--ease-in-out), border-color var(--dur) var(--ease-in-out), color var(--dur) var(--ease-in-out) !important;
+    }}
+
+    /* Content swap fade used when filters, lenses, or views change */
+    .swap-target {{
+      transition: opacity var(--dur-fast) var(--ease-in-out), transform var(--dur-fast) var(--ease-in-out);
+    }}
+    .swap-target.is-swapping {{
+      opacity: 0;
+      transform: translateY(6px);
+    }}
+
+    .svg-icon {{
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }}
 
     .container {{
@@ -737,18 +778,22 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       align-items: center;
       justify-content: center;
       gap: 7px;
-      transition: transform 0.2s var(--spring), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      transition: transform var(--dur) var(--spring), border-color var(--dur-fast) ease, background-color var(--dur-fast) ease, box-shadow var(--dur) var(--spring);
       user-select: none;
       text-decoration: none;
     }}
     .btn:hover {{
-      transform: translateY(-2px);
-      border-color: var(--accent);
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
       background: var(--surface-hover);
-      box-shadow: 0 6px 18px -6px var(--accent-glow);
+      box-shadow: 0 6px 16px -8px var(--accent-glow);
     }}
     .btn:active {{
-      transform: translateY(0) scale(0.97);
+      transform: translateY(0) scale(0.98);
+      transition-duration: 80ms;
+    }}
+    .btn-icon-only {{
+      padding: 10px 12px;
     }}
     .btn-primary {{
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
@@ -797,8 +842,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       border-radius: 999px;
       font-size: 12px;
       font-weight: 600;
-      transition: all 0.2s var(--spring);
+      transition: color var(--dur-fast) ease, background-color var(--dur) var(--spring), border-color var(--dur) var(--spring), transform var(--dur) var(--spring);
     }}
+    .lens-btn:active {{ transform: scale(0.97); }}
     .lens-btn:hover {{
       color: var(--text);
       border-color: var(--accent);
@@ -861,12 +907,12 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       justify-content: space-between;
       position: relative;
       cursor: pointer;
-      transition: transform 0.28s var(--spring), border-color 0.25s ease, box-shadow 0.28s ease;
+      transition: transform var(--dur-slow) var(--spring), border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring);
     }}
     .hero-card:hover {{
       border-color: var(--gold-border);
-      transform: translateY(-4px);
-      box-shadow: 0 14px 28px -10px rgba(245, 158, 11, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -16px rgba(245, 158, 11, 0.22);
     }}
     .rank-pill {{
       font-size: 10.5px;
@@ -896,7 +942,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: transform 0.25s var(--spring), border-color 0.2s ease, box-shadow 0.25s ease;
+      transition: transform var(--dur-slow) var(--spring), border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring);
     }}
     .kpi-card::after {{
       content: "";
@@ -908,7 +954,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       pointer-events: none;
     }}
     .kpi-card:hover {{
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       border-color: var(--accent);
       box-shadow: var(--card-shadow);
     }}
@@ -984,8 +1030,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .signal-seg {{
       height: 100%;
-      transition: width 0.6s var(--spring);
+      transform-origin: 0 50%;
+      animation: segGrow 1s var(--spring) backwards;
     }}
+    .signal-seg:nth-child(2) {{ animation-delay: 90ms; }}
+    .signal-seg:nth-child(3) {{ animation-delay: 180ms; }}
 
     /* Glassmorphic Sticky Filter & View Bar */
     .controls {{
@@ -1007,6 +1056,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35);
     }}
     .tabs {{
+      position: relative;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1029,16 +1079,39 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       font-weight: 600;
       white-space: nowrap;
       flex-shrink: 0;
-      transition: all 0.2s var(--spring);
+      position: relative;
+      z-index: 1;
+      transition: color var(--dur) var(--spring), background-color var(--dur-fast) ease;
     }}
     .tab:hover {{
       color: var(--text);
       background: var(--surface-hover);
     }}
-    .tab.active {{
-      background: var(--accent);
+    .tab.active, .tab.active:hover {{
+      background: transparent;
       color: #ffffff;
-      box-shadow: 0 4px 12px -2px var(--accent-glow);
+    }}
+    /* Sliding active indicator shared by tabs and view toggle */
+    .seg-indicator {{
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0;
+      width: 0;
+      z-index: 0;
+      border-radius: 9px;
+      background: var(--accent);
+      box-shadow: 0 4px 14px -4px var(--accent-glow);
+      transition: transform var(--dur-slow) var(--spring), width var(--dur-slow) var(--spring), height var(--dur-slow) var(--spring), opacity var(--dur) ease;
+      pointer-events: none;
+      opacity: 0;
+    }}
+    .seg-indicator.ready {{ opacity: 1; }}
+    .seg-indicator.no-anim {{ transition: none; }}
+    .view-toggle .seg-indicator {{
+      background: var(--surface-elevated);
+      box-shadow: none;
+      border-radius: 7px;
     }}
     .right-controls {{
       display: flex;
@@ -1084,7 +1157,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       pointer-events: none;
     }}
     .view-toggle {{
+      position: relative;
       display: inline-flex;
+      padding: 2px;
       border: 1px solid var(--border);
       border-radius: 9px;
       overflow: hidden;
@@ -1097,15 +1172,22 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       background: transparent;
       color: var(--muted);
       padding: 7px 11px;
-      min-height: 36px;
+      min-height: 32px;
       font-size: 12px;
       font-weight: 600;
-      transition: background 0.15s, color 0.15s;
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 7px;
+      transition: color var(--dur) var(--spring);
     }}
+    .view-btn:hover {{ color: var(--text); }}
     .view-btn.active {{
-      background: var(--surface-elevated);
       color: var(--text);
     }}
+    .view-btn .svg-icon {{ width: 14px; height: 14px; }}
 
     /* Cards Grid View */
     .cards-grid {{
@@ -1126,17 +1208,18 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       overflow: hidden;
       cursor: pointer;
       box-shadow: var(--card-shadow);
-      opacity: 0;
-      transform: translateY(22px) scale(0.985);
+      /* Hover transitions only — entry uses a separate animation so hover is never delayed */
       transition:
-        opacity 0.55s var(--spring),
-        transform 0.55s var(--spring),
-        border-color 0.22s ease,
-        box-shadow 0.25s ease;
+        transform var(--dur-slow) var(--spring),
+        border-color var(--dur) ease,
+        box-shadow var(--dur-slow) var(--spring);
+    }}
+    .news-card.pre-reveal {{
+      opacity: 0;
     }}
     .news-card.in-view {{
-      opacity: 1;
-      transform: translateY(0) scale(1);
+      animation: cardIn 0.7s var(--spring) backwards;
+      animation-delay: var(--reveal-delay, 0ms);
     }}
     .news-card::before {{
       content: "";
@@ -1148,9 +1231,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       pointer-events: none;
     }}
     .news-card:hover {{
-      transform: translateY(-4px) scale(1.003);
-      border-color: var(--accent);
-      box-shadow: 0 18px 36px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--accent-glow);
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--accent-glow);
+    }}
+    .news-card:active {{
+      transform: translateY(0) scale(0.995);
+      transition-duration: 120ms;
     }}
     .news-card:hover::before {{ opacity: 1; }}
     .card-top {{
@@ -1226,16 +1313,23 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       align-items: center;
       justify-content: center;
       border-radius: 8px;
-      transition: background 0.15s, color 0.15s, transform 0.2s var(--spring);
+      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur) var(--spring);
     }}
     .icon-btn:hover {{
       background: var(--surface-elevated);
       color: var(--text);
-      transform: scale(1.12);
+    }}
+    .icon-btn:active {{
+      transform: scale(0.9);
     }}
     .icon-btn.saved {{
-      color: #fbbf24;
-      animation: starPop 0.35s var(--spring);
+      color: var(--gold-text);
+    }}
+    .icon-btn.saved .svg-icon {{
+      fill: currentColor;
+    }}
+    .icon-btn.just-saved .svg-icon {{
+      animation: savePop 0.45s var(--spring);
     }}
     .card-title {{
       margin: 0 0 10px;
@@ -1332,7 +1426,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 7px;
-      transition: all 0.15s;
+      transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease, background-color var(--dur-fast) ease;
     }}
     .quick-brief-btn:hover {{
       border-color: var(--accent);
@@ -1348,7 +1442,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     .read-link span.arrow {{
       display: inline-block;
-      transition: transform 0.2s var(--spring);
+      transition: transform var(--dur) var(--spring);
     }}
     .news-card:hover .read-link span.arrow,
     .hero-card:hover .read-link span.arrow {{
@@ -1385,9 +1479,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       padding: 14px 16px;
       border-bottom: 1px solid var(--border-subtle);
       vertical-align: top;
-      transition: background 0.15s;
+      transition: background-color var(--dur-fast) ease;
     }}
     .compact-table tr {{ cursor: pointer; }}
+    .compact-table tbody tr.row-in {{
+      animation: rowIn 0.45s var(--spring) backwards;
+      animation-delay: calc(var(--i, 0) * 18ms);
+    }}
     .compact-table tr:hover td {{
       background: var(--surface-hover);
     }}
@@ -1410,12 +1508,16 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     .drawer-backdrop {{
       position: fixed;
       inset: 0;
-      background: rgba(3, 7, 18, 0.65);
-      backdrop-filter: blur(6px);
+      background: rgba(3, 7, 18, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.28s ease;
+      transition: opacity var(--dur-slow) var(--drawer-ease);
+    }}
+    body.drawer-open {{
+      overflow: hidden;
     }}
     .drawer-backdrop.open {{
       opacity: 1;
@@ -1429,18 +1531,36 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       width: min(520px, 100vw);
       background: var(--surface-solid);
       border-left: 1px solid var(--border);
-      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.55);
+      box-shadow: -24px 0 60px rgba(0, 0, 0, 0.45);
       z-index: 210;
       display: flex;
       flex-direction: column;
-       justify-content: space-between;
-      transform: translateX(102%);
-      transition: transform 0.35s var(--spring);
+      justify-content: space-between;
+      transform: translateX(104%);
+      visibility: hidden;
+      transition: transform 0.5s var(--drawer-ease), visibility 0s linear 0.5s;
       overflow-y: auto;
+      overscroll-behavior: contain;
     }}
     .drawer-panel.open {{
       transform: translateX(0);
+      visibility: visible;
+      transition: transform 0.5s var(--drawer-ease), visibility 0s;
     }}
+    .drawer-body {{
+      transition: opacity var(--dur-fast) var(--ease-in-out), transform var(--dur-fast) var(--ease-in-out);
+    }}
+    .drawer-body.swap-next {{ opacity: 0; transform: translateX(-10px); }}
+    .drawer-body.swap-prev {{ opacity: 0; transform: translateX(10px); }}
+    .drawer-panel.open .drawer-body > * {{
+      animation: fadeSlideUp 0.5s var(--spring) backwards;
+    }}
+    .drawer-panel.open .drawer-body > *:nth-child(2) {{ animation-delay: 40ms; }}
+    .drawer-panel.open .drawer-body > *:nth-child(3) {{ animation-delay: 80ms; }}
+    .drawer-panel.open .drawer-body > *:nth-child(4) {{ animation-delay: 120ms; }}
+    .drawer-panel.open .drawer-body > *:nth-child(5) {{ animation-delay: 160ms; }}
+    .drawer-panel.open .drawer-body > *:nth-child(6) {{ animation-delay: 200ms; }}
+    .drawer-panel.open .drawer-body > *:nth-child(n+7) {{ animation-delay: 240ms; }}
     .drawer-header {{
       padding: 20px 24px;
       border-bottom: 1px solid var(--border);
@@ -1455,6 +1575,12 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     .drawer-body {{
       padding: 24px;
       flex: 1;
+    }}
+    .drawer-progress {{
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.02em;
     }}
     .drawer-title {{
       font-size: 20px;
@@ -1529,9 +1655,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       justify-content: center;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
       opacity: 0;
-      transform: translateY(14px) scale(0.9);
+      transform: translateY(14px) scale(0.92);
       pointer-events: none;
-      transition: all 0.25s var(--spring);
+      transition: opacity var(--dur) ease, transform var(--dur-slow) var(--spring), border-color var(--dur-fast) ease;
       z-index: 90;
     }}
     #backToTop.visible {{
@@ -1541,7 +1667,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
     #backToTop:hover {{
       border-color: var(--accent);
-      transform: translateY(-3px) scale(1.05);
+      transform: translateY(-2px);
     }}
 
     #toast {{
@@ -1560,9 +1686,9 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       align-items: center;
       gap: 8px;
       opacity: 0;
-      transform: translateY(12px) scale(0.96);
+      transform: translateY(12px) scale(0.97);
       pointer-events: none;
-      transition: all 0.25s var(--spring);
+      transition: opacity var(--dur) ease, transform var(--dur-slow) var(--spring);
       z-index: 250;
     }}
     #toast.show {{
@@ -1593,10 +1719,28 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       70% {{ box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }}
       100% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }}
     }}
-    @keyframes starPop {{
+    @keyframes savePop {{
       0% {{ transform: scale(1); }}
-      45% {{ transform: scale(1.38) rotate(12deg); }}
+      40% {{ transform: scale(1.22); }}
       100% {{ transform: scale(1); }}
+    }}
+    @keyframes cardIn {{
+      from {{ opacity: 0; transform: translateY(16px); }}
+      to {{ opacity: 1; transform: translateY(0); }}
+    }}
+    @keyframes rowIn {{
+      from {{ opacity: 0; transform: translateY(6px); }}
+      to {{ opacity: 1; transform: translateY(0); }}
+    }}
+    @keyframes segGrow {{
+      from {{ transform: scaleX(0); }}
+      to {{ transform: scaleX(1); }}
+    }}
+
+    /* View Transitions API: soft cross-fade for theme switching */
+    ::view-transition-old(root), ::view-transition-new(root) {{
+      animation-duration: 320ms;
+      animation-timing-function: var(--ease-in-out);
     }}
 
     @media (max-width: 960px) {{
@@ -1659,8 +1803,10 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     @media (prefers-reduced-motion: reduce) {{
       *, *::before, *::after {{
         animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
         transition-duration: 0.01ms !important;
       }}
+      html {{ scroll-behavior: auto; }}
     }}
   </style>
 </head>
@@ -1678,9 +1824,17 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
         <p class="subtitle">Curated & ranked by practical benefit for UK Finance, Accounting, Audit & FP&A teams alongside global AI breakthroughs.</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-primary" onclick="copyTeamBriefing()">📋 Copy Team Summary</button>
-        <button class="btn" onclick="window.print()" title="Print or save as Boardroom PDF">🖨️ Export PDF Brief</button>
-        <button class="btn" onclick="toggleTheme()" aria-label="Toggle colour theme">☀️ / 🌙 Theme</button>
+        <button class="btn btn-primary" onclick="copyTeamBriefing()">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+          Copy Team Summary
+        </button>
+        <button class="btn" onclick="window.print()" title="Print or save as Boardroom PDF">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
+          Export PDF
+        </button>
+        <button class="btn btn-icon-only" onclick="toggleTheme()" aria-label="Toggle colour theme" title="Toggle light / dark theme">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
       </div>
     </header>
 
@@ -1696,7 +1850,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     </div>
 
     <!-- 60-Second CFO Hero Brief -->
-    <section class="hero-section" id="heroSection">
+    <section class="hero-section swap-target" id="heroSection">
       <div class="hero-header">
         <h2 class="hero-title" id="heroTitle">⚡ 60-Second UK Finance Morning Brief — Top 3 Today</h2>
         <span class="hero-sub">Click any card to open the Executive Quick-Brief Drawer</span>
@@ -1747,7 +1901,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
 
     <!-- Glassmorphic Sticky Filter & View Bar -->
     <div class="controls">
-      <div class="tabs" role="tablist">
+      <div class="tabs" role="tablist" id="filterTabs">
+        <span class="seg-indicator" aria-hidden="true"></span>
         <button class="tab active" data-filter="all" onclick="setFilter('all', this)">All Prioritised ({len(cards)})</button>
         <button class="tab" data-filter="high" onclick="setFilter('high', this)">🇬🇧💷 UK Finance & CFO ({high_impact_count})</button>
         <button class="tab" data-filter="ops" onclick="setFilter('ops', this)">⚡ Ops & Security ({ops_count})</button>
@@ -1756,17 +1911,24 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       </div>
       <div class="right-controls">
         <div class="search-wrap">
-          <input type="search" id="searchInput" class="search-input" placeholder="Search FCA, Deloitte, audit, OpenAI..." oninput="renderMain()" />
+          <input type="search" id="searchInput" class="search-input" placeholder="Search FCA, Deloitte, audit, OpenAI..." oninput="onSearchInput()" />
           <span class="kbd-hint">/</span>
         </div>
-        <div class="view-toggle" role="group" aria-label="View mode">
-          <button class="view-btn active" id="viewCardsBtn" onclick="setViewMode('cards')">⊞ Cards</button>
-          <button class="view-btn" id="viewTableBtn" onclick="setViewMode('table')">☰ Compact</button>
+        <div class="view-toggle" role="group" aria-label="View mode" id="viewToggle">
+          <span class="seg-indicator" aria-hidden="true"></span>
+          <button class="view-btn active" id="viewCardsBtn" onclick="setViewMode('cards')">
+            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            Cards
+          </button>
+          <button class="view-btn" id="viewTableBtn" onclick="setViewMode('table')">
+            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            Compact
+          </button>
         </div>
       </div>
     </div>
 
-    <div id="mainContainer"></div>
+    <div id="mainContainer" class="swap-target"></div>
   </div>
 
   <!-- Slide-Over Executive Quick-Brief Drawer -->
@@ -1774,19 +1936,31 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
   <aside class="drawer-panel" id="drawerPanel" aria-label="Executive Quick-Brief Drawer">
     <div class="drawer-header">
       <span class="brand-badge" id="drawerBadge">⚡ Executive Quick-Brief</span>
-      <button class="icon-btn" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">✕</button>
+      <button class="icon-btn" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">
+        <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
     <div class="drawer-body" id="drawerBody"></div>
     <div class="drawer-footer">
       <div class="drawer-nav">
-        <button class="btn" onclick="stepDrawer(-1)" title="Previous story (←)">← Prev</button>
-        <button class="btn" onclick="stepDrawer(1)" title="Next story (→)">Next →</button>
+        <button class="btn" onclick="stepDrawer(-1)" title="Previous story (←)" aria-label="Previous story">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="btn" onclick="stepDrawer(1)" title="Next story (→)" aria-label="Next story">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <span class="drawer-progress" id="drawerProgress" style="align-self:center;margin-left:6px;"></span>
       </div>
-      <a class="btn btn-primary" id="drawerReadLink" href="#" target="_blank" rel="noopener noreferrer">Open Article ↗</a>
+      <a class="btn btn-primary" id="drawerReadLink" href="#" target="_blank" rel="noopener noreferrer">
+        Open article
+        <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+      </a>
     </div>
   </aside>
 
-  <button id="backToTop" onclick="window.scrollTo({{top: 0, behavior: 'smooth'}})" aria-label="Back to top" title="Back to top">↑</button>
+  <button id="backToTop" onclick="window.scrollTo({{top: 0, behavior: 'smooth'}})" aria-label="Back to top" title="Back to top">
+    <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
   <div id="toast" role="status" aria-live="polite">✓ Copied Top 5 UK Finance Briefing!</div>
 
   <script>
@@ -1799,6 +1973,46 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     let activeDrawerId = null;
     let currentDisplayedIds = [];
     let revealObserver = null;
+    let lastFocusedEl = null;
+    let searchTimer = null;
+    const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const ICON_LINK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+    const ICON_BOOKMARK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+
+    /* Slide the shared pill indicator under the active tab / view button */
+    function moveIndicator(container, animate = true) {{
+      if (!container) return;
+      const ind = container.querySelector('.seg-indicator');
+      const active = container.querySelector('.active');
+      if (!ind || !active) return;
+      ind.classList.toggle('no-anim', !animate);
+      ind.style.width = `${{active.offsetWidth}}px`;
+      ind.style.height = `${{active.offsetHeight}}px`;
+      ind.style.transform = `translate(${{active.offsetLeft}}px, ${{active.offsetTop}}px)`;
+      ind.classList.add('ready');
+    }}
+    function moveAllIndicators(animate = true) {{
+      moveIndicator(document.getElementById('filterTabs'), animate);
+      moveIndicator(document.getElementById('viewToggle'), animate);
+    }}
+
+    /* Fade content out, swap it, fade it back in — avoids hard jumps on filter changes */
+    function swapContent(renderFn) {{
+      const targets = document.querySelectorAll('.swap-target');
+      if (REDUCED_MOTION) {{ renderFn(); return; }}
+      targets.forEach(t => t.classList.add('is-swapping'));
+      clearTimeout(window._swapTimer);
+      window._swapTimer = setTimeout(() => {{
+        renderFn();
+        requestAnimationFrame(() => targets.forEach(t => t.classList.remove('is-swapping')));
+      }}, 150);
+    }}
+
+    function onSearchInput() {{
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => renderMain({{ animate: false }}), 120);
+    }}
 
     function escapeHtml(str) {{
       const d = document.createElement('div');
@@ -1861,6 +2075,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     function updateSavedTabCount() {{
       const btn = document.getElementById('savedTabBtn');
       if (btn) btn.textContent = `⭐ Saved (${{savedUrls.size}})`;
+      moveIndicator(document.getElementById('filterTabs'));
     }}
 
     function toggleSaveById(id, ev) {{
@@ -1868,17 +2083,28 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       const item = ITEM_MAP.get(id);
       if (!item) return;
       const url = item.url;
-      if (savedUrls.has(url)) {{
+      const nowSaved = !savedUrls.has(url);
+      if (nowSaved) {{
+        savedUrls.add(url);
+        showToast('Saved to your reading list');
+      }} else {{
         savedUrls.delete(url);
         showToast('Removed from saved stories');
-      }} else {{
-        savedUrls.add(url);
-        showToast('⭐ Saved story to your reading list');
       }}
       localStorage.setItem('ai-news-saved', JSON.stringify(Array.from(savedUrls)));
       updateSavedTabCount();
-      renderHero();
-      renderMain();
+
+      if (currentFilter === 'saved') {{
+        swapContent(() => {{ renderHero(); renderMain(); }});
+        return;
+      }}
+      /* Update in place so the page never flickers or re-animates */
+      document.querySelectorAll(`[data-save-id="${{id}}"]`).forEach(b => {{
+        b.classList.toggle('saved', nowSaved);
+        b.setAttribute('aria-pressed', String(nowSaved));
+        b.classList.remove('just-saved');
+        if (nowSaved) {{ void b.offsetWidth; b.classList.add('just-saved'); }}
+      }});
     }}
 
     function shareById(id, ev) {{
@@ -1889,19 +2115,50 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
         navigator.share({{ title: item.title, url: item.url }}).catch(() => {{}});
       }} else {{
         navigator.clipboard.writeText(`${{item.title}} — ${{item.url}}`).then(() => {{
-          showToast('🔗 Story link copied to clipboard!');
+          showToast('Link copied to clipboard');
         }});
       }}
     }}
 
-    function openDrawer(id, ev) {{
+    function openDrawer(id, ev, direction) {{
       if (ev && (ev.target.closest('a') || ev.target.closest('button.icon-btn'))) return;
       const item = ITEM_MAP.get(id);
       if (!item) return;
+      const panel = document.getElementById('drawerPanel');
+      const body = document.getElementById('drawerBody');
+      const alreadyOpen = panel.classList.contains('open');
+      if (!alreadyOpen) lastFocusedEl = document.activeElement;
       activeDrawerId = id;
+
+      const paint = () => {{
+        fillDrawer(item);
+        body.classList.remove('swap-next', 'swap-prev');
+        panel.scrollTop = 0;
+      }};
+
+      if (alreadyOpen && direction && !REDUCED_MOTION) {{
+        body.classList.add(direction > 0 ? 'swap-next' : 'swap-prev');
+        setTimeout(paint, 150);
+      }} else {{
+        paint();
+      }}
+
+      document.body.classList.add('drawer-open');
+      document.getElementById('drawerBackdrop').classList.add('open');
+      panel.classList.add('open');
+      if (!alreadyOpen) setTimeout(() => {{
+        const closeBtn = panel.querySelector('.drawer-header .icon-btn');
+        if (closeBtn) closeBtn.focus({{ preventScroll: true }});
+      }}, 60);
+    }}
+
+    function fillDrawer(item) {{
       const effScore = getActiveScore(item);
       document.getElementById('drawerBadge').textContent = `${{item.func_tag}} · Priority ${{effScore}}/100`;
       document.getElementById('drawerReadLink').href = item.url;
+      const pos = currentDisplayedIds.indexOf(item.id);
+      document.getElementById('drawerProgress').textContent =
+        pos > -1 ? `${{pos + 1}} of ${{currentDisplayedIds.length}}` : '';
 
       const summaryBlock = item.summary
         ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--blue-text);">📰 Article Summary</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
@@ -1931,15 +2188,16 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
           <p class="drawer-sec-text">${{escapeHtml(item.action_item)}}</p>
         </div>
       `;
-
-      document.getElementById('drawerBackdrop').classList.add('open');
-      document.getElementById('drawerPanel').classList.add('open');
     }}
 
     function closeDrawer() {{
       activeDrawerId = null;
+      document.body.classList.remove('drawer-open');
       document.getElementById('drawerBackdrop').classList.remove('open');
       document.getElementById('drawerPanel').classList.remove('open');
+      if (lastFocusedEl && document.contains(lastFocusedEl)) {{
+        lastFocusedEl.focus({{ preventScroll: true }});
+      }}
     }}
 
     function stepDrawer(delta) {{
@@ -1947,10 +2205,11 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       const idx = currentDisplayedIds.indexOf(activeDrawerId);
       if (idx === -1) return;
       const nextIdx = (idx + delta + currentDisplayedIds.length) % currentDisplayedIds.length;
-      openDrawer(currentDisplayedIds[nextIdx]);
+      openDrawer(currentDisplayedIds[nextIdx], null, delta);
     }}
 
     function setRoleLens(lens, btn) {{
+      if (lens === currentLens) return;
       currentLens = lens;
       document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -1960,40 +2219,48 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
         audit: '🛡️ Audit, Risk & FCA Lens — Top 3 Governance Priorities',
         fpa: '📊 FP&A & Systems Lens — Top 3 Automation & Model Priorities'
       }};
-      document.getElementById('heroTitle').textContent = labels[lens] || labels.default;
-      renderHero();
-      renderMain();
-      showToast(`Switched view to ${{btn ? btn.textContent.trim() : lens}}`);
+      swapContent(() => {{
+        document.getElementById('heroTitle').textContent = labels[lens] || labels.default;
+        renderHero();
+        renderMain();
+      }});
     }}
 
     function setupScrollReveal() {{
       if (revealObserver) revealObserver.disconnect();
-      const cards = document.querySelectorAll('.news-card');
-      if (!('IntersectionObserver' in window)) {{
-        cards.forEach(c => c.classList.add('in-view'));
+      const cards = document.querySelectorAll('.news-card.pre-reveal');
+      if (!('IntersectionObserver' in window) || REDUCED_MOTION) {{
+        cards.forEach(c => c.classList.remove('pre-reveal'));
         return;
       }}
       revealObserver = new IntersectionObserver((entries) => {{
-        entries.forEach((entry) => {{
-          if (entry.isIntersecting) {{
-            entry.target.classList.add('in-view');
-            revealObserver.unobserve(entry.target);
-          }}
+        const visible = entries.filter(e => e.isIntersecting);
+        visible.forEach((entry, i) => {{
+          const el = entry.target;
+          el.style.setProperty('--reveal-delay', `${{Math.min(i, 5) * 55}}ms`);
+          el.classList.remove('pre-reveal');
+          el.classList.add('in-view');
+          el.addEventListener('animationend', () => el.classList.remove('in-view'), {{ once: true }});
+          revealObserver.unobserve(el);
         }});
-      }}, {{ threshold: 0.08, rootMargin: '0px 0px -20px 0px' }});
+      }}, {{ threshold: 0.06, rootMargin: '0px 0px -24px 0px' }});
 
-      cards.forEach((card, i) => {{
-        card.style.transitionDelay = `${{Math.min(i % 6, 5) * 45}}ms`;
-        revealObserver.observe(card);
-      }});
+      cards.forEach(card => revealObserver.observe(card));
     }}
 
     function attachSpotlightTracking() {{
       document.querySelectorAll('.news-card, .kpi-card').forEach(card => {{
+        if (card.dataset.spot) return;
+        card.dataset.spot = '1';
+        let raf = null;
         card.addEventListener('mousemove', (e) => {{
-          const rect = card.getBoundingClientRect();
-          card.style.setProperty('--mouse-x', `${{e.clientX - rect.left}}px`);
-          card.style.setProperty('--mouse-y', `${{e.clientY - rect.top}}px`);
+          if (raf) return;
+          raf = requestAnimationFrame(() => {{
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', `${{e.clientX - rect.left}}px`);
+            card.style.setProperty('--mouse-y', `${{e.clientY - rect.top}}px`);
+            raf = null;
+          }});
         }}, {{ passive: true }});
       }});
     }}
@@ -2024,10 +2291,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                   </span>
                 </div>
                 <div class="card-actions">
-                  <button class="icon-btn" title="Copy story link" onclick="shareById('${{item.id}}', event)">🔗</button>
-                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" title="Save for later" onclick="toggleSaveById('${{item.id}}', event)">
-                    ${{isSaved ? '⭐' : '☆'}}
-                  </button>
+                  <button class="icon-btn" title="Copy story link" aria-label="Copy story link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
+                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save for later" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
                 </div>
               </div>
               <h3 class="card-title">
@@ -2045,17 +2310,18 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
 
     function setFilter(filter, btn) {{
+      if (filter === currentFilter) return;
       currentFilter = filter;
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       if (btn) {{
         btn.classList.add('active');
         btn.scrollIntoView({{ behavior: 'smooth', inline: 'center', block: 'nearest' }});
       }}
+      moveIndicator(document.getElementById('filterTabs'));
       document.querySelectorAll('.kpi-card').forEach(k => {{
         k.classList.toggle('active-kpi', k.getAttribute('data-kpi') === filter);
       }});
-      renderHero();
-      renderMain();
+      swapContent(() => {{ renderHero(); renderMain(); }});
     }}
 
     function setFilterByName(filter) {{
@@ -2064,14 +2330,17 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     }}
 
     function setViewMode(mode) {{
+      if (mode === currentView) return;
       currentView = mode;
       localStorage.setItem('ai-news-view', mode);
       document.getElementById('viewCardsBtn').classList.toggle('active', mode === 'cards');
       document.getElementById('viewTableBtn').classList.toggle('active', mode === 'table');
-      renderMain();
+      moveIndicator(document.getElementById('viewToggle'));
+      swapContent(() => renderMain());
     }}
 
-    function renderMain() {{
+    function renderMain(opts = {{}}) {{
+      const animate = opts.animate !== false;
       const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
       const container = document.getElementById('mainContainer');
       const sorted = getSortedItems();
@@ -2091,13 +2360,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       currentDisplayedIds = filtered.map(i => i.id);
 
       if (!filtered.length) {{
-        container.className = '';
+        container.className = 'swap-target';
         container.innerHTML = '<div class="empty-state">No stories match your current filter or search query.</div>';
         return;
       }}
 
       if (currentView === 'table') {{
-        container.className = 'compact-table-wrap';
+        container.className = 'compact-table-wrap swap-target';
         container.innerHTML = `
           <table class="compact-table">
             <thead>
@@ -2111,15 +2380,13 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
               </tr>
             </thead>
             <tbody>
-              ${{filtered.map(item => {{
+              ${{filtered.map((item, rowIdx) => {{
                 const isSaved = savedUrls.has(item.url);
                 const effScore = getActiveScore(item);
                 return `
-                  <tr onclick="openDrawer('${{item.id}}', event)">
+                  <tr class="${{animate ? 'row-in' : ''}}" style="--i:${{Math.min(rowIdx, 20)}}" onclick="openDrawer('${{item.id}}', event)">
                     <td>
-                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" onclick="toggleSaveById('${{item.id}}', event)">
-                        ${{isSaved ? '⭐' : '☆'}}
-                      </button>
+                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
                     </td>
                     <td><span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span></td>
                     <td>
@@ -2143,7 +2410,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
         return;
       }}
 
-      container.className = 'cards-grid';
+      container.className = 'cards-grid swap-target';
       container.innerHTML = filtered.map(item => {{
         const isSaved = savedUrls.has(item.url);
         const effScore = getActiveScore(item);
@@ -2151,7 +2418,7 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
           ? `<p class="card-summary">${{escapeHtml(item.summary)}}</p>`
           : '';
         return `
-          <article class="news-card" onclick="openDrawer('${{item.id}}', event)">
+          <article class="news-card ${{animate ? 'pre-reveal' : ''}}" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
                 <div class="tag-group">
@@ -2162,10 +2429,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
                   </span>
                 </div>
                 <div class="card-actions">
-                  <button class="icon-btn" title="Share / copy link" onclick="shareById('${{item.id}}', event)">🔗</button>
-                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" title="Save for later" onclick="toggleSaveById('${{item.id}}', event)">
-                    ${{isSaved ? '⭐' : '☆'}}
-                  </button>
+                  <button class="icon-btn" title="Share / copy link" aria-label="Share or copy link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
+                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save for later" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
                 </div>
               </div>
               <h3 class="card-title">
@@ -2236,17 +2501,39 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
     function toggleTheme() {{
       const root = document.documentElement;
       const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('ai-news-theme', next);
+      const apply = () => {{
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('ai-news-theme', next);
+      }};
+      if (REDUCED_MOTION) {{ apply(); return; }}
+      if (document.startViewTransition) {{
+        document.startViewTransition(apply);
+        return;
+      }}
+      root.classList.add('theme-anim');
+      apply();
+      setTimeout(() => root.classList.remove('theme-anim'), 320);
     }}
 
+    let scrollTicking = false;
     window.addEventListener('scroll', () => {{
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
-      document.getElementById('scrollProgress').style.width = `${{pct}}%`;
-      document.getElementById('backToTop').classList.toggle('visible', scrollTop > 420);
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {{
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+        document.getElementById('scrollProgress').style.transform = `scaleX(${{ratio}})`;
+        document.getElementById('backToTop').classList.toggle('visible', scrollTop > 420);
+        scrollTicking = false;
+      }});
     }}, {{ passive: true }});
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {{
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => moveAllIndicators(false), 100);
+    }});
 
     window.addEventListener('keydown', (e) => {{
       if (e.key === 'Escape' && activeDrawerId) {{
@@ -2276,6 +2563,8 @@ def build_dashboard_html(cards: list[dict[str, object]], date_str: str) -> str:
       renderHero();
       renderMain();
       animateKpiCounters();
+      requestAnimationFrame(() => moveAllIndicators(false));
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => moveAllIndicators(false));
     }})();
   </script>
 </body>
