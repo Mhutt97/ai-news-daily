@@ -542,7 +542,7 @@ def prepare_prioritized_cards(
 def build_dashboard_html(
     cards: list[dict[str, object]], date_str: str, updated_at: str = ""
 ) -> str:
-    """Render an editorial UK Finance & AI Intelligence Dashboard inspired by The Rundown AI (therundown.ai)."""
+    """Render an editorial UK Finance & AI Intelligence Dashboard."""
     total = max(len(cards), 1)
     high_impact_count = sum(1 for c in cards if int(c["score"]) >= 85)
     ops_count = sum(1 for c in cards if 70 <= int(c["score"]) < 85)
@@ -563,12 +563,12 @@ def build_dashboard_html(
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#171717" />
   <meta name="description" content="UK Finance & AI News in 5 Minutes a Day — curated & ranked daily for UK CFOs, Accounting, Audit, FCA Compliance & FP&A teams." />
-  <meta property="og:title" content="The Finance Rundown · Daily UK Finance & AI Intelligence — {html.escape(date_str)}" />
+  <meta property="og:title" content="UK Finance & AI Daily Intelligence — {html.escape(date_str)}" />
   <meta property="og:description" content="Get the latest AI news, understand why it matters for UK Finance & CFO teams, and apply it in 5 minutes a day." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mhutt97.github.io/ai-news-daily/" />
   <meta name="robots" content="index, follow" />
-  <title>The Finance Rundown — UK Finance & AI Intelligence ({html.escape(date_str)})</title>
+  <title>UK Finance & AI Daily Intelligence — {html.escape(date_str)}</title>
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -579,7 +579,7 @@ def build_dashboard_html(
       --font-sans: "Satoshi", "Satoshi Variable", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
-      /* The Rundown AI Core Editorial Palette (Light Paper Default + Obsidian Masthead) */
+      /* Core Editorial Palette (Light Paper Default + Obsidian Masthead) */
       --stage-bg: #171717;
       --paper: #ffffff;
       --card-bg: #ffffff;
@@ -592,7 +592,7 @@ def build_dashboard_html(
       --line-subtle: #efefef;
       --glass-sheet: rgba(255, 255, 255, 0.9);
 
-      /* Signature Rundown Tri-Tone Accents */
+      /* Editorial Tri-Tone Accents */
       --brand-pink: #cd408f;
       --brand-violet: #8b4cd4;
       --brand-violet-bg: rgba(139, 76, 212, 0.09);
@@ -675,7 +675,7 @@ def build_dashboard_html(
       overflow-x: hidden;
     }}
 
-    /* Signature Rundown Tri-Tone Top Reading Progress */
+    /* Tri-Tone Top Reading Progress */
     #scrollProgress {{
       position: fixed;
       top: 0;
@@ -729,7 +729,7 @@ def build_dashboard_html(
       flex-shrink: 0;
     }}
 
-    /* Signature Rundown Text Gradients */
+    /* Editorial Text Gradients */
     .text-gradient {{
       background-image: linear-gradient(45deg, var(--brand-pink), var(--brand-violet) 50%, var(--brand-blue));
       -webkit-background-clip: text;
@@ -746,7 +746,7 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       1. TOP STICKY OBSIDIAN MASTHEAD (therundown.ai Header)
+       1. TOP STICKY OBSIDIAN MASTHEAD
        ========================================================= */
     .site-nav {{
       position: sticky;
@@ -786,8 +786,8 @@ def build_dashboard_html(
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 19px;
-      letter-spacing: -0.05em;
+      font-size: 14.5px;
+      letter-spacing: -0.04em;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
       flex-shrink: 0;
     }}
@@ -878,9 +878,9 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       2. HERO STAGE (therundown.ai Homepage Hero)
+       2. EDITORIAL HERO STAGE
        ========================================================= */
-    .rundown-hero {{
+    .editorial-hero {{
       background:
         radial-gradient(680px circle at 50% 0%, rgba(139, 76, 212, 0.18), transparent 68%),
         var(--stage-bg);
@@ -913,7 +913,7 @@ def build_dashboard_html(
       animation: pulseDot 2s infinite;
       flex-shrink: 0;
     }}
-    .rundown-hero h1 {{
+    .editorial-hero h1 {{
       margin: 0 auto;
       max-width: 820px;
       font-size: clamp(2.25rem, 5.3vw, 4.35rem);
@@ -931,7 +931,7 @@ def build_dashboard_html(
       font-weight: 400;
     }}
 
-    /* Signature Rundown White Pill Bar in Hero */
+    /* White Pill Search Bar in Hero */
     .hero-search-form {{
       margin: 30px auto 0;
       max-width: 530px;
@@ -1029,7 +1029,7 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       3. ROUNDED .sheet EDITORIAL PAPER BODY (therundown.ai .sheet)
+       3. ROUNDED .sheet EDITORIAL PAPER BODY
        ========================================================= */
     .main-sheet-wrap {{
       padding: 0 10px 12px;
@@ -1072,7 +1072,7 @@ def build_dashboard_html(
       letter-spacing: 0.14em;
       color: var(--mute);
     }}
-    /* Exact therundown.ai Segmented Switcher */
+    /* Segmented Role Lens Switcher */
     .segmented-box {{
       display: inline-flex;
       flex-wrap: wrap;
@@ -1180,7 +1180,7 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       4. TODAY'S MORNING RUNDOWN — FEATURED #1 + TOP STACK
+       4. TODAY'S EXECUTIVE BRIEFING — FEATURED #1 + TOP STACK
        ========================================================= */
     .editorial-showcase {{
       margin-bottom: 48px;
@@ -1234,7 +1234,7 @@ def build_dashboard_html(
       grid-template-columns: 1fr;
     }}
 
-    /* #1 Lead Feature Card (therundown.ai/news Featured Story) */
+    /* #1 Lead Feature Card */
     .lead-feature-card {{
       background: var(--mist-soft);
       border: 1px solid var(--line);
@@ -1367,7 +1367,7 @@ def build_dashboard_html(
       gap: 10px;
     }}
 
-    /* Rounded-Full Pill Search in #stories (exact therundown.ai/news#stories) */
+    /* Rounded-Full Pill Search in #stories */
     .pill-search-wrap {{
       display: flex;
       align-items: center;
@@ -1431,7 +1431,7 @@ def build_dashboard_html(
     }}
     .view-btn .svg-icon {{ width: 13.5px; height: 13.5px; }}
 
-    /* Exact therundown.ai/news Rounded-Full Category Pills */
+    /* Rounded-Full Category Pills */
     .controls-bar {{
       margin-bottom: 26px;
       padding: 12px 0;
@@ -1511,7 +1511,7 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       6. STORY CARDS GRID (therundown.ai/news rounded-3xl cards)
+       6. STORY CARDS GRID (rounded-3xl editorial cards)
        ========================================================= */
     .cards-grid {{
       display: grid;
@@ -1703,7 +1703,7 @@ def build_dashboard_html(
       line-height: 1.58;
     }}
 
-    /* Signature Rundown "Why It Matters" Inset Box */
+    /* "Why It Matters" Inset Callout Box */
     .benefit-box {{
       background: var(--mist);
       border: 1px solid var(--line-subtle);
@@ -1825,9 +1825,9 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       7. VIEW 2: "RUNDOWN" EDITORIAL NEWSLETTER STREAM (TLDR/Rundown Email)
+       7. VIEW 2: "BRIEFING" 5-MINUTE EDITORIAL STREAM
        ========================================================= */
-    .rundown-stream {{
+    .briefing-stream {{
       max-width: 860px;
       margin: 0 auto;
       display: flex;
@@ -2200,7 +2200,7 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       10. ROUNDED FOOTER SHEET (therundown.ai Footer)
+       10. ROUNDED FOOTER SHEET
        ========================================================= */
     .site-footer-wrap {{
       padding: 0 10px 16px;
@@ -2366,7 +2366,7 @@ def build_dashboard_html(
       .site-nav-inner {{ padding: 0 14px; height: 60px; }}
       .brand-edition-pill {{ display: none; }}
       .nav-btn span.hide-sm {{ display: none; }}
-      .rundown-hero {{ padding: 38px 16px 46px; }}
+      .editorial-hero {{ padding: 38px 16px 46px; }}
       .hero-kbd {{ display: none; }}
       .main-sheet-wrap {{ padding: 0 4px 10px; }}
       .main-sheet {{ padding: 24px 16px 48px; border-radius: 22px; }}
@@ -2387,7 +2387,7 @@ def build_dashboard_html(
     /* Boardroom A4 Print / PDF Memo Stylesheet */
     @media print {{
       body {{ background: #ffffff !important; color: #171717 !important; font-size: 10.5pt; }}
-      #scrollProgress, .site-nav, .rundown-hero, .executive-strip, .controls-bar, .explore-right-tools,
+      #scrollProgress, .site-nav, .editorial-hero, .executive-strip, .controls-bar, .explore-right-tools,
       .card-actions, .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel, .modal-backdrop, .site-footer-wrap {{
         display: none !important;
       }}
@@ -2425,17 +2425,17 @@ def build_dashboard_html(
 <body>
   <div id="scrollProgress"></div>
 
-  <!-- 1. TOP STICKY OBSIDIAN MASTHEAD (therundown.ai Header) -->
+  <!-- 1. TOP STICKY OBSIDIAN MASTHEAD -->
   <header class="site-nav">
     <div class="site-nav-inner">
-      <a class="brand-lockup" href="#" onclick="resetAllFilters(event)" aria-label="The Finance Rundown Home">
-        <span class="brand-monogram" aria-hidden="true">R</span>
-        <span class="brand-wordmark">The Rundown</span>
-        <span class="brand-edition-pill"><span id="brandFlagSlot"></span> UK Finance</span>
+      <a class="brand-lockup" href="#" onclick="resetAllFilters(event)" aria-label="UK Finance & AI Daily Intelligence Home">
+        <span class="brand-monogram" aria-hidden="true">AI</span>
+        <span class="brand-wordmark">UK Finance &amp; AI</span>
+        <span class="brand-edition-pill"><span id="brandFlagSlot"></span> Daily Briefing</span>
       </a>
 
       <nav class="nav-links" aria-label="Primary sections">
-        <button class="nav-link" type="button" onclick="jumpToSection('heroSection', 'all')">Morning Rundown</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('heroSection', 'all')">Top Briefing</button>
         <button class="nav-link" type="button" onclick="jumpToSection('stories', 'all')">Latest News</button>
         <button class="nav-link" type="button" onclick="jumpToSection('stories', 'high')">UK CFO &amp; FCA</button>
         <button class="nav-link" type="button" onclick="jumpToSection('stories', 'ops')">AI Ops &amp; Agents</button>
@@ -2465,8 +2465,8 @@ def build_dashboard_html(
     </div>
   </header>
 
-  <!-- 2. EDITORIAL HERO STAGE (therundown.ai Homepage Hero) -->
-  <section class="rundown-hero">
+  <!-- 2. EDITORIAL HERO STAGE -->
+  <section class="editorial-hero">
     <div class="hero-eyebrow-pill">
       <span class="live-dot"></span>
       <span id="heroFlagSlot"></span>
@@ -2520,7 +2520,7 @@ def build_dashboard_html(
       <div class="sheet-container">
 
         <div class="print-memo-header" style="display:none;">
-          <h2 style="margin:0 0 4px;font-size:18pt;font-weight:800;">THE RUNDOWN: UK FINANCE &amp; AI EXECUTIVE BRIEFING</h2>
+          <h2 style="margin:0 0 4px;font-size:18pt;font-weight:800;">UK FINANCE &amp; AI — DAILY EXECUTIVE BRIEFING</h2>
           <div style="font-size:10pt;color:#404040;margin-bottom:6px;">
             <strong>Date:</strong> {html.escape(date_str)} · {updated_str} | <strong>Scope:</strong> CFO Strategy, FCA/PRA Compliance, Internal Audit &amp; FP&amp;A
           </div>
@@ -2575,11 +2575,11 @@ def build_dashboard_html(
           </div>
         </div>
 
-        <!-- 4. TODAY'S MORNING RUNDOWN (Featured #1 Lead + #2-#4 Top Stack) -->
+        <!-- 4. TODAY'S EXECUTIVE BRIEFING (Featured #1 Lead + #2-#4 Top Stack) -->
         <section class="editorial-showcase swap-target" id="heroSection" aria-labelledby="heroTitle">
           <div class="section-head">
             <div>
-              <p class="eyebrow"><span class="eyebrow-dot"></span> Today's Rundown</p>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> Today's Briefing</p>
               <h2 class="section-h2 text-gradient-heading" id="heroTitle">Top priorities today</h2>
             </div>
             <span class="section-sub">Click any story to open the 3-point Executive Brief</span>
@@ -2587,7 +2587,7 @@ def build_dashboard_html(
           <div class="showcase-grid" id="heroGrid"></div>
         </section>
 
-        <!-- 5. EXPLORE THE LATEST (therundown.ai/news#stories) -->
+        <!-- 5. EXPLORE THE LATEST -->
         <section class="explore-section" id="stories" aria-labelledby="storiesHeading">
           <div class="explore-top-row">
             <div>
@@ -2613,9 +2613,9 @@ def build_dashboard_html(
                   <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                   Grid
                 </button>
-                <button class="view-btn" type="button" id="viewRundownBtn" onclick="setViewMode('rundown')" title="5-minute newsletter reading stream">
+                <button class="view-btn" type="button" id="viewBriefingBtn" onclick="setViewMode('briefing')" title="5-minute executive reading stream">
                   <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h12"/></svg>
-                  Rundown
+                  Briefing
                 </button>
                 <button class="view-btn" type="button" id="viewTableBtn" onclick="setViewMode('table')" title="Compact analyst table">
                   <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -2653,15 +2653,15 @@ def build_dashboard_html(
     </div>
   </main>
 
-  <!-- 6. ROUNDED OBSIDIAN FOOTER SHEET (therundown.ai Footer) -->
+  <!-- 6. ROUNDED OBSIDIAN FOOTER SHEET -->
   <footer class="site-footer-wrap">
     <div class="footer-sheet">
       <div class="footer-grid">
         <div>
           <div class="brand-lockup" style="margin-bottom:4px;">
-            <span class="brand-monogram" aria-hidden="true">R</span>
-            <span class="brand-wordmark">The Rundown</span>
-            <span class="brand-edition-pill"><span id="footerFlagSlot"></span> UK Finance</span>
+            <span class="brand-monogram" aria-hidden="true">AI</span>
+            <span class="brand-wordmark">UK Finance &amp; AI</span>
+            <span class="brand-edition-pill"><span id="footerFlagSlot"></span> Daily Briefing</span>
           </div>
           <p class="footer-desc">
             Daily AI intelligence curated and ranked by practical benefit for UK CFOs, Audit Partners, FP&amp;A teams, and FCA compliance leaders.
@@ -2671,7 +2671,7 @@ def build_dashboard_html(
         <div>
           <h3 class="footer-col-title">Intelligence Feeds</h3>
           <ul class="footer-links-list">
-            <li><button type="button" onclick="jumpToSection('heroSection', 'all')">Today's Morning Rundown</button></li>
+            <li><button type="button" onclick="jumpToSection('heroSection', 'all')">Today's Top Briefing</button></li>
             <li><button type="button" onclick="jumpToSection('stories', 'high')">High UK Finance &amp; FCA</button></li>
             <li><button type="button" onclick="jumpToSection('stories', 'ops')">Finance Ops, Agents &amp; Privacy</button></li>
             <li><button type="button" onclick="jumpToSection('stories', 'general')">Global AI Labs &amp; ArXiv Papers</button></li>
@@ -2731,7 +2731,7 @@ def build_dashboard_html(
       <div class="modal-header">
         <h3 class="modal-title" id="shareModalTitle">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          Share Today's Rundown
+          Share Executive Briefing
         </h3>
         <button class="icon-btn" type="button" onclick="closeShareModal()" aria-label="Close modal">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -2743,7 +2743,7 @@ def build_dashboard_html(
             <div class="share-channel-info">
               <div class="share-icon-wrap">💬</div>
               <div>
-                <strong style="display:block;font-size:13.5px;color:var(--ink);">Copy MS Teams &amp; Slack Rundown</strong>
+                <strong style="display:block;font-size:13.5px;color:var(--ink);">Copy MS Teams &amp; Slack Briefing</strong>
                 <span style="font-size:12px;color:var(--mute);">Formatted top 5 stories &amp; takeaways ready to paste</span>
               </div>
             </div>
@@ -2823,7 +2823,7 @@ def build_dashboard_html(
     let currentLens = 'default';
     let currentTopic = 'all';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
-    if (!['cards', 'rundown', 'table'].includes(currentView)) currentView = 'cards';
+    if (!['cards', 'briefing', 'table'].includes(currentView)) currentView = 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
     let activeDrawerId = null;
     let currentDisplayedIds = [];
@@ -3141,7 +3141,7 @@ def build_dashboard_html(
         pos > -1 ? `${{pos + 1}} of ${{currentDisplayedIds.length}}` : '';
 
       const summaryBlock = item.summary
-        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--ink);">📰 The Rundown</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
+        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--ink);">📰 Key Summary</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
         : '';
 
       document.getElementById('drawerBody').innerHTML = `
@@ -3390,7 +3390,7 @@ def build_dashboard_html(
       selectedCardIndex = -1;
       localStorage.setItem('ai-news-view', mode);
       document.getElementById('viewCardsBtn').classList.toggle('active', mode === 'cards');
-      document.getElementById('viewRundownBtn').classList.toggle('active', mode === 'rundown');
+      document.getElementById('viewBriefingBtn').classList.toggle('active', mode === 'briefing');
       document.getElementById('viewTableBtn').classList.toggle('active', mode === 'table');
       swapContent(() => renderMain());
     }}
@@ -3492,17 +3492,17 @@ def build_dashboard_html(
         return;
       }}
 
-      /* VIEW MODE 2: "RUNDOWN" 5-MINUTE NEWSLETTER READING STREAM */
-      if (currentView === 'rundown') {{
-        container.className = 'rundown-stream swap-target';
+      /* VIEW MODE 2: "BRIEFING" 5-MINUTE READING STREAM */
+      if (currentView === 'briefing') {{
+        container.className = 'briefing-stream swap-target';
         container.innerHTML = filtered.map((item, idx) => {{
           const isSaved = savedUrls.has(item.url);
           const effScore = getActiveScore(item);
           const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
           const urgencyBadge = urgencyBadgeHtml(effScore, item);
           const numStr = String(idx + 1).padStart(2, '0');
-          const rundownLine = item.summary
-            ? `<div class="stream-bullet"><strong>The Rundown:</strong> ${{escapeHtml(item.summary)}}</div>`
+          const summaryLine = item.summary
+            ? `<div class="stream-bullet"><strong>Key Summary:</strong> ${{escapeHtml(item.summary)}}</div>`
             : '';
           return `
             <article class="stream-article" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
@@ -3523,7 +3523,7 @@ def build_dashboard_html(
                 <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
               </h3>
               <div class="stream-bullets">
-                ${{rundownLine}}
+                ${{summaryLine}}
                 <div class="stream-bullet"><strong>Why it matters (UK Finance):</strong> ${{escapeHtml(item.benefit)}}</div>
                 <div class="stream-bullet"><strong>Action &amp; Governance:</strong> ${{escapeHtml(item.action_item)}}</div>
               </div>
@@ -3543,7 +3543,7 @@ def build_dashboard_html(
         return;
       }}
 
-      /* VIEW MODE 1 (DEFAULT): THERUNDOWN.AI /NEWS 3-COLUMN ROUNDED-3XL CARDS */
+      /* VIEW MODE 1 (DEFAULT): 3-COLUMN ROUNDED-3XL EDITORIAL CARDS */
       container.className = 'cards-grid swap-target';
       container.innerHTML = filtered.map(item => {{
         const isSaved = savedUrls.has(item.url);
@@ -3620,7 +3620,7 @@ def build_dashboard_html(
     function copyTeamBriefing() {{
       const top5 = getSortedItems().slice(0, 5);
       const lines = [
-        `*The Finance Rundown — UK Finance & AI Briefing (${{DATE_STR}})*`,
+        `*UK Finance & AI — Daily Executive Briefing (${{DATE_STR}})*`,
         `Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
         ``
       ];
@@ -3632,14 +3632,14 @@ def build_dashboard_html(
         lines.push(``);
       }});
       navigator.clipboard.writeText(lines.join('\\n')).then(() => {{
-        showToast('✓ Copied Top 5 Rundown for Teams / Slack');
+        showToast('✓ Copied Top 5 Briefing for Teams / Slack');
       }});
     }}
 
     function openEmailDraft() {{
       const top5 = getSortedItems().slice(0, 5);
-      const subject = encodeURIComponent(`The Finance Rundown: UK Finance & AI Briefing — ${{DATE_STR}}`);
-      let body = `THE RUNDOWN — UK FINANCE & CFO AI INTELLIGENCE\\nDate: ${{DATE_STR}}\\nLive Dashboard: https://mhutt97.github.io/ai-news-daily/\\n\\n` +
+      const subject = encodeURIComponent(`UK Finance & AI Executive Briefing — ${{DATE_STR}}`);
+      let body = `UK FINANCE & AI — DAILY EXECUTIVE BRIEFING\\nDate: ${{DATE_STR}}\\nLive Dashboard: https://mhutt97.github.io/ai-news-daily/\\n\\n` +
         `TOP 5 STORIES & WHY THEY MATTER FOR UK FINANCE:\\n\\n`;
       top5.forEach((it, idx) => {{
         body += `${{idx + 1}}. ${{it.title}} [${{it.func_tag}}]\\n`;
@@ -3668,7 +3668,7 @@ def build_dashboard_html(
         "Tier",
         "Area / Tag",
         "Title",
-        "The Rundown (Summary)",
+        "Executive Summary",
         "Why It Matters (UK Finance)",
         "Audit & FCA Governance Risk",
         "Recommended Action",
@@ -3703,7 +3703,7 @@ def build_dashboard_html(
       const link = document.createElement("a");
       const datePart = new Date().toISOString().slice(0, 10);
       link.setAttribute("href", url);
-      link.setAttribute("download", `UK_Finance_AI_Rundown_${{datePart}}.csv`);
+      link.setAttribute("download", `UK_Finance_AI_Briefing_${{datePart}}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -3770,7 +3770,7 @@ def build_dashboard_html(
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       const apply = () => {{
         root.setAttribute('data-theme', next);
-        localStorage.setItem('rundown-theme', next);
+        localStorage.setItem('uk-fin-ai-theme', next);
         syncThemeIcon(next);
       }};
       if (REDUCED_MOTION) {{ apply(); return; }}
@@ -3872,7 +3872,7 @@ def build_dashboard_html(
         return;
       }}
 
-      const navigableCards = Array.from(document.querySelectorAll('.cards-grid .news-card, .rundown-stream .stream-article, .compact-table tbody tr'));
+      const navigableCards = Array.from(document.querySelectorAll('.cards-grid .news-card, .briefing-stream .stream-article, .compact-table tbody tr'));
       if (!navigableCards.length) return;
 
       if (e.key === 'j' || e.key === 'ArrowDown') {{
@@ -3909,12 +3909,12 @@ def build_dashboard_html(
         if (slot) slot.innerHTML = FLAG_SVG;
       }});
 
-      const savedTheme = localStorage.getItem('rundown-theme') || 'light';
+      const savedTheme = localStorage.getItem('uk-fin-ai-theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
       syncThemeIcon(savedTheme);
 
       document.getElementById('viewCardsBtn').classList.toggle('active', currentView === 'cards');
-      document.getElementById('viewRundownBtn').classList.toggle('active', currentView === 'rundown');
+      document.getElementById('viewBriefingBtn').classList.toggle('active', currentView === 'briefing');
       document.getElementById('viewTableBtn').classList.toggle('active', currentView === 'table');
 
       updateSavedTabCount();

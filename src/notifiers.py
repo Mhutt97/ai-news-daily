@@ -23,7 +23,7 @@ def send_discord_digest(md_digest: str, settings: Settings) -> bool:
     header = sections[0].strip()
     embeds: list[dict] = []
 
-    COLORS = [0x3B82F6, 0x8B5CF6, 0x10B981, 0xF59E0B]
+    COLORS = [0x8B4CD4, 0x009767, 0x6254FF, 0xCD408F]
 
     for idx, sec in enumerate(sections[1:]):
         lines = sec.strip().splitlines()
@@ -80,8 +80,8 @@ def send_email_digest(md_digest: str, html_digest: str, settings: Settings) -> b
         print("[info] Email credentials not configured; skipping Email delivery.")
         return False
 
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    subject = f"🤖 Daily AI News Briefing — {today_str}"
+    today_str = datetime.now().strftime("%d %b %Y")
+    subject = f"UK Finance & AI Daily Briefing — {today_str}"
     recipients = [addr.strip() for addr in settings.email_to.split(",") if addr.strip()]
 
     # Option A: Resend REST API
