@@ -310,7 +310,7 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
         return (
             90,
             "High UK Finance Impact",
-            "🇬🇧 UK Finance",
+            "💷 UK Finance",
             clean_summary,
             f"UK Finance Update ({item.source}): Covers AI governance, productivity, and operational trends across UK financial services.",
         )
@@ -542,7 +542,7 @@ def prepare_prioritized_cards(
 def build_dashboard_html(
     cards: list[dict[str, object]], date_str: str, updated_at: str = ""
 ) -> str:
-    """Render a modern, mobile-first, animated UK Finance & AI Intelligence Dashboard."""
+    """Render an editorial UK Finance & AI Intelligence Dashboard inspired by The Rundown AI (therundown.ai)."""
     total = max(len(cards), 1)
     high_impact_count = sum(1 for c in cards if int(c["score"]) >= 85)
     ops_count = sum(1 for c in cards if 70 <= int(c["score"]) < 85)
@@ -557,149 +557,155 @@ def build_dashboard_html(
     cards_json = json.dumps(cards, ensure_ascii=False)
 
     return f"""<!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#070b14" />
-  <meta name="description" content="Daily AI News & UK CFO Intelligence Dashboard — ranked by practical impact for UK Finance, Accounting, Audit & FP&A teams." />
-  <meta property="og:title" content="UK Finance & AI Daily Intelligence — {html.escape(date_str)}" />
-  <meta property="og:description" content="Executive AI intelligence curated daily for UK CFOs, Audit Directors, and FCA Compliance teams." />
+  <meta name="theme-color" content="#171717" />
+  <meta name="description" content="UK Finance & AI News in 5 Minutes a Day — curated & ranked daily for UK CFOs, Accounting, Audit, FCA Compliance & FP&A teams." />
+  <meta property="og:title" content="The Finance Rundown · Daily UK Finance & AI Intelligence — {html.escape(date_str)}" />
+  <meta property="og:description" content="Get the latest AI news, understand why it matters for UK Finance & CFO teams, and apply it in 5 minutes a day." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mhutt97.github.io/ai-news-daily/" />
   <meta name="robots" content="index, follow" />
-  <title>UK Finance & AI Daily Intelligence — {html.escape(date_str)}</title>
+  <title>The Finance Rundown — UK Finance & AI Intelligence ({html.escape(date_str)})</title>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {{
-      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --bg: #070b14;
-      --bg-mesh-1: rgba(59, 130, 246, 0.11);
-      --bg-mesh-2: rgba(245, 158, 11, 0.08);
-      --surface: rgba(17, 24, 39, 0.86);
-      --surface-solid: #111827;
-      --surface-elevated: #192338;
-      --surface-hover: #1e293b;
-      --glass-bg: rgba(15, 23, 42, 0.82);
-      --border: rgba(255, 255, 255, 0.09);
-      --border-subtle: rgba(255, 255, 255, 0.06);
-      --text: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --muted: #94a3b8;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --accent-glow: rgba(59, 130, 246, 0.35);
-      --gold-bg: rgba(245, 158, 11, 0.13);
-      --gold-border: rgba(245, 158, 11, 0.42);
-      --gold-text: #fbbf24;
-      --emerald-bg: rgba(16, 185, 129, 0.13);
-      --emerald-border: rgba(16, 185, 129, 0.38);
-      --emerald-text: #34d399;
-      --blue-bg: rgba(59, 130, 246, 0.13);
-      --blue-border: rgba(59, 130, 246, 0.38);
-      --blue-text: #60a5fa;
-      --benefit-bg: rgba(9, 14, 26, 0.68);
-      --hero-gradient: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.94) 100%);
-      --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
-      /* Motion system: one easing family, three durations */
+      --font-sans: "Satoshi", "Satoshi Variable", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+      /* The Rundown AI Core Editorial Palette (Light Paper Default + Obsidian Masthead) */
+      --stage-bg: #171717;
+      --paper: #ffffff;
+      --card-bg: #ffffff;
+      --mist: #f5f5f5;
+      --mist-soft: #fafafa;
+      --ink: #171717;
+      --ink-soft: #262626;
+      --mute: #737373;
+      --line: #e5e5e5;
+      --line-subtle: #efefef;
+      --glass-sheet: rgba(255, 255, 255, 0.9);
+
+      /* Signature Rundown Tri-Tone Accents */
+      --brand-pink: #cd408f;
+      --brand-violet: #8b4cd4;
+      --brand-violet-bg: rgba(139, 76, 212, 0.09);
+      --brand-violet-border: rgba(139, 76, 212, 0.28);
+      --brand-blue: #6254ff;
+      --brand-blue-bg: rgba(98, 84, 255, 0.09);
+      --brand-blue-border: rgba(98, 84, 255, 0.25);
+      --emerald: #009767;
+      --emerald-bg: rgba(0, 151, 103, 0.09);
+      --emerald-border: rgba(0, 151, 103, 0.26);
+      --green-live: #00c758;
+      --danger: #e40014;
+      --danger-bg: rgba(228, 0, 20, 0.08);
+      --danger-border: rgba(228, 0, 20, 0.28);
+
+      --heading-grad: linear-gradient(91.69deg, #000000 0.85%, #4c4c4c 96.98%);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --card-hover-shadow: 0 20px 44px -18px rgba(23, 23, 23, 0.13);
+
       --spring: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
       --drawer-ease: cubic-bezier(0.32, 0.72, 0, 1);
-      --dur-fast: 160ms;
-      --dur: 260ms;
-      --dur-slow: 520ms;
-    }}
-    [data-theme="light"] {{
-      --bg: #f4f7fb;
-      --bg-mesh-1: rgba(37, 99, 235, 0.07);
-      --bg-mesh-2: rgba(245, 158, 11, 0.07);
-      --surface: rgba(255, 255, 255, 0.95);
-      --surface-solid: #ffffff;
-      --surface-elevated: #f1f5f9;
-      --surface-hover: #f8fafc;
-      --glass-bg: rgba(255, 255, 255, 0.88);
-      --border: #e2e8f0;
-      --border-subtle: #edf2f7;
-      --text: #0f172a;
-      --text-secondary: #334155;
-      --muted: #64748b;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --accent-glow: rgba(37, 99, 235, 0.2);
-      --gold-bg: #fef3c7;
-      --gold-border: #f59e0b;
-      --gold-text: #b45309;
-      --emerald-bg: #d1fae5;
-      --emerald-border: #10b981;
-      --emerald-text: #047857;
-      --blue-bg: #dbeafe;
-      --blue-border: #3b82f6;
-      --blue-text: #1d4ed8;
-      --benefit-bg: #f8fafc;
-      --hero-gradient: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
-      --card-shadow: 0 10px 25px -8px rgba(15, 23, 42, 0.07);
+      --dur-fast: 150ms;
+      --dur: 240ms;
+      --dur-slow: 460ms;
     }}
 
-    /* Strict Font Consistency Across 100% of Elements */
+    [data-theme="dark"] {{
+      --stage-bg: #0c0c0c;
+      --paper: #141414;
+      --card-bg: #1c1c1c;
+      --mist: #232323;
+      --mist-soft: #191919;
+      --ink: #ffffff;
+      --ink-soft: #e5e5e5;
+      --mute: #a1a1aa;
+      --line: #2e2e2e;
+      --line-subtle: #242424;
+      --glass-sheet: rgba(20, 20, 20, 0.9);
+
+      --brand-violet: #b380ff;
+      --brand-violet-bg: rgba(179, 128, 255, 0.13);
+      --brand-violet-border: rgba(179, 128, 255, 0.35);
+      --brand-blue: #8c82ff;
+      --brand-blue-bg: rgba(140, 130, 255, 0.13);
+      --brand-blue-border: rgba(140, 130, 255, 0.32);
+      --emerald: #34d399;
+      --emerald-bg: rgba(52, 211, 153, 0.12);
+      --emerald-border: rgba(52, 211, 153, 0.32);
+      --danger: #ff6470;
+      --danger-bg: rgba(255, 100, 112, 0.14);
+      --danger-border: rgba(255, 100, 112, 0.36);
+
+      --heading-grad: linear-gradient(91.69deg, #ffffff 0.85%, #a3a3a3 96.98%);
+      --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --card-hover-shadow: 0 22px 48px -18px rgba(0, 0, 0, 0.65);
+    }}
+
     *, *::before, *::after {{
       box-sizing: border-box;
       font-family: var(--font-sans);
       font-variant-numeric: tabular-nums;
       -webkit-tap-highlight-color: transparent;
     }}
-    button, input, select, textarea, table, th, td, code, kbd, span, div, p, a, h1, h2, h3, h4 {{
+    button, input, select, textarea, table, th, td, span, div, p, a, h1, h2, h3, h4 {{
+      font-family: var(--font-sans);
+    }}
+    code, kbd {{
       font-family: var(--font-sans);
     }}
 
     html {{ scroll-behavior: smooth; }}
     body {{
       margin: 0;
-      background-color: var(--bg);
-      background-image:
-        radial-gradient(at 12% 0%, var(--bg-mesh-2) 0px, transparent 50%),
-        radial-gradient(at 88% 4%, var(--bg-mesh-1) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text);
-      line-height: 1.6;
+      background-color: var(--stage-bg);
+      color: var(--ink);
+      line-height: 1.55;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }}
 
+    /* Signature Rundown Tri-Tone Top Reading Progress */
     #scrollProgress {{
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 2px;
+      height: 2.5px;
       transform-origin: 0 50%;
       transform: scaleX(0);
-      background: linear-gradient(90deg, #f59e0b 0%, #3b82f6 55%, #10b981 100%);
-      z-index: 999;
+      background: linear-gradient(90deg, var(--brand-pink) 0%, var(--brand-violet) 50%, var(--brand-blue) 100%);
+      z-index: 1000;
       will-change: transform;
     }}
 
-    /* Accessible, understated focus rings */
     :focus-visible {{
-      outline: 2px solid var(--accent);
+      outline: 2px solid var(--brand-violet);
       outline-offset: 2px;
       border-radius: 8px;
     }}
     :focus:not(:focus-visible) {{ outline: none; }}
 
-    /* Smooth theme cross-fade (fallback when View Transitions unsupported) */
     html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {{
       transition: background-color var(--dur) var(--ease-in-out), border-color var(--dur) var(--ease-in-out), color var(--dur) var(--ease-in-out) !important;
     }}
 
-    /* Content swap fade used when filters, lenses, or views change */
     .swap-target {{
       transition: opacity var(--dur-fast) var(--ease-in-out), transform var(--dur-fast) var(--ease-in-out);
     }}
     .swap-target.is-swapping {{
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(5px);
     }}
 
     .svg-icon {{
@@ -708,558 +714,841 @@ def build_dashboard_html(
       flex-shrink: 0;
       stroke: currentColor;
       fill: none;
-      stroke-width: 1.8;
+      stroke-width: 1.85;
       stroke-linecap: round;
       stroke-linejoin: round;
     }}
 
-    .container {{
-      max-width: 1260px;
-      margin: 0 auto;
-      padding: 28px 20px 96px;
+    .uk-flag {{
+      width: 15px;
+      height: 10px;
+      border-radius: 2px;
+      vertical-align: -1px;
+      display: inline-block;
+      box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.25);
+      flex-shrink: 0;
     }}
 
-    header {{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 20px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid var(--border);
-      animation: fadeSlideDown 0.6s var(--spring) both;
+    /* Signature Rundown Text Gradients */
+    .text-gradient {{
+      background-image: linear-gradient(45deg, var(--brand-pink), var(--brand-violet) 50%, var(--brand-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }}
-    .brand-row {{
+    .text-gradient-heading {{
+      background-image: var(--heading-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding-bottom: 0.08em;
+      margin-bottom: -0.08em;
+    }}
+
+    /* =========================================================
+       1. TOP STICKY OBSIDIAN MASTHEAD (therundown.ai Header)
+       ========================================================= */
+    .site-nav {{
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      background: rgba(23, 23, 23, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      color: #ffffff;
+    }}
+    .site-nav-inner {{
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 68px;
+      padding: 0 22px;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      justify-content: space-between;
+      gap: 16px;
     }}
-    .brand-badge {{
+    .brand-lockup {{
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: 11px;
+      gap: 11px;
+      text-decoration: none;
+      color: #ffffff;
+      flex-shrink: 0;
+    }}
+    .brand-monogram {{
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #171717;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 19px;
+      letter-spacing: -0.05em;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+    }}
+    .brand-wordmark {{
+      font-size: 19px;
       font-weight: 800;
+      letter-spacing: -0.035em;
+      color: #ffffff;
+      line-height: 1;
+    }}
+    .brand-edition-pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 5px 12px;
+      letter-spacing: 0.1em;
+      padding: 4px 9px;
       border-radius: 999px;
-      background: var(--gold-bg);
-      border: 1px solid var(--gold-border);
-      color: var(--gold-text);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.88);
+    }}
+
+    .nav-links {{
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }}
+    .nav-link {{
+      background: transparent;
+      border: none;
+      padding: 6px 2px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color var(--dur-fast) ease;
+      white-space: nowrap;
+    }}
+    .nav-link:hover {{
+      color: #ffffff;
+    }}
+
+    .nav-actions {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }}
+    .nav-btn {{
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      padding: 7px 13px;
+      height: 36px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      white-space: nowrap;
+    }}
+    .nav-btn:hover {{
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.32);
+    }}
+    .nav-btn:active {{ transform: scale(0.97); }}
+    .nav-btn-primary {{
+      background: #ffffff;
+      color: #171717;
+      border-color: #ffffff;
+      font-weight: 700;
+    }}
+    .nav-btn-primary:hover {{
+      background: #f0f0f0;
+      border-color: #f0f0f0;
+    }}
+    .nav-btn-icon {{
+      width: 36px;
+      padding: 0;
+    }}
+
+    /* =========================================================
+       2. HERO STAGE (therundown.ai Homepage Hero)
+       ========================================================= */
+    .rundown-hero {{
+      background:
+        radial-gradient(680px circle at 50% 0%, rgba(139, 76, 212, 0.18), transparent 68%),
+        var(--stage-bg);
+      color: #ffffff;
+      padding: 54px 20px 64px;
+      text-align: center;
+      animation: fadeSlideDown 0.55s var(--spring) both;
+    }}
+    .hero-eyebrow-pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.86);
+      margin-bottom: 22px;
     }}
     .live-dot {{
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      background: var(--green-live);
+      box-shadow: 0 0 0 0 rgba(0, 199, 88, 0.7);
       animation: pulseDot 2s infinite;
+      flex-shrink: 0;
     }}
-    .date-chip {{
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--muted);
-      padding: 4px 11px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-    }}
-    h1 {{
-      margin: 0;
-      font-size: clamp(23px, 3.2vw, 34px);
+    .rundown-hero h1 {{
+      margin: 0 auto;
+      max-width: 820px;
+      font-size: clamp(2.25rem, 5.3vw, 4.35rem);
       font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.18;
-    }}
-    .subtitle {{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: clamp(13.5px, 1.5vw, 15px);
-      font-weight: 400;
-      max-width: 68ch;
-    }}
-    .header-actions {{
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-    }}
-    .btn {{
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 10px 15px;
-      min-height: 42px;
-      border-radius: 11px;
-      font-size: 13px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      transition: transform var(--dur) var(--spring), border-color var(--dur-fast) ease, background-color var(--dur-fast) ease, box-shadow var(--dur) var(--spring);
-      user-select: none;
-      text-decoration: none;
-    }}
-    .btn:hover {{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-      background: var(--surface-hover);
-      box-shadow: 0 6px 16px -8px var(--accent-glow);
-    }}
-    .btn:active {{
-      transform: translateY(0) scale(0.98);
-      transition-duration: 80ms;
-    }}
-    .btn-icon-only {{
-      padding: 10px 12px;
-    }}
-    .btn-primary {{
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      border-color: rgba(255, 255, 255, 0.15);
+      letter-spacing: -0.04em;
+      line-height: 1.07;
       color: #ffffff;
-      box-shadow: 0 6px 18px -4px rgba(37, 99, 235, 0.45);
     }}
-    .btn-primary:hover {{
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-      border-color: rgba(255, 255, 255, 0.3);
+    .hero-subtitle {{
+      margin: 22px auto 0;
+      max-width: 540px;
+      font-size: clamp(15.5px, 1.6vw, 18px);
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.76);
+      font-weight: 400;
     }}
 
-    /* UK Finance Role Lens Switcher */
-    .lens-bar {{
-      margin: 20px 0 18px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      animation: fadeSlideUp 0.6s 0.05s var(--spring) both;
-    }}
-    .lens-label {{
+    /* Signature Rundown White Pill Bar in Hero */
+    .hero-search-form {{
+      margin: 30px auto 0;
+      max-width: 530px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text-secondary);
-    }}
-    .lens-pills {{
-      display: flex;
-      flex-wrap: wrap;
       gap: 6px;
+      background: #ffffff;
+      padding: 6px 6px 6px 15px;
+      border-radius: 14px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }}
-    .lens-btn {{
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--muted);
-      padding: 7px 13px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      transition: color var(--dur-fast) ease, background-color var(--dur) var(--spring), border-color var(--dur) var(--spring), transform var(--dur) var(--spring);
+    .hero-search-form .svg-icon {{
+      color: #737373;
+      width: 18px;
+      height: 18px;
     }}
-    .lens-btn:active {{ transform: scale(0.97); }}
-    .lens-btn:hover {{
-      color: var(--text);
-      border-color: var(--accent);
+    .hero-search-input {{
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      color: #171717;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 9px 6px;
+      outline: none;
     }}
-    .lens-btn.active {{
-      background: var(--gold-bg);
-      border-color: var(--gold-border);
-      color: var(--gold-text);
+    .hero-search-input::placeholder {{
+      color: #737373;
+    }}
+    .hero-kbd {{
+      font-size: 11px;
       font-weight: 700;
-    }}
-
-    /* 60-Second CFO Hero Brief */
-    .hero-section {{
-      margin: 0 0 22px;
-      background: var(--hero-gradient);
-      border: 1px solid var(--gold-border);
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: var(--card-shadow);
-      position: relative;
-      overflow: hidden;
-      animation: fadeSlideUp 0.65s 0.08s var(--spring) both;
-    }}
-    .hero-header {{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }}
-    .hero-title {{
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: clamp(13.5px, 1.8vw, 15.5px);
-      font-weight: 800;
-      color: var(--gold-text);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin: 0;
-    }}
-    .hero-sub {{
-      font-size: 12.5px;
-      color: var(--muted);
-    }}
-    .hero-grid {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 16px;
-    }}
-    .hero-card {{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      cursor: pointer;
-      transition: transform var(--dur-slow) var(--spring), border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring);
-    }}
-    .hero-card:hover {{
-      border-color: var(--gold-border);
-      transform: translateY(-2px);
-      box-shadow: 0 16px 32px -16px rgba(245, 158, 11, 0.22);
-    }}
-    .rank-pill {{
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      padding: 3px 9px;
+      color: #737373;
+      background: #f5f5f5;
+      border: 1px solid #e5e5e5;
+      padding: 2px 7px;
       border-radius: 6px;
-      background: var(--gold-bg);
-      color: var(--gold-text);
-      border: 1px solid var(--gold-border);
-    }}
-
-    /* KPI Strip & Signal Mix Bar */
-    .kpi-grid {{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 14px;
-      animation: fadeSlideUp 0.65s 0.14s var(--spring) both;
-    }}
-    .kpi-card {{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 18px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: transform var(--dur-slow) var(--spring), border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring);
-    }}
-    .kpi-card::after {{
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.1), transparent 40%);
-      opacity: 0;
-      transition: opacity 0.25s;
       pointer-events: none;
     }}
-    .kpi-card:hover {{
-      transform: translateY(-2px);
-      border-color: var(--accent);
-      box-shadow: var(--card-shadow);
+    .hero-search-submit {{
+      cursor: pointer;
+      border: none;
+      background: #171717;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      flex-shrink: 0;
     }}
-    .kpi-card:hover::after {{ opacity: 1; }}
-    .kpi-card.active-kpi {{
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent);
+    .hero-search-submit:hover {{
+      background: #000000;
     }}
-    .kpi-label {{
+
+    /* Trusted Sources Social Proof Strip */
+    .hero-proof {{
+      margin: 36px auto 0;
+      max-width: 880px;
+    }}
+    .hero-proof-label {{
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0 0 14px;
+    }}
+    .hero-proof-label strong {{
+      color: #ffffff;
+      font-weight: 700;
+    }}
+    .hero-proof-logos {{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px 24px;
+    }}
+    .proof-source {{
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: rgba(255, 255, 255, 0.56);
+      transition: color var(--dur-fast) ease;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 2px 4px;
+    }}
+    .proof-source:hover {{
+      color: #ffffff;
+    }}
+
+    /* =========================================================
+       3. ROUNDED .sheet EDITORIAL PAPER BODY (therundown.ai .sheet)
+       ========================================================= */
+    .main-sheet-wrap {{
+      padding: 0 10px 12px;
+    }}
+    .main-sheet {{
+      background-color: var(--paper);
+      color: var(--ink);
+      border-radius: 28px;
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 36px 28px 68px;
+      box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.14);
+    }}
+    .sheet-container {{
+      max-width: 1220px;
+      margin: 0 auto;
+    }}
+
+    /* Role Lens & Signal Snapshot Bar */
+    .executive-strip {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 34px;
+    }}
+    .lens-group-wrap {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }}
+    .strip-micro-label {{
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
+      letter-spacing: 0.14em;
+      color: var(--mute);
     }}
-    .kpi-val {{
-      font-size: clamp(22px, 2.5vw, 28px);
-      font-weight: 800;
-      margin-top: 4px;
-      line-height: 1.1;
+    /* Exact therundown.ai Segmented Switcher */
+    .segmented-box {{
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--mist);
     }}
-    .kpi-sub {{
-      font-size: 11.5px;
-      color: var(--muted);
-      margin-top: 4px;
+    .lens-btn {{
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      white-space: nowrap;
+    }}
+    .lens-btn:hover {{
+      background: var(--paper);
+    }}
+    .lens-btn.active {{
+      background: var(--ink);
+      color: var(--paper);
+      font-weight: 700;
     }}
 
-    /* Segmented Signal Mix Bar */
-    .signal-mix-card {{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 22px;
+    /* Sleek Editorial KPI Chips + Signal Mix */
+    .signal-cluster {{
       display: flex;
       flex-direction: column;
       gap: 8px;
-      animation: fadeSlideUp 0.65s 0.18s var(--spring) both;
+      min-width: min(100%, 460px);
     }}
-    .signal-mix-top {{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
+    .kpi-strip {{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
-      font-size: 11.5px;
+    }}
+    .kpi-card {{
+      cursor: pointer;
+      background: var(--mist-soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 11px;
+      text-align: left;
+      transition: border-color var(--dur-fast) ease, transform var(--dur-fast) ease, background-color var(--dur-fast) ease;
+    }}
+    .kpi-card:hover {{
+      border-color: var(--brand-violet);
+      transform: translateY(-1px);
+    }}
+    .kpi-card.active-kpi {{
+      border-color: var(--ink);
+      background: var(--mist);
+    }}
+    .kpi-val {{
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--ink);
+    }}
+    .kpi-label {{
+      font-size: 10.5px;
       font-weight: 600;
-      color: var(--muted);
-    }}
-    .signal-legend {{
+      color: var(--mute);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-    }}
-    .legend-item {{
-      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }}
-    .legend-dot {{
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+    .signal-bar-row {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }}
     .signal-track {{
-      width: 100%;
-      height: 7px;
+      flex: 1;
+      height: 5px;
       border-radius: 999px;
       overflow: hidden;
       display: flex;
-      background: var(--border);
+      background: var(--line);
       gap: 2px;
     }}
     .signal-seg {{
       height: 100%;
-      transform-origin: 0 50%;
-      animation: segGrow 1s var(--spring) backwards;
+      transition: width var(--dur-slow) var(--spring);
     }}
-    .signal-seg:nth-child(2) {{ animation-delay: 90ms; }}
-    .signal-seg:nth-child(3) {{ animation-delay: 180ms; }}
+    .signal-legend-inline {{
+      display: flex;
+      gap: 10px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--mute);
+      white-space: nowrap;
+    }}
 
-    /* Glassmorphic Sticky Filter & View Bar */
-    .controls {{
+    /* =========================================================
+       4. TODAY'S MORNING RUNDOWN — FEATURED #1 + TOP STACK
+       ========================================================= */
+    .editorial-showcase {{
+      margin-bottom: 48px;
+    }}
+    .section-head {{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 22px;
+    }}
+    .eyebrow {{
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--brand-violet);
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }}
+    .eyebrow-dot {{
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--brand-violet);
+      display: inline-block;
+    }}
+    .section-h2 {{
+      margin: 0;
+      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+    }}
+    .section-sub {{
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: var(--mute);
+    }}
+
+    .showcase-grid {{
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }}
+    .showcase-grid.single-col {{
+      grid-template-columns: 1fr;
+    }}
+
+    /* #1 Lead Feature Card (therundown.ai/news Featured Story) */
+    .lead-feature-card {{
+      background: var(--mist-soft);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 30px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring), transform var(--dur-slow) var(--spring);
+    }}
+    .lead-feature-card:hover {{
+      border-color: var(--brand-violet-border);
+      box-shadow: var(--card-hover-shadow);
+      transform: translateY(-2px);
+    }}
+    .lead-title {{
+      margin: 14px 0 12px;
+      font-size: clamp(22px, 2.35vw, 30px);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.028em;
+    }}
+    .lead-title a {{
+      color: var(--ink);
+      text-decoration: none;
+      transition: color var(--dur-fast) ease;
+    }}
+    .lead-feature-card:hover .lead-title a {{
+      color: var(--brand-violet);
+    }}
+    .lead-summary {{
+      margin: 0 0 18px;
+      font-size: 15px;
+      line-height: 1.62;
+      color: var(--mute);
+    }}
+    .lead-why-box {{
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--brand-violet);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }}
+    .lead-action-line {{
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px dashed var(--line);
+      font-size: 12.5px;
+      color: var(--mute);
+    }}
+    .lead-action-line strong {{
+      color: var(--ink);
+    }}
+
+    /* #2-#4 Right Column Stack */
+    .top-stack {{
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }}
+    .stack-card {{
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring), transform var(--dur-slow) var(--spring);
+    }}
+    .stack-card:hover {{
+      border-color: var(--brand-violet-border);
+      box-shadow: var(--card-hover-shadow);
+      transform: translateY(-2px);
+    }}
+    .stack-title {{
+      margin: 8px 0 6px;
+      font-size: 17.5px;
+      font-weight: 700;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+    }}
+    .stack-title a {{
+      color: var(--ink);
+      text-decoration: none;
+      transition: color var(--dur-fast) ease;
+    }}
+    .stack-card:hover .stack-title a {{
+      color: var(--brand-violet);
+    }}
+    .stack-plus {{
+      margin: 0 0 12px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--mute);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }}
+    .stack-plus strong {{
+      color: var(--ink-soft);
+      font-weight: 700;
+    }}
+
+    /* =========================================================
+       5. EXPLORE THE LATEST — STICKY PILL CONTROLS & 3 VIEWS
+       ========================================================= */
+    .explore-section {{
+      border-top: 1px solid var(--line);
+      padding-top: 38px;
+      scroll-margin-top: 80px;
+    }}
+    .explore-top-row {{
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 15px;
-      position: sticky;
-      top: 10px;
-      z-index: 40;
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35);
+      gap: 16px;
+      margin-bottom: 20px;
     }}
-    .tabs {{
-      position: relative;
+    .explore-right-tools {{
       display: flex;
-      align-items: center;
-      gap: 6px;
-      overflow-x: auto;
-      max-width: 100%;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding-bottom: 2px;
-    }}
-    .tabs::-webkit-scrollbar {{ display: none; }}
-    .tab {{
-      cursor: pointer;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      padding: 8px 13px;
-      min-height: 38px;
-      border-radius: 9px;
-      font-size: 12.5px;
-      font-weight: 600;
-      white-space: nowrap;
-      flex-shrink: 0;
-      position: relative;
-      z-index: 1;
-      transition: color var(--dur) var(--spring), background-color var(--dur-fast) ease;
-    }}
-    .tab:hover {{
-      color: var(--text);
-      background: var(--surface-hover);
-    }}
-    .tab.active, .tab.active:hover {{
-      background: transparent;
-      color: #ffffff;
-    }}
-    /* Sliding active indicator shared by tabs and view toggle */
-    .seg-indicator {{
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 0;
-      width: 0;
-      z-index: 0;
-      border-radius: 9px;
-      background: var(--accent);
-      box-shadow: 0 4px 14px -4px var(--accent-glow);
-      transition: transform var(--dur-slow) var(--spring), width var(--dur-slow) var(--spring), height var(--dur-slow) var(--spring), opacity var(--dur) ease;
-      pointer-events: none;
-      opacity: 0;
-    }}
-    .seg-indicator.ready {{ opacity: 1; }}
-    .seg-indicator.no-anim {{ transition: none; }}
-    .view-toggle .seg-indicator {{
-      background: var(--surface-elevated);
-      box-shadow: none;
-      border-radius: 7px;
-    }}
-    .right-controls {{
-      display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 10px;
-      flex: 1;
-      justify-content: flex-end;
-      min-width: 240px;
     }}
-    .search-wrap {{
-      position: relative;
-      flex: 1;
-      max-width: 290px;
+
+    /* Rounded-Full Pill Search in #stories (exact therundown.ai/news#stories) */
+    .pill-search-wrap {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      padding: 5px 14px;
+      min-width: 250px;
+      transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+    }}
+    .pill-search-wrap:focus-within {{
+      border-color: var(--brand-violet);
+      box-shadow: 0 0 0 3px var(--brand-violet-bg);
+    }}
+    .pill-search-wrap .svg-icon {{
+      color: var(--mute);
+      width: 15px;
+      height: 15px;
     }}
     .search-input {{
-      width: 100%;
-      padding: 8px 32px 8px 13px;
-      min-height: 38px;
-      border-radius: 9px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-size: 13px;
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      font-size: 13.5px;
       font-weight: 500;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }}
-    .search-input:focus {{
+      padding: 5px 0;
+      width: 100%;
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
     }}
-    .kbd-hint {{
-      position: absolute;
-      right: 9px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 1px 6px;
-      border-radius: 4px;
-      pointer-events: none;
-    }}
+    .search-input::placeholder {{ color: var(--mute); }}
+
     .view-toggle {{
-      position: relative;
       display: inline-flex;
-      padding: 2px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      overflow: hidden;
-      background: var(--bg);
-      flex-shrink: 0;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--mist);
     }}
     .view-btn {{
       cursor: pointer;
       border: none;
       background: transparent;
-      color: var(--muted);
-      padding: 7px 11px;
-      min-height: 32px;
-      font-size: 12px;
+      color: var(--mute);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
       font-weight: 600;
-      position: relative;
-      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+    }}
+    .view-btn:hover {{ color: var(--ink); }}
+    .view-btn.active {{
+      background: var(--ink);
+      color: var(--paper);
+      font-weight: 700;
+    }}
+    .view-btn .svg-icon {{ width: 13.5px; height: 13.5px; }}
+
+    /* Exact therundown.ai/news Rounded-Full Category Pills */
+    .controls-bar {{
+      margin-bottom: 26px;
+      padding: 12px 0;
+      position: sticky;
+      top: 68px;
+      z-index: 40;
+      background: var(--glass-sheet);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line-subtle);
+    }}
+    .tabs {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }}
+    .tab {{
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--ink);
+      padding: 8px 17px;
+      font-size: 13.5px;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      border-radius: 7px;
-      transition: color var(--dur) var(--spring);
+      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      white-space: nowrap;
     }}
-    .view-btn:hover {{ color: var(--text); }}
-    .view-btn.active {{
-      color: var(--text);
+    .tab:hover {{
+      border-color: var(--brand-violet);
+      color: var(--brand-violet);
     }}
-    .view-btn .svg-icon {{ width: 14px; height: 14px; }}
+    .tab:active {{ transform: scale(0.98); }}
+    .tab.active, .tab.active:hover {{
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+      font-weight: 700;
+    }}
 
-    /* Cards Grid View */
+    /* Secondary Topic Chips */
+    .topic-bar {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+    }}
+    .topic-pill {{
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: var(--mist);
+      color: var(--mute);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all var(--dur-fast) ease;
+      user-select: none;
+    }}
+    .topic-pill:hover {{
+      color: var(--ink);
+      border-color: var(--line);
+    }}
+    .topic-pill.active {{
+      background: var(--brand-violet-bg);
+      border-color: var(--brand-violet-border);
+      color: var(--brand-violet);
+      font-weight: 700;
+    }}
+
+    /* =========================================================
+       6. STORY CARDS GRID (therundown.ai/news rounded-3xl cards)
+       ========================================================= */
     .cards-grid {{
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 22px;
     }}
     .news-card {{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 25px 26px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      overflow: hidden;
       cursor: pointer;
       box-shadow: var(--card-shadow);
-      /* Hover transitions only — entry uses a separate animation so hover is never delayed */
       transition:
         transform var(--dur-slow) var(--spring),
         border-color var(--dur) ease,
         box-shadow var(--dur-slow) var(--spring);
     }}
-    .news-card.pre-reveal {{
-      opacity: 0;
-    }}
+    .news-card.pre-reveal {{ opacity: 0; }}
     .news-card.in-view {{
-      animation: cardIn 0.7s var(--spring) backwards;
+      animation: cardIn 0.6s var(--spring) backwards;
       animation-delay: var(--reveal-delay, 0ms);
-    }}
-    .news-card::before {{
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(59, 130, 246, 0.08), transparent 45%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
     }}
     .news-card:hover {{
       transform: translateY(-2px);
-      border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
-      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--accent-glow);
+      border-color: var(--brand-violet-border);
+      box-shadow: var(--card-hover-shadow);
     }}
     .news-card:active {{
-      transform: translateY(0) scale(0.995);
-      transition-duration: 120ms;
+      transform: translateY(0) scale(0.996);
+      transition-duration: 100ms;
     }}
-    .news-card:hover::before {{ opacity: 1; }}
+
     .card-top {{
       display: flex;
       justify-content: space-between;
@@ -1273,62 +1562,109 @@ def build_dashboard_html(
       align-items: center;
       gap: 6px;
     }}
-    .badge {{
+
+    /* Editorial Category Eyebrows & Badges */
+    .cat-eyebrow {{
       font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       display: inline-flex;
       align-items: center;
       gap: 5px;
     }}
+    .cat-high {{ color: var(--brand-violet); }}
+    .cat-ops {{ color: var(--emerald); }}
+    .cat-gen {{ color: var(--brand-blue); }}
+
+    .badge {{
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }}
     .badge-high {{
-      background: var(--gold-bg);
-      border: 1px solid var(--gold-border);
-      color: var(--gold-text);
+      background: var(--brand-violet-bg);
+      border: 1px solid var(--brand-violet-border);
+      color: var(--brand-violet);
     }}
     .badge-ops {{
       background: var(--emerald-bg);
       border: 1px solid var(--emerald-border);
-      color: var(--emerald-text);
+      color: var(--emerald);
     }}
     .badge-gen {{
-      background: var(--blue-bg);
-      border: 1px solid var(--blue-border);
-      color: var(--blue-text);
+      background: var(--brand-blue-bg);
+      border: 1px solid var(--brand-blue-border);
+      color: var(--brand-blue);
     }}
-    .pub-pill {{
+    .rank-pill {{
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 800;
       padding: 3px 9px;
       border-radius: 6px;
-      background: var(--surface-elevated);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
+      background: var(--ink);
+      color: var(--paper);
+      letter-spacing: 0.02em;
+    }}
+    .new-badge {{
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--emerald-bg);
+      border: 1px solid var(--emerald-border);
+      color: var(--emerald);
+      text-transform: uppercase;
+    }}
+    .urgency-badge {{
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--danger);
+      text-transform: uppercase;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 3px;
+    }}
+
+    .pub-pill {{
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--mute);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }}
     .pub-favicon {{
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
       object-fit: contain;
       flex-shrink: 0;
     }}
+
     .card-actions {{
       display: flex;
       align-items: center;
       gap: 2px;
+      flex-shrink: 0;
     }}
     .icon-btn {{
       cursor: pointer;
       border: none;
       background: transparent;
-      font-size: 15px;
-      color: var(--muted);
-      width: 32px;
-      height: 32px;
+      color: var(--mute);
+      width: 30px;
+      height: 30px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1336,53 +1672,48 @@ def build_dashboard_html(
       transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur) var(--spring);
     }}
     .icon-btn:hover {{
-      background: var(--surface-elevated);
-      color: var(--text);
+      background: var(--mist);
+      color: var(--ink);
     }}
-    .icon-btn:active {{
-      transform: scale(0.9);
-    }}
-    .icon-btn.saved {{
-      color: var(--gold-text);
-    }}
-    .icon-btn.saved .svg-icon {{
-      fill: currentColor;
-    }}
-    .icon-btn.just-saved .svg-icon {{
-      animation: savePop 0.45s var(--spring);
-    }}
+    .icon-btn:active {{ transform: scale(0.9); }}
+    .icon-btn.saved {{ color: var(--brand-violet); }}
+    .icon-btn.saved .svg-icon {{ fill: currentColor; }}
+    .icon-btn.just-saved .svg-icon {{ animation: savePop 0.45s var(--spring); }}
+
     .card-title {{
       margin: 0 0 10px;
-      font-size: 16.5px;
+      font-size: 20px;
       font-weight: 700;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
+      line-height: 1.28;
+      letter-spacing: -0.022em;
     }}
     .card-title a {{
-      color: var(--text);
+      color: var(--ink);
       text-decoration: none;
-      transition: color 0.15s ease;
+      transition: color var(--dur-fast) ease;
     }}
+    .news-card:hover .card-title a,
     .card-title a:hover {{
-      color: var(--accent);
+      color: var(--brand-violet);
     }}
     .card-summary {{
-      font-size: 13.5px;
-      color: var(--muted);
-      margin: 0 0 14px;
-      line-height: 1.55;
+      font-size: 14px;
+      color: var(--mute);
+      margin: 0 0 16px;
+      line-height: 1.58;
     }}
+
+    /* Signature Rundown "Why It Matters" Inset Box */
     .benefit-box {{
-      background: var(--benefit-bg);
-      border-left: 3px solid var(--gold-text);
-      padding: 12px 14px;
-      border-radius: 9px;
-      font-size: 12.8px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
+      background: var(--mist);
+      border: 1px solid var(--line-subtle);
+      padding: 13px 15px;
+      border-radius: 15px;
+      font-size: 13px;
+      line-height: 1.52;
+      color: var(--ink-soft);
+      margin-bottom: 18px;
     }}
-    .benefit-box.ops-box {{ border-left-color: var(--emerald-text); }}
-    .benefit-box.gen-box {{ border-left-color: var(--blue-text); }}
     .benefit-header {{
       display: flex;
       justify-content: space-between;
@@ -1391,92 +1722,177 @@ def build_dashboard_html(
       margin-bottom: 5px;
     }}
     .benefit-label {{
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--gold-text);
+      letter-spacing: 0.1em;
+      color: var(--brand-violet);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }}
-    .ops-box .benefit-label {{ color: var(--emerald-text); }}
-    .gen-box .benefit-label {{ color: var(--blue-text); }}
+    .ops-box .benefit-label {{ color: var(--emerald); }}
+    .gen-box .benefit-label {{ color: var(--brand-blue); }}
+
     .score-meter-wrap {{
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       font-size: 11px;
       font-weight: 700;
-      color: var(--muted);
+      color: var(--mute);
+    }}
+    .score-info-trigger {{
+      cursor: help;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--mute);
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }}
     .score-bar {{
-      width: 44px;
-      height: 5px;
-      background: var(--border);
+      width: 36px;
+      height: 4px;
+      background: var(--line);
       border-radius: 99px;
       overflow: hidden;
     }}
     .score-fill {{
       height: 100%;
       border-radius: 99px;
-      background: var(--gold-text);
+      background: var(--brand-violet);
     }}
-    .ops-box .score-fill {{ background: var(--emerald-text); }}
-    .gen-box .score-fill {{ background: var(--blue-text); }}
+    .ops-box .score-fill {{ background: var(--emerald); }}
+    .gen-box .score-fill {{ background: var(--brand-blue); }}
 
     .card-footer {{
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
       font-size: 12px;
       font-weight: 500;
-      color: var(--muted);
-      padding-top: 12px;
-      border-top: 1px solid var(--border-subtle);
+      color: var(--mute);
+      padding-top: 14px;
+      border-top: 1px solid var(--line-subtle);
     }}
     .footer-links {{
       display: inline-flex;
       align-items: center;
       gap: 12px;
+      flex-shrink: 0;
     }}
     .quick-brief-btn {{
       cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface-elevated);
-      color: var(--text-secondary);
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--mute);
       font-size: 11.5px;
       font-weight: 600;
       padding: 4px 10px;
-      border-radius: 7px;
-      transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+      border-radius: 999px;
+      transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
     }}
     .quick-brief-btn:hover {{
-      border-color: var(--accent);
-      color: var(--text);
+      border-color: var(--ink);
+      color: var(--ink);
     }}
     .read-link {{
-      color: var(--accent);
+      color: var(--ink);
       font-weight: 700;
+      font-size: 12.5px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
+      transition: color var(--dur-fast) ease;
     }}
+    .read-link:hover {{ color: var(--brand-violet); }}
     .read-link span.arrow {{
       display: inline-block;
       transition: transform var(--dur) var(--spring);
     }}
     .news-card:hover .read-link span.arrow,
-    .hero-card:hover .read-link span.arrow {{
-      transform: translateX(4px);
+    .lead-feature-card:hover .read-link span.arrow,
+    .stack-card:hover .read-link span.arrow {{
+      transform: translate(2px, -1px);
     }}
 
-    /* Compact Table View */
+    /* =========================================================
+       7. VIEW 2: "RUNDOWN" EDITORIAL NEWSLETTER STREAM (TLDR/Rundown Email)
+       ========================================================= */
+    .rundown-stream {{
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }}
+    .stream-article {{
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 26px 30px;
+      cursor: pointer;
+      transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring);
+    }}
+    .stream-article:hover {{
+      border-color: var(--brand-violet-border);
+      box-shadow: var(--card-hover-shadow);
+    }}
+    .stream-num {{
+      font-size: 12px;
+      font-weight: 900;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+    }}
+    .stream-headline {{
+      margin: 12px 0 14px;
+      font-size: clamp(19px, 2.1vw, 23px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }}
+    .stream-headline a {{
+      color: var(--ink);
+      text-decoration: none;
+    }}
+    .stream-article:hover .stream-headline a {{ color: var(--brand-violet); }}
+    .stream-bullets {{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0 0 16px;
+      padding: 15px 18px;
+      border-radius: 16px;
+      background: var(--mist-soft);
+      border: 1px solid var(--line-subtle);
+      font-size: 14px;
+      line-height: 1.58;
+      color: var(--ink-soft);
+    }}
+    .stream-bullet strong {{
+      color: var(--ink);
+      font-weight: 800;
+    }}
+
+    /* =========================================================
+       8. VIEW 3: COMPACT ANALYST TABLE (AlphaSignal Style)
+       ========================================================= */
     .compact-table-wrap {{
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 22px;
       overflow-x: auto;
       box-shadow: var(--card-shadow);
-      animation: fadeSlideUp 0.4s var(--spring) both;
     }}
     table.compact-table {{
       width: 100%;
@@ -1489,46 +1905,67 @@ def build_dashboard_html(
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      background: var(--surface-elevated);
+      letter-spacing: 0.08em;
+      color: var(--mute);
+      border-bottom: 1px solid var(--line);
+      background: var(--mist-soft);
       white-space: nowrap;
     }}
     .compact-table td {{
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border-subtle);
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line-subtle);
       vertical-align: top;
       transition: background-color var(--dur-fast) ease;
     }}
     .compact-table tr {{ cursor: pointer; }}
     .compact-table tbody tr.row-in {{
-      animation: rowIn 0.45s var(--spring) backwards;
-      animation-delay: calc(var(--i, 0) * 18ms);
+      animation: rowIn 0.4s var(--spring) backwards;
+      animation-delay: calc(var(--i, 0) * 16ms);
     }}
     .compact-table tr:hover td {{
-      background: var(--surface-hover);
+      background: var(--mist-soft);
     }}
     .compact-headline {{
       font-weight: 700;
-      color: var(--text);
+      font-size: 14.5px;
+      color: var(--ink);
       text-decoration: none;
       display: block;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
     }}
-    .compact-headline:hover {{
-      color: var(--accent);
-    }}
+    .compact-headline:hover {{ color: var(--brand-violet); }}
     .compact-takeaway {{
-      font-size: 12.5px;
-      color: var(--muted);
+      font-size: 12.8px;
+      color: var(--mute);
     }}
 
-    /* Slide-Over Executive Quick-Brief Drawer */
+    /* Deep-Link Target Glow & Keyboard Selection */
+    .news-card.target-highlight, .lead-feature-card.target-highlight, .stack-card.target-highlight, .stream-article.target-highlight {{
+      animation: targetGlow 2.4s ease-out;
+      border-color: var(--brand-violet) !important;
+    }}
+    .news-card.kbd-selected, .stream-article.kbd-selected {{
+      outline: 2px solid var(--brand-violet);
+      outline-offset: 2px;
+    }}
+    .compact-table tr.kbd-selected td {{
+      background: var(--mist);
+      outline: 1px solid var(--brand-violet);
+    }}
+    @keyframes targetGlow {{
+      0% {{ box-shadow: 0 0 0 4px var(--brand-violet-bg), 0 18px 40px rgba(139, 76, 212, 0.25); }}
+      70% {{ box-shadow: 0 0 0 4px var(--brand-violet-bg), 0 18px 40px rgba(139, 76, 212, 0.25); }}
+      100% {{ box-shadow: var(--card-shadow); }}
+    }}
+
+    /* =========================================================
+       9. SLIDE-OVER EXECUTIVE DRAWER & MODALS
+       ========================================================= */
     .drawer-backdrop {{
       position: fixed;
       inset: 0;
-      background: rgba(3, 7, 18, 0.55);
+      background: rgba(10, 10, 10, 0.55);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       z-index: 200;
@@ -1536,361 +1973,142 @@ def build_dashboard_html(
       pointer-events: none;
       transition: opacity var(--dur-slow) var(--drawer-ease);
     }}
-    body.drawer-open {{
-      overflow: hidden;
-    }}
-    .drawer-backdrop.open {{
-      opacity: 1;
-      pointer-events: auto;
-    }}
+    body.drawer-open {{ overflow: hidden; }}
+    .drawer-backdrop.open {{ opacity: 1; pointer-events: auto; }}
     .drawer-panel {{
       position: fixed;
       top: 0;
       right: 0;
       bottom: 0;
-      width: min(520px, 100vw);
-      background: var(--surface-solid);
-      border-left: 1px solid var(--border);
-      box-shadow: -24px 0 60px rgba(0, 0, 0, 0.45);
+      width: min(540px, 100vw);
+      background: var(--paper);
+      color: var(--ink);
+      border-left: 1px solid var(--line);
+      box-shadow: -24px 0 60px rgba(0, 0, 0, 0.28);
       z-index: 210;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transform: translateX(104%);
       visibility: hidden;
-      transition: transform 0.5s var(--drawer-ease), visibility 0s linear 0.5s;
+      transition: transform 0.48s var(--drawer-ease), visibility 0s linear 0.48s;
       overflow-y: auto;
       overscroll-behavior: contain;
     }}
     .drawer-panel.open {{
       transform: translateX(0);
       visibility: visible;
-      transition: transform 0.5s var(--drawer-ease), visibility 0s;
+      transition: transform 0.48s var(--drawer-ease), visibility 0s;
     }}
-    .drawer-body {{
-      transition: opacity var(--dur-fast) var(--ease-in-out), transform var(--dur-fast) var(--ease-in-out);
-    }}
-    .drawer-body.swap-next {{ opacity: 0; transform: translateX(-10px); }}
-    .drawer-body.swap-prev {{ opacity: 0; transform: translateX(10px); }}
-    .drawer-panel.open .drawer-body > * {{
-      animation: fadeSlideUp 0.5s var(--spring) backwards;
-    }}
-    .drawer-panel.open .drawer-body > *:nth-child(2) {{ animation-delay: 40ms; }}
-    .drawer-panel.open .drawer-body > *:nth-child(3) {{ animation-delay: 80ms; }}
-    .drawer-panel.open .drawer-body > *:nth-child(4) {{ animation-delay: 120ms; }}
-    .drawer-panel.open .drawer-body > *:nth-child(5) {{ animation-delay: 160ms; }}
-    .drawer-panel.open .drawer-body > *:nth-child(6) {{ animation-delay: 200ms; }}
-    .drawer-panel.open .drawer-body > *:nth-child(n+7) {{ animation-delay: 240ms; }}
     .drawer-header {{
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      background: var(--surface-solid);
+      background: var(--paper);
       z-index: 5;
     }}
     .drawer-body {{
-      padding: 24px;
+      padding: 26px 24px;
       flex: 1;
+      transition: opacity var(--dur-fast) var(--ease-in-out), transform var(--dur-fast) var(--ease-in-out);
     }}
-    .drawer-progress {{
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.02em;
-    }}
+    .drawer-body.swap-next {{ opacity: 0; transform: translateX(-10px); }}
+    .drawer-body.swap-prev {{ opacity: 0; transform: translateX(10px); }}
     .drawer-title {{
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
-      line-height: 1.35;
-      margin: 14px 0 12px;
-      letter-spacing: -0.02em;
+      line-height: 1.28;
+      margin: 14px 0 10px;
+      letter-spacing: -0.025em;
+      color: var(--ink);
     }}
     .drawer-meta {{
       font-size: 12.5px;
-      color: var(--muted);
+      color: var(--mute);
       margin-bottom: 20px;
       padding-bottom: 16px;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--line);
     }}
     .drawer-section {{
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 15px 16px;
+      background: var(--mist-soft);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 18px;
       margin-bottom: 14px;
     }}
     .drawer-sec-title {{
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.1em;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
       gap: 6px;
     }}
     .drawer-sec-text {{
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.55;
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.58;
       margin: 0;
     }}
     .drawer-footer {{
       padding: 16px 24px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--line);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
       position: sticky;
       bottom: 0;
-      background: var(--surface-solid);
+      background: var(--paper);
     }}
-    .drawer-nav {{
-      display: inline-flex;
-      gap: 6px;
-    }}
+    .drawer-nav {{ display: inline-flex; gap: 6px; align-items: center; }}
+    .drawer-progress {{ font-size: 12px; font-weight: 600; color: var(--mute); margin-left: 6px; }}
 
-    /* Floating Back-to-Top Button */
-    #backToTop {{
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 700;
+    .btn {{
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-      opacity: 0;
-      transform: translateY(14px) scale(0.92);
-      pointer-events: none;
-      transition: opacity var(--dur) ease, transform var(--dur-slow) var(--spring), border-color var(--dur-fast) ease;
-      z-index: 90;
-    }}
-    #backToTop.visible {{
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }}
-    #backToTop:hover {{
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }}
-
-    #toast {{
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--surface-solid);
-      border: 1px solid var(--emerald-border);
-      color: var(--text);
-      font-weight: 600;
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--ink);
+      padding: 9px 16px;
+      min-height: 40px;
+      border-radius: 999px;
       font-size: 13px;
-      padding: 12px 18px;
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      transform: translateY(12px) scale(0.97);
-      pointer-events: none;
-      transition: opacity var(--dur) ease, transform var(--dur-slow) var(--spring);
-      z-index: 250;
-    }}
-    #toast.show {{
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }}
-
-    .empty-state {{
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 56px 20px;
-      color: var(--muted);
-      background: var(--surface);
-      border: 1px dashed var(--border);
-      border-radius: 16px;
-    }}
-
-    @keyframes fadeSlideDown {{
-      from {{ opacity: 0; transform: translateY(-14px); }}
-      to {{ opacity: 1; transform: translateY(0); }}
-    }}
-    @keyframes fadeSlideUp {{
-      from {{ opacity: 0; transform: translateY(18px); }}
-      to {{ opacity: 1; transform: translateY(0); }}
-    }}
-    @keyframes pulseDot {{
-      0% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }}
-      70% {{ box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }}
-      100% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }}
-    }}
-    @keyframes savePop {{
-      0% {{ transform: scale(1); }}
-      40% {{ transform: scale(1.22); }}
-      100% {{ transform: scale(1); }}
-    }}
-    @keyframes cardIn {{
-      from {{ opacity: 0; transform: translateY(16px); }}
-      to {{ opacity: 1; transform: translateY(0); }}
-    }}
-    @keyframes rowIn {{
-      from {{ opacity: 0; transform: translateY(6px); }}
-      to {{ opacity: 1; transform: translateY(0); }}
-    }}
-    @keyframes segGrow {{
-      from {{ transform: scaleX(0); }}
-      to {{ transform: scaleX(1); }}
-    }}
-
-    /* View Transitions API: soft cross-fade for theme switching */
-    ::view-transition-old(root), ::view-transition-new(root) {{
-      animation-duration: 320ms;
-      animation-timing-function: var(--ease-in-out);
-    }}
-
-    .uk-flag {{
-      width: 15px;
-      height: 10px;
-      border-radius: 2px;
-      vertical-align: -1px;
-      display: inline-block;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
-      flex-shrink: 0;
-    }}
-    .score-info-trigger {{
-      cursor: help;
-      font-size: 11px;
       font-weight: 700;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 14px;
-      height: 14px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      line-height: 1;
-      margin-left: 2px;
-      margin-right: 2px;
-      transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
-    }}
-    .score-info-trigger:hover {{
-      color: var(--text);
-      border-color: var(--accent);
-    }}
-    .new-badge {{
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(16, 185, 129, 0.14);
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      color: #34d399;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-    }}
-    .urgency-badge {{
-      font-size: 9.5px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      padding: 2px 7px;
-      border-radius: 4px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.45);
-      color: #f87171;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-    }}
-    .time-chip {{
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-    }}
-    .news-card.target-highlight, .hero-card.target-highlight {{
-      animation: targetGlow 2.4s ease-out;
-      border-color: var(--accent) !important;
-    }}
-    .news-card.kbd-selected, .hero-card.kbd-selected {{
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }}
-    .compact-table tr.kbd-selected td {{
-      background: var(--surface-hover);
-      outline: 1px solid var(--accent);
-    }}
-    @keyframes targetGlow {{
-      0% {{ box-shadow: 0 0 0 5px var(--accent-glow), 0 16px 36px rgba(59, 130, 246, 0.4); }}
-      70% {{ box-shadow: 0 0 0 5px var(--accent-glow), 0 16px 36px rgba(59, 130, 246, 0.4); }}
-      100% {{ box-shadow: var(--card-shadow); }}
-    }}
-
-    /* Interactive Topic Bar */
-    .topic-bar {{
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-subtle);
-      width: 100%;
-    }}
-    .topic-pill {{
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--muted);
-      padding: 5px 11px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      gap: 7px;
+      text-decoration: none;
       transition: all var(--dur-fast) ease;
-      user-select: none;
     }}
-    .topic-pill:hover {{
-      color: var(--text);
-      border-color: var(--accent);
-      background: var(--surface-hover);
+    .btn:hover {{
+      border-color: var(--ink);
+      background: var(--mist);
     }}
-    .topic-pill.active {{
-      background: var(--blue-bg);
-      border-color: var(--blue-border);
-      color: var(--blue-text);
-      font-weight: 700;
+    .btn-primary {{
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }}
+    .btn-primary:hover {{
+      background: var(--brand-violet);
+      border-color: var(--brand-violet);
+      color: #ffffff;
     }}
 
-    /* Share & Keyboard Shortcuts Modals */
+    /* Modals */
     .modal-backdrop {{
       position: fixed;
       inset: 0;
-      background: rgba(3, 7, 18, 0.65);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(10, 10, 10, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       z-index: 300;
       opacity: 0;
       pointer-events: none;
@@ -1900,53 +2118,42 @@ def build_dashboard_html(
       justify-content: center;
       padding: 20px;
     }}
-    .modal-backdrop.open {{
-      opacity: 1;
-      pointer-events: auto;
-    }}
+    .modal-backdrop.open {{ opacity: 1; pointer-events: auto; }}
     .modal-dialog {{
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 24px;
       max-width: 520px;
       width: 100%;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-      transform: translateY(16px) scale(0.97);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      transform: translateY(14px) scale(0.97);
       transition: transform var(--dur-slow) var(--spring);
       overflow: hidden;
     }}
-    .modal-backdrop.open .modal-dialog {{
-      transform: translateY(0) scale(1);
-    }}
+    .modal-backdrop.open .modal-dialog {{ transform: translateY(0) scale(1); }}
     .modal-header {{
       padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--line);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }}
     .modal-title {{
-      font-size: 16px;
+      font-size: 16.5px;
       font-weight: 800;
+      letter-spacing: -0.02em;
       margin: 0;
       display: flex;
       align-items: center;
       gap: 8px;
     }}
-    .modal-body {{
-      padding: 22px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }}
-    .share-channel-grid {{
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }}
+    .modal-body {{ padding: 22px; max-height: 80vh; overflow-y: auto; }}
+    .share-channel-grid {{ display: grid; grid-template-columns: 1fr; gap: 10px; }}
     .share-channel-card {{
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      background: var(--mist-soft);
+      border: 1px solid var(--line);
+      border-radius: 16px;
       padding: 14px 16px;
       display: flex;
       align-items: center;
@@ -1956,25 +2163,21 @@ def build_dashboard_html(
       transition: all var(--dur-fast) ease;
     }}
     .share-channel-card:hover {{
-      border-color: var(--accent);
-      background: var(--surface-hover);
+      border-color: var(--brand-violet);
+      background: var(--mist);
       transform: translateY(-1px);
     }}
-    .share-channel-info {{
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }}
+    .share-channel-info {{ display: flex; align-items: center; gap: 12px; }}
     .share-icon-wrap {{
       width: 38px;
       height: 38px;
       border-radius: 10px;
-      background: var(--surface);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--line);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 17px;
       flex-shrink: 0;
     }}
     .kbd-shortcut-row {{
@@ -1982,132 +2185,231 @@ def build_dashboard_html(
       justify-content: space-between;
       align-items: center;
       padding: 9px 0;
-      border-bottom: 1px solid var(--border-subtle);
-      font-size: 13px;
+      border-bottom: 1px solid var(--line-subtle);
+      font-size: 13.5px;
     }}
-    .kbd-shortcut-row:last-child {{
-      border-bottom: none;
-    }}
+    .kbd-shortcut-row:last-child {{ border-bottom: none; }}
     kbd {{
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      color: var(--text);
+      background: var(--mist);
+      border: 1px solid var(--line);
+      color: var(--ink);
       padding: 2px 7px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }}
 
-    .dashboard-footer {{
-      margin-top: 56px;
-      padding-top: 28px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12.5px;
-      animation: fadeSlideUp 0.6s var(--spring) both;
+    /* =========================================================
+       10. ROUNDED FOOTER SHEET (therundown.ai Footer)
+       ========================================================= */
+    .site-footer-wrap {{
+      padding: 0 10px 16px;
     }}
-    .footer-inner {{
+    .footer-sheet {{
+      max-width: 1380px;
+      margin: 0 auto;
+      background: #171717;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 44px 36px;
+      color: #ffffff;
+    }}
+    .footer-grid {{
+      max-width: 1220px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 32px;
+    }}
+    .footer-desc {{
+      margin: 14px 0 16px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 44ch;
+    }}
+    .footer-col-title {{
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.48);
+      margin: 0 0 14px;
+    }}
+    .footer-links-list {{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }}
+    .footer-links-list button, .footer-links-list a {{
+      background: none;
+      border: none;
+      padding: 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: left;
+      transition: color var(--dur-fast) ease;
+    }}
+    .footer-links-list button:hover, .footer-links-list a:hover {{ color: #ffffff; }}
+    .footer-bottom {{
+      max-width: 1220px;
+      margin: 32px auto 0;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.52);
     }}
-    .footer-brand {{
-      font-weight: 700;
-      color: var(--text);
+
+    /* Floating Back-to-Top & Toast */
+    #backToTop {{
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transform: translateY(12px) scale(0.92);
+      pointer-events: none;
+      transition: opacity var(--dur) ease, transform var(--dur-slow) var(--spring);
+      z-index: 90;
+    }}
+    #backToTop.visible {{ opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }}
+    #backToTop:hover {{ background: var(--brand-violet); border-color: var(--brand-violet); color: #ffffff; }}
+
+    #toast {{
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #171717;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 6px;
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+      pointer-events: none;
+      transition: opacity var(--dur) ease, transform var(--dur-slow) var(--spring);
+      z-index: 350;
     }}
-    .footer-meta {{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 6px;
-    }}
-    .footer-meta strong {{
-      color: var(--text-secondary);
-    }}
-    .footer-meta a {{
-      color: var(--accent);
-      text-decoration: none;
-    }}
-    .footer-meta a:hover {{
-      text-decoration: underline;
-    }}
-    .footer-disclaimer {{
-      font-size: 11px;
-      color: var(--muted);
-      margin: 0;
-      max-width: 72ch;
-      line-height: 1.5;
+    #toast.show {{ opacity: 1; transform: translateY(0) scale(1); }}
+
+    .empty-state {{
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 56px 20px;
+      color: var(--mute);
+      background: var(--mist-soft);
+      border: 1px dashed var(--line);
+      border-radius: 24px;
     }}
 
-    @media (max-width: 960px) {{
-      .kpi-grid {{ grid-template-columns: repeat(2, 1fr); }}
+    @keyframes fadeSlideDown {{
+      from {{ opacity: 0; transform: translateY(-10px); }}
+      to {{ opacity: 1; transform: translateY(0); }}
+    }}
+    @keyframes pulseDot {{
+      0% {{ box-shadow: 0 0 0 0 rgba(0, 199, 88, 0.7); }}
+      70% {{ box-shadow: 0 0 0 7px rgba(0, 199, 88, 0); }}
+      100% {{ box-shadow: 0 0 0 0 rgba(0, 199, 88, 0); }}
+    }}
+    @keyframes savePop {{
+      0% {{ transform: scale(1); }}
+      40% {{ transform: scale(1.24); }}
+      100% {{ transform: scale(1); }}
+    }}
+    @keyframes cardIn {{
+      from {{ opacity: 0; transform: translateY(14px); }}
+      to {{ opacity: 1; transform: translateY(0); }}
+    }}
+    @keyframes rowIn {{
+      from {{ opacity: 0; transform: translateY(6px); }}
+      to {{ opacity: 1; transform: translateY(0); }}
+    }}
+
+    ::view-transition-old(root), ::view-transition-new(root) {{
+      animation-duration: 300ms;
+      animation-timing-function: var(--ease-in-out);
+    }}
+
+    @media (max-width: 1020px) {{
+      .nav-links {{ display: none; }}
+      .showcase-grid {{ grid-template-columns: 1fr; }}
+      .footer-grid {{ grid-template-columns: 1fr 1fr; }}
     }}
     @media (max-width: 680px) {{
-      .container {{ padding: 18px 14px 84px; }}
-      header {{ align-items: stretch; gap: 14px; }}
-      .header-actions {{ width: 100%; }}
-      .header-actions .btn {{ flex: 1; padding: 9px 10px; font-size: 12px; }}
-      .hero-section {{ padding: 16px; }}
-      .hero-grid {{ grid-template-columns: 1fr; }}
-      .kpi-grid {{ grid-template-columns: repeat(2, 1fr); gap: 10px; }}
-      .kpi-card {{ padding: 13px 14px; }}
-      .controls {{ padding: 10px 12px; top: 6px; }}
-      .right-controls {{ width: 100%; min-width: 100%; }}
-      .search-wrap {{ max-width: none; }}
-      .kbd-hint {{ display: none; }}
-      .cards-grid {{ grid-template-columns: 1fr; gap: 14px; }}
-      .news-card {{ padding: 18px; }}
+      .site-nav-inner {{ padding: 0 14px; height: 60px; }}
+      .brand-edition-pill {{ display: none; }}
+      .nav-btn span.hide-sm {{ display: none; }}
+      .rundown-hero {{ padding: 38px 16px 46px; }}
+      .hero-kbd {{ display: none; }}
+      .main-sheet-wrap {{ padding: 0 4px 10px; }}
+      .main-sheet {{ padding: 24px 16px 48px; border-radius: 22px; }}
+      .kpi-strip {{ grid-template-columns: repeat(2, 1fr); }}
+      .lead-feature-card {{ padding: 22px 20px; border-radius: 22px; }}
+      .controls-bar {{ top: 60px; }}
+      .pill-search-wrap {{ width: 100%; min-width: 0; }}
+      .explore-right-tools {{ width: 100%; justify-content: space-between; }}
+      .cards-grid {{ grid-template-columns: 1fr; gap: 16px; }}
+      .news-card {{ padding: 20px; border-radius: 20px; }}
+      .stream-article {{ padding: 20px; }}
       .compact-hide-mobile {{ display: none; }}
+      .footer-sheet {{ padding: 32px 20px; border-radius: 22px; }}
+      .footer-grid {{ grid-template-columns: 1fr; gap: 24px; }}
       #toast {{ left: 14px; right: 14px; bottom: 16px; justify-content: center; }}
     }}
 
-    /* Boardroom A4 Print / PDF Stylesheet */
+    /* Boardroom A4 Print / PDF Memo Stylesheet */
     @media print {{
-      body {{
-        background: #ffffff !important;
-        color: #0f172a !important;
-        font-size: 10.5pt;
-      }}
-      #scrollProgress, .header-actions, .lens-bar, .controls, .topic-bar, .card-actions,
-      .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel, .modal-backdrop {{
+      body {{ background: #ffffff !important; color: #171717 !important; font-size: 10.5pt; }}
+      #scrollProgress, .site-nav, .rundown-hero, .executive-strip, .controls-bar, .explore-right-tools,
+      .card-actions, .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel, .modal-backdrop, .site-footer-wrap {{
         display: none !important;
       }}
-      .container {{
-        max-width: 100% !important;
-        padding: 0 !important;
-      }}
+      .main-sheet-wrap, .main-sheet {{ padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; background: #ffffff !important; }}
       .print-memo-header {{
         display: block !important;
-        border-bottom: 2px solid #0f172a;
+        border-bottom: 2px solid #171717;
         padding-bottom: 10px;
         margin-bottom: 18px;
       }}
-      .hero-section, .news-card, .kpi-card, .signal-mix-card {{
+      .lead-feature-card, .stack-card, .news-card, .stream-article {{
         background: #ffffff !important;
-        color: #0f172a !important;
-        border: 1px solid #cbd5e1 !important;
+        color: #171717 !important;
+        border: 1px solid #d4d4d4 !important;
         box-shadow: none !important;
         opacity: 1 !important;
         transform: none !important;
         break-inside: avoid;
         page-break-inside: avoid;
       }}
-      .cards-grid {{
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-      }}
-      .benefit-box {{
-        background: #f8fafc !important;
-        color: #1e293b !important;
-        border-left: 3px solid #0f172a !important;
-      }}
+      .cards-grid {{ grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }}
+      .benefit-box, .lead-why-box {{ background: #f8f8f8 !important; color: #171717 !important; border-left: 3px solid #171717 !important; }}
     }}
 
     @media (prefers-reduced-motion: reduce) {{
@@ -2123,193 +2425,302 @@ def build_dashboard_html(
 <body>
   <div id="scrollProgress"></div>
 
-  <div class="container">
-    <header>
-      <div>
-        <div class="brand-row">
-          <div class="brand-badge"><span class="live-dot"></span> <span id="brandFlagSlot"></span> UK Finance & CFO Priority Edition</div>
-          <span class="date-chip" title="Refreshed daily">{html.escape(date_str)} · {updated_str}</span>
-        </div>
-        <h1>Daily AI News & CFO Intelligence</h1>
-        <p class="subtitle">Curated & ranked by practical benefit for UK Finance, Accounting, Audit & FP&A teams alongside global AI breakthroughs.</p>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn-primary" onclick="openShareModal()" title="Share executive briefing via Email, Teams or Slack">
-          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-          Share Briefing
+  <!-- 1. TOP STICKY OBSIDIAN MASTHEAD (therundown.ai Header) -->
+  <header class="site-nav">
+    <div class="site-nav-inner">
+      <a class="brand-lockup" href="#" onclick="resetAllFilters(event)" aria-label="The Finance Rundown Home">
+        <span class="brand-monogram" aria-hidden="true">R</span>
+        <span class="brand-wordmark">The Rundown</span>
+        <span class="brand-edition-pill"><span id="brandFlagSlot"></span> UK Finance</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary sections">
+        <button class="nav-link" type="button" onclick="jumpToSection('heroSection', 'all')">Morning Rundown</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'all')">Latest News</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'high')">UK CFO &amp; FCA</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'ops')">AI Ops &amp; Agents</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'saved')">Saved</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-btn nav-btn-primary" type="button" onclick="openShareModal()" title="Share executive briefing via Teams, Slack or Email">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          <span>Share</span>
         </button>
-        <button class="btn" onclick="exportToCsv()" title="Export intelligence register to CSV (Excel compatible)">
+        <button class="nav-btn" type="button" onclick="exportToCsv()" title="Export intelligence register to CSV (Excel)">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export CSV
+          <span class="hide-sm">CSV</span>
         </button>
-        <button class="btn" onclick="window.print()" title="Print or save as Boardroom PDF">
+        <button class="nav-btn" type="button" onclick="window.print()" title="Print or save Boardroom PDF">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
-          Export PDF
+          <span class="hide-sm">PDF</span>
         </button>
-        <button class="btn btn-icon-only" onclick="toggleKbdModal()" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
-          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/><line x1="14" y1="8" x2="14" y2="8"/><line x1="18" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="14" y2="12"/><line x1="18" y1="12" x2="18" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+        <button class="nav-btn nav-btn-icon" type="button" onclick="toggleKbdModal()" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
+          <span style="font-weight:800;font-size:13px;">?</span>
         </button>
-        <button class="btn btn-icon-only" onclick="toggleTheme()" aria-label="Toggle colour theme" title="Toggle light / dark theme">
-          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <button class="nav-btn nav-btn-icon" type="button" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle light and dark theme" title="Toggle light / dark theme (t)">
+          <svg class="svg-icon" id="themeIconSvg" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         </button>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <div class="print-memo-header" style="display:none;">
-      <h2 style="margin:0 0 4px;font-size:18pt;font-weight:800;">EXECUTIVE BRIEFING: UK FINANCE & AI INTELLIGENCE</h2>
-      <div style="font-size:10pt;color:#334155;margin-bottom:8px;">
-        <strong>Date:</strong> {html.escape(date_str)} · {updated_str} | <strong>Coverage:</strong> CFO Strategy, FCA/PRA Compliance, Internal Audit, FP&A Automation
-      </div>
-      <div style="font-size:8.5pt;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">
-        STRICTLY CONFIDENTIAL — PREPARED FOR UK FINANCE EXECUTIVE LEADERSHIP
+  <!-- 2. EDITORIAL HERO STAGE (therundown.ai Homepage Hero) -->
+  <section class="rundown-hero">
+    <div class="hero-eyebrow-pill">
+      <span class="live-dot"></span>
+      <span id="heroFlagSlot"></span>
+      <span>{html.escape(date_str)} · Refreshed {updated_str}</span>
+    </div>
+    <h1>
+      UK Finance &amp; AI news<br />
+      in <span class="text-gradient">5 minutes</span> a day.
+    </h1>
+    <p class="hero-subtitle">
+      Get the latest AI breakthroughs, understand why they matter for UK CFOs, Audit &amp; FCA compliance, and apply them in your work.
+    </p>
+
+    <form class="hero-search-form" role="search" onsubmit="submitHeroSearch(event)">
+      <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input
+        type="search"
+        id="heroSearchInput"
+        class="hero-search-input"
+        placeholder="Search FCA, Deloitte, OpenAI, audit, agents…"
+        aria-label="Search AI news and UK finance takeaways"
+        oninput="onSearchInput(this)"
+      />
+      <span class="hero-kbd">/</span>
+      <button type="submit" class="hero-search-submit">
+        Explore
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+
+    <div class="hero-proof">
+      <p class="hero-proof-label">
+        Curated daily across <strong>{sources_count} verified feeds</strong> from leading institutions &amp; labs:
+      </p>
+      <div class="hero-proof-logos" aria-label="Featured intelligence sources">
+        <button type="button" class="proof-source" onclick="quickFilterQuery('UK Finance')">UK Finance</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('Deloitte')">Deloitte</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('PwC')">PwC UK</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('OpenAI')">OpenAI</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('Google')">Google DeepMind</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('MIT')">MIT Tech Review</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('TechCrunch')">TechCrunch</button>
+        <button type="button" class="proof-source" onclick="quickFilterQuery('ArXiv')">ArXiv</button>
       </div>
     </div>
+  </section>
 
-    <!-- UK Finance Role Lens Switcher -->
-    <div class="lens-bar">
-      <div class="lens-label">👔 Prioritise Feed for UK Finance Role:</div>
-      <div class="lens-pills" role="group" aria-label="Finance Role Lens">
-        <button class="lens-btn active" data-lens="default" onclick="setRoleLens('default', this)">🎯 All Finance Roles</button>
-        <button class="lens-btn" data-lens="cfo" onclick="setRoleLens('cfo', this)">👔 CFO & Strategy</button>
-        <button class="lens-btn" data-lens="audit" onclick="setRoleLens('audit', this)">🛡️ Audit, Risk & FCA</button>
-        <button class="lens-btn" data-lens="fpa" onclick="setRoleLens('fpa', this)">📊 FP&A & Systems</button>
-      </div>
-    </div>
+  <!-- 3. MAIN ROUNDED .sheet EDITORIAL CANVAS -->
+  <main class="main-sheet-wrap">
+    <div class="main-sheet">
+      <div class="sheet-container">
 
-    <!-- 60-Second CFO Hero Brief -->
-    <section class="hero-section swap-target" id="heroSection">
-      <div class="hero-header">
-        <h2 class="hero-title" id="heroTitle">⚡ 60-Second UK Finance Morning Brief — Top 3 Today</h2>
-        <span class="hero-sub">Click any card to open the Executive Quick-Brief Drawer</span>
-      </div>
-      <div class="hero-grid" id="heroGrid"></div>
-    </section>
-
-    <!-- Interactive KPI Cards with Animated Count-Up -->
-    <div class="kpi-grid">
-      <div class="kpi-card" data-kpi="high" onclick="setFilterByName('high')">
-        <div class="kpi-label"><span id="kpiFlagSlot"></span> High UK Finance Impact</div>
-        <div class="kpi-val" style="color: var(--gold-text);" data-count="{high_impact_count}">{high_impact_count}</div>
-        <div class="kpi-sub">FCA, CFO, Audit & UK Regulation</div>
-      </div>
-      <div class="kpi-card" data-kpi="ops" onclick="setFilterByName('ops')">
-        <div class="kpi-label">⚡ Finance Ops & Security</div>
-        <div class="kpi-val" style="color: var(--emerald-text);" data-count="{ops_count}">{ops_count}</div>
-        <div class="kpi-sub">AI Agents, Privacy & Models</div>
-      </div>
-      <div class="kpi-card" data-kpi="general" onclick="setFilterByName('general')">
-        <div class="kpi-label">🌐 General AI & Research</div>
-        <div class="kpi-val" style="color: var(--blue-text);" data-count="{general_count}">{general_count}</div>
-        <div class="kpi-sub">Global Labs, Press & ArXiv</div>
-      </div>
-      <div class="kpi-card active-kpi" data-kpi="all" onclick="setFilterByName('all')">
-        <div class="kpi-label">📊 Total Curated Stories</div>
-        <div class="kpi-val" data-count="{len(cards)}">{len(cards)}</div>
-        <div class="kpi-sub">Deduplicated across {sources_count} verified feeds</div>
-      </div>
-    </div>
-
-    <!-- Segmented Signal Mix Visual Bar -->
-    <div class="signal-mix-card">
-      <div class="signal-mix-top">
-        <span>TODAY'S INTELLIGENCE SIGNAL MIX</span>
-        <div class="signal-legend">
-          <span class="legend-item"><span class="legend-dot" style="background:var(--gold-text);"></span> UK Finance & FCA <span class="sig-pct-high">({high_pct}%)</span></span>
-          <span class="legend-item"><span class="legend-dot" style="background:var(--emerald-text);"></span> Ops & Data Security <span class="sig-pct-ops">({ops_pct}%)</span></span>
-          <span class="legend-item"><span class="legend-dot" style="background:var(--blue-text);"></span> Global AI & Research <span class="sig-pct-gen">({gen_pct}%)</span></span>
-        </div>
-      </div>
-      <div class="signal-track">
-        <div class="signal-seg" style="width:{high_pct}%;background:var(--gold-text);"></div>
-        <div class="signal-seg" style="width:{ops_pct}%;background:var(--emerald-text);"></div>
-        <div class="signal-seg" style="width:{gen_pct}%;background:var(--blue-text);"></div>
-      </div>
-    </div>
-
-    <!-- Glassmorphic Sticky Filter & View Bar -->
-    <div class="controls">
-      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;width:100%;gap:12px;">
-        <div class="tabs" role="tablist" id="filterTabs">
-          <span class="seg-indicator" aria-hidden="true"></span>
-          <button class="tab active" data-filter="all" role="tab" aria-selected="true" onclick="setFilter('all', this)">All Prioritised ({len(cards)})</button>
-          <button class="tab" data-filter="high" role="tab" aria-selected="false" onclick="setFilter('high', this)"><span id="tabFlagSlot"></span> High UK Finance ({high_impact_count})</button>
-          <button class="tab" data-filter="ops" role="tab" aria-selected="false" onclick="setFilter('ops', this)">⚡ Ops & Security ({ops_count})</button>
-          <button class="tab" data-filter="general" role="tab" aria-selected="false" onclick="setFilter('general', this)">🌐 General AI ({general_count})</button>
-          <button class="tab" data-filter="saved" id="savedTabBtn" role="tab" aria-selected="false" onclick="setFilter('saved', this)">⭐ Saved (0)</button>
-        </div>
-        <div class="right-controls">
-          <div class="search-wrap">
-            <input type="search" id="searchInput" class="search-input" placeholder="Search FCA, Deloitte, audit, OpenAI..." oninput="onSearchInput()" />
-            <span class="kbd-hint">/</span>
+        <div class="print-memo-header" style="display:none;">
+          <h2 style="margin:0 0 4px;font-size:18pt;font-weight:800;">THE RUNDOWN: UK FINANCE &amp; AI EXECUTIVE BRIEFING</h2>
+          <div style="font-size:10pt;color:#404040;margin-bottom:6px;">
+            <strong>Date:</strong> {html.escape(date_str)} · {updated_str} | <strong>Scope:</strong> CFO Strategy, FCA/PRA Compliance, Internal Audit &amp; FP&amp;A
           </div>
-          <div class="view-toggle" role="group" aria-label="View mode" id="viewToggle">
-            <span class="seg-indicator" aria-hidden="true"></span>
-            <button class="view-btn active" id="viewCardsBtn" onclick="setViewMode('cards')">
-              <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-              Cards
-            </button>
-            <button class="view-btn" id="viewTableBtn" onclick="setViewMode('table')">
-              <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-              Compact
-            </button>
+          <div style="font-size:8.5pt;color:#737373;text-transform:uppercase;letter-spacing:0.06em;">
+            PREPARED FOR UK FINANCE EXECUTIVE LEADERSHIP
           </div>
         </div>
-      </div>
-      <!-- Interactive Topic Filter Pills -->
-      <div class="topic-bar" id="topicBar" role="group" aria-label="Filter by Topic">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-right:2px;">Topic:</span>
-        <button class="topic-pill active" data-topic="all" onclick="setTopic('all', this)">All Topics</button>
-        <button class="topic-pill" data-topic="fca" onclick="setTopic('fca', this)">🏛️ FCA & Regulation</button>
-        <button class="topic-pill" data-topic="audit" onclick="setTopic('audit', this)">🛡️ Audit & Risk</button>
-        <button class="topic-pill" data-topic="cfo" onclick="setTopic('cfo', this)">📈 CFO Strategy</button>
-        <button class="topic-pill" data-topic="privacy" onclick="setTopic('privacy', this)">🔒 Data Privacy</button>
-        <button class="topic-pill" data-topic="agents" onclick="setTopic('agents', this)">🤖 AI Agents</button>
-        <button class="topic-pill" data-topic="models" onclick="setTopic('models', this)">🧠 Frontier Models</button>
+
+        <!-- Role Priority Switcher + Compact Signal Snapshot -->
+        <div class="executive-strip">
+          <div class="lens-group-wrap">
+            <span class="strip-micro-label">Role Lens</span>
+            <div class="segmented-box" role="group" aria-label="Finance Role Lens">
+              <button class="lens-btn active" type="button" data-lens="default" onclick="setRoleLens('default', this)">All Roles</button>
+              <button class="lens-btn" type="button" data-lens="cfo" onclick="setRoleLens('cfo', this)">CFO &amp; Strategy</button>
+              <button class="lens-btn" type="button" data-lens="audit" onclick="setRoleLens('audit', this)">Audit, Risk &amp; FCA</button>
+              <button class="lens-btn" type="button" data-lens="fpa" onclick="setRoleLens('fpa', this)">FP&amp;A &amp; Systems</button>
+            </div>
+          </div>
+
+          <div class="signal-cluster">
+            <div class="kpi-strip">
+              <button type="button" class="kpi-card" data-kpi="high" onclick="setFilterByName('high')">
+                <div class="kpi-val" style="color:var(--brand-violet);" data-count="{high_impact_count}">{high_impact_count}</div>
+                <div class="kpi-label"><span id="kpiFlagSlot"></span> UK Finance</div>
+              </button>
+              <button type="button" class="kpi-card" data-kpi="ops" onclick="setFilterByName('ops')">
+                <div class="kpi-val" style="color:var(--emerald);" data-count="{ops_count}">{ops_count}</div>
+                <div class="kpi-label">Ops &amp; Security</div>
+              </button>
+              <button type="button" class="kpi-card" data-kpi="general" onclick="setFilterByName('general')">
+                <div class="kpi-val" style="color:var(--brand-blue);" data-count="{general_count}">{general_count}</div>
+                <div class="kpi-label">Global Research</div>
+              </button>
+              <button type="button" class="kpi-card active-kpi" data-kpi="all" onclick="setFilterByName('all')">
+                <div class="kpi-val" data-count="{len(cards)}">{len(cards)}</div>
+                <div class="kpi-label">Total Stories</div>
+              </button>
+            </div>
+            <div class="signal-bar-row">
+              <div class="signal-track" aria-hidden="true">
+                <div class="signal-seg" style="width:{high_pct}%;background:var(--brand-violet);"></div>
+                <div class="signal-seg" style="width:{ops_pct}%;background:var(--emerald);"></div>
+                <div class="signal-seg" style="width:{gen_pct}%;background:var(--brand-blue);"></div>
+              </div>
+              <div class="signal-legend-inline">
+                <span>UK <span class="sig-pct-high">{high_pct}%</span></span>
+                <span>Ops <span class="sig-pct-ops">{ops_pct}%</span></span>
+                <span>AI <span class="sig-pct-gen">{gen_pct}%</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. TODAY'S MORNING RUNDOWN (Featured #1 Lead + #2-#4 Top Stack) -->
+        <section class="editorial-showcase swap-target" id="heroSection" aria-labelledby="heroTitle">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> Today's Rundown</p>
+              <h2 class="section-h2 text-gradient-heading" id="heroTitle">Top priorities today</h2>
+            </div>
+            <span class="section-sub">Click any story to open the 3-point Executive Brief</span>
+          </div>
+          <div class="showcase-grid" id="heroGrid"></div>
+        </section>
+
+        <!-- 5. EXPLORE THE LATEST (therundown.ai/news#stories) -->
+        <section class="explore-section" id="stories" aria-labelledby="storiesHeading">
+          <div class="explore-top-row">
+            <div>
+              <h2 class="section-h2 text-gradient-heading" id="storiesHeading">Explore the latest</h2>
+              <p class="section-sub"><span id="storiesCountLabel">{len(cards)} stories</span> curated today. Stay up to speed.</p>
+            </div>
+
+            <div class="explore-right-tools">
+              <div class="pill-search-wrap">
+                <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input
+                  type="search"
+                  id="searchInput"
+                  class="search-input"
+                  placeholder="Filter stories…"
+                  aria-label="Filter stories"
+                  oninput="onSearchInput(this)"
+                />
+              </div>
+
+              <div class="view-toggle" role="group" aria-label="View layout" id="viewToggle">
+                <button class="view-btn active" type="button" id="viewCardsBtn" onclick="setViewMode('cards')" title="Editorial 3-column cards">
+                  <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                  Grid
+                </button>
+                <button class="view-btn" type="button" id="viewRundownBtn" onclick="setViewMode('rundown')" title="5-minute newsletter reading stream">
+                  <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h12"/></svg>
+                  Rundown
+                </button>
+                <button class="view-btn" type="button" id="viewTableBtn" onclick="setViewMode('table')" title="Compact analyst table">
+                  <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+                  Table
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sticky Category Pills & Topic Chips -->
+          <div class="controls-bar">
+            <div class="tabs" role="tablist" id="filterTabs">
+              <button class="tab active" type="button" data-filter="all" role="tab" aria-selected="true" onclick="setFilter('all', this)">All news ({len(cards)})</button>
+              <button class="tab" type="button" data-filter="high" role="tab" aria-selected="false" onclick="setFilter('high', this)"><span id="tabFlagSlot"></span> High UK Finance ({high_impact_count})</button>
+              <button class="tab" type="button" data-filter="ops" role="tab" aria-selected="false" onclick="setFilter('ops', this)">Ops &amp; Security ({ops_count})</button>
+              <button class="tab" type="button" data-filter="general" role="tab" aria-selected="false" onclick="setFilter('general', this)">Global AI &amp; Research ({general_count})</button>
+              <button class="tab" type="button" data-filter="saved" id="savedTabBtn" role="tab" aria-selected="false" onclick="setFilter('saved', this)">Saved (0)</button>
+            </div>
+
+            <div class="topic-bar" id="topicBar" role="group" aria-label="Filter by Topic">
+              <button class="topic-pill active" type="button" data-topic="all" onclick="setTopic('all', this)">All Topics</button>
+              <button class="topic-pill" type="button" data-topic="fca" onclick="setTopic('fca', this)">🏛️ FCA &amp; Regulation</button>
+              <button class="topic-pill" type="button" data-topic="audit" onclick="setTopic('audit', this)">🛡️ Audit &amp; Risk</button>
+              <button class="topic-pill" type="button" data-topic="cfo" onclick="setTopic('cfo', this)">📈 CFO Strategy</button>
+              <button class="topic-pill" type="button" data-topic="privacy" onclick="setTopic('privacy', this)">🔒 Data Privacy</button>
+              <button class="topic-pill" type="button" data-topic="agents" onclick="setTopic('agents', this)">🤖 AI Agents</button>
+              <button class="topic-pill" type="button" data-topic="models" onclick="setTopic('models', this)">🧠 Frontier Models</button>
+            </div>
+          </div>
+
+          <div id="mainContainer" class="swap-target"></div>
+        </section>
+
       </div>
     </div>
+  </main>
 
-    <div id="mainContainer" class="swap-target"></div>
-
-    <footer class="dashboard-footer">
-      <div class="footer-inner">
+  <!-- 6. ROUNDED OBSIDIAN FOOTER SHEET (therundown.ai Footer) -->
+  <footer class="site-footer-wrap">
+    <div class="footer-sheet">
+      <div class="footer-grid">
         <div>
-          <div class="footer-brand"><span id="footerFlagSlot"></span> UK Finance & CFO AI Intelligence</div>
-          <p class="footer-disclaimer">Algorithmic intelligence aggregation curated for UK CFOs, Audit Partners, and FCA compliance leaders. Informational summary only; does not constitute regulatory, legal, or investment advice.</p>
-        </div>
-        <div style="text-align: right;">
-          <div class="footer-meta">
-            <span>Verified Sources: <strong>{sources_count} Feeds</strong></span>
-            <span>Refreshed: <strong>{updated_str}</strong></span>
-            <span><a href="https://github.com/Mhutt97/ai-news-daily" target="_blank" rel="noopener noreferrer">Source Code & Archive ↗</a></span>
+          <div class="brand-lockup" style="margin-bottom:4px;">
+            <span class="brand-monogram" aria-hidden="true">R</span>
+            <span class="brand-wordmark">The Rundown</span>
+            <span class="brand-edition-pill"><span id="footerFlagSlot"></span> UK Finance</span>
           </div>
+          <p class="footer-desc">
+            Daily AI intelligence curated and ranked by practical benefit for UK CFOs, Audit Partners, FP&amp;A teams, and FCA compliance leaders.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Intelligence Feeds</h3>
+          <ul class="footer-links-list">
+            <li><button type="button" onclick="jumpToSection('heroSection', 'all')">Today's Morning Rundown</button></li>
+            <li><button type="button" onclick="jumpToSection('stories', 'high')">High UK Finance &amp; FCA</button></li>
+            <li><button type="button" onclick="jumpToSection('stories', 'ops')">Finance Ops, Agents &amp; Privacy</button></li>
+            <li><button type="button" onclick="jumpToSection('stories', 'general')">Global AI Labs &amp; ArXiv Papers</button></li>
+            <li><button type="button" onclick="jumpToSection('stories', 'saved')">Saved Reading List</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-col-title">Executive Toolkit</h3>
+          <ul class="footer-links-list">
+            <li><button type="button" onclick="openShareModal()">Share MS Teams / Outlook Brief</button></li>
+            <li><button type="button" onclick="exportToCsv()">Download CSV Risk Register</button></li>
+            <li><button type="button" onclick="window.print()">Print Boardroom PDF Memo</button></li>
+            <li><button type="button" onclick="toggleKbdModal()">Keyboard Shortcuts (?)</button></li>
+            <li><a href="https://github.com/Mhutt97/ai-news-daily" target="_blank" rel="noopener noreferrer">Source Code &amp; Archive ↗</a></li>
+          </ul>
         </div>
       </div>
-    </footer>
-  </div>
+
+      <div class="footer-bottom">
+        <span>Informational executive summary only; does not constitute regulatory, legal, or investment advice.</span>
+        <span>Verified Feeds: <strong style="color:#fff;">{sources_count}</strong> · Refreshed: <strong style="color:#fff;">{updated_str}</strong></span>
+      </div>
+    </div>
+  </footer>
 
   <!-- Slide-Over Executive Quick-Brief Drawer -->
   <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
   <aside class="drawer-panel" id="drawerPanel" role="dialog" aria-modal="true" aria-labelledby="drawerBadge" aria-label="Executive Quick-Brief Drawer">
     <div class="drawer-header">
-      <span class="brand-badge" id="drawerBadge">⚡ Executive Quick-Brief</span>
-      <button class="icon-btn" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">
+      <span class="badge badge-high" id="drawerBadge">Executive Quick-Brief</span>
+      <button class="icon-btn" type="button" onclick="closeDrawer()" aria-label="Close drawer" title="Close (Esc)">
         <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="drawer-body" id="drawerBody"></div>
     <div class="drawer-footer">
       <div class="drawer-nav">
-        <button class="btn" onclick="stepDrawer(-1)" title="Previous story (←)" aria-label="Previous story">
+        <button class="btn" type="button" onclick="stepDrawer(-1)" title="Previous story (←)" aria-label="Previous story">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <button class="btn" onclick="stepDrawer(1)" title="Next story (→)" aria-label="Next story">
+        <button class="btn" type="button" onclick="stepDrawer(1)" title="Next story (→)" aria-label="Next story">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
         </button>
-        <span class="drawer-progress" id="drawerProgress" style="align-self:center;margin-left:6px;"></span>
+        <span class="drawer-progress" id="drawerProgress"></span>
       </div>
       <a class="btn btn-primary" id="drawerReadLink" href="#" target="_blank" rel="noopener noreferrer">
-        Open article
-        <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        Read story
+        <span aria-hidden="true">↗</span>
       </a>
     </div>
   </aside>
@@ -2319,10 +2730,10 @@ def build_dashboard_html(
     <div class="modal-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
       <div class="modal-header">
         <h3 class="modal-title" id="shareModalTitle">
-          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-          Share Executive Briefing
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Share Today's Rundown
         </h3>
-        <button class="icon-btn" onclick="closeShareModal()" aria-label="Close modal">
+        <button class="icon-btn" type="button" onclick="closeShareModal()" aria-label="Close modal">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
       </div>
@@ -2330,10 +2741,10 @@ def build_dashboard_html(
         <div class="share-channel-grid">
           <div class="share-channel-card" onclick="copyTeamBriefing(); closeShareModal();">
             <div class="share-channel-info">
-              <div class="share-icon-wrap" style="color:#60a5fa;">💬</div>
+              <div class="share-icon-wrap">💬</div>
               <div>
-                <strong style="display:block;font-size:13.5px;color:var(--text);">Copy MS Teams & Slack Markdown</strong>
-                <span style="font-size:12px;color:var(--muted);">Formatted top 5 priorities ready to paste directly into channel chats</span>
+                <strong style="display:block;font-size:13.5px;color:var(--ink);">Copy MS Teams &amp; Slack Rundown</strong>
+                <span style="font-size:12px;color:var(--mute);">Formatted top 5 stories &amp; takeaways ready to paste</span>
               </div>
             </div>
             <span class="read-link">Copy <span class="arrow">→</span></span>
@@ -2341,10 +2752,10 @@ def build_dashboard_html(
 
           <div class="share-channel-card" onclick="openEmailDraft(); closeShareModal();">
             <div class="share-channel-info">
-              <div class="share-icon-wrap" style="color:#fbbf24;">✉️</div>
+              <div class="share-icon-wrap">✉️</div>
               <div>
-                <strong style="display:block;font-size:13.5px;color:var(--text);">Draft Outlook / Email Memo</strong>
-                <span style="font-size:12px;color:var(--muted);">Opens pre-filled email draft with subject line and executive takeaways</span>
+                <strong style="display:block;font-size:13.5px;color:var(--ink);">Draft Outlook / Email Memo</strong>
+                <span style="font-size:12px;color:var(--mute);">Pre-filled executive email draft with top 5 action items</span>
               </div>
             </div>
             <span class="read-link">Open <span class="arrow">→</span></span>
@@ -2352,10 +2763,10 @@ def build_dashboard_html(
 
           <div class="share-channel-card" onclick="copyDashboardUrl(); closeShareModal();">
             <div class="share-channel-info">
-              <div class="share-icon-wrap" style="color:#34d399;">🔗</div>
+              <div class="share-icon-wrap">🔗</div>
               <div>
-                <strong style="display:block;font-size:13.5px;color:var(--text);">Copy Live Dashboard URL</strong>
-                <span style="font-size:12px;color:var(--muted);">Direct public dashboard link with current role lens preference</span>
+                <strong style="display:block;font-size:13.5px;color:var(--ink);">Copy Live Dashboard URL</strong>
+                <span style="font-size:12px;color:var(--mute);">Direct public link to today's interactive briefing</span>
               </div>
             </div>
             <span class="read-link">Copy <span class="arrow">→</span></span>
@@ -2363,10 +2774,10 @@ def build_dashboard_html(
 
           <div class="share-channel-card" onclick="exportToCsv(); closeShareModal();">
             <div class="share-channel-info">
-              <div class="share-icon-wrap" style="color:#10b981;">📊</div>
+              <div class="share-icon-wrap">📊</div>
               <div>
-                <strong style="display:block;font-size:13.5px;color:var(--text);">Export CSV Risk Register</strong>
-                <span style="font-size:12px;color:var(--muted);">Full structured dataset for Excel, audit scoping, and FP&A tools</span>
+                <strong style="display:block;font-size:13.5px;color:var(--ink);">Export CSV Risk Register</strong>
+                <span style="font-size:12px;color:var(--mute);">Structured dataset for Excel, audit scoping &amp; FP&amp;A</span>
               </div>
             </div>
             <span class="read-link">Download <span class="arrow">↓</span></span>
@@ -2380,58 +2791,29 @@ def build_dashboard_html(
   <div class="modal-backdrop" id="kbdModalBackdrop" onclick="closeKbdModal()">
     <div class="modal-dialog" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="kbdModalTitle">
       <div class="modal-header">
-        <h3 class="modal-title" id="kbdModalTitle">
-          ⌨️ Keyboard Navigation & Shortcuts
-        </h3>
-        <button class="icon-btn" onclick="closeKbdModal()" aria-label="Close modal">
+        <h3 class="modal-title" id="kbdModalTitle">⌨️ Keyboard Navigation</h3>
+        <button class="icon-btn" type="button" onclick="closeKbdModal()" aria-label="Close modal">
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
       </div>
       <div class="modal-body">
-        <div class="kbd-shortcut-row">
-          <span>Focus Search</span>
-          <kbd>/</kbd>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Next / Previous Story</span>
-          <span><kbd>j</kbd> / <kbd>k</kbd> or <kbd>↓</kbd> / <kbd>↑</kbd></span>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Open Quick-Brief Drawer</span>
-          <span><kbd>Enter</kbd> or <kbd>o</kbd></span>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Close Drawer or Modal</span>
-          <kbd>Esc</kbd>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Share Briefing Options</span>
-          <kbd>s</kbd>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Copy Team Briefing</span>
-          <kbd>c</kbd>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Export CSV</span>
-          <kbd>e</kbd>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Toggle Light / Dark Theme</span>
-          <kbd>t</kbd>
-        </div>
-        <div class="kbd-shortcut-row">
-          <span>Toggle This Help Modal</span>
-          <kbd>?</kbd>
-        </div>
+        <div class="kbd-shortcut-row"><span>Focus Search</span><kbd>/</kbd></div>
+        <div class="kbd-shortcut-row"><span>Next / Previous Story</span><span><kbd>j</kbd> / <kbd>k</kbd> or <kbd>↓</kbd> / <kbd>↑</kbd></span></div>
+        <div class="kbd-shortcut-row"><span>Open Quick-Brief Drawer</span><span><kbd>Enter</kbd> or <kbd>o</kbd></span></div>
+        <div class="kbd-shortcut-row"><span>Close Drawer or Modal</span><kbd>Esc</kbd></div>
+        <div class="kbd-shortcut-row"><span>Share Briefing Modal</span><kbd>s</kbd></div>
+        <div class="kbd-shortcut-row"><span>Copy Teams / Slack Summary</span><kbd>c</kbd></div>
+        <div class="kbd-shortcut-row"><span>Export CSV Register</span><kbd>e</kbd></div>
+        <div class="kbd-shortcut-row"><span>Toggle Light / Dark Theme</span><kbd>t</kbd></div>
+        <div class="kbd-shortcut-row"><span>Toggle Shortcuts Help</span><kbd>?</kbd></div>
       </div>
     </div>
   </div>
 
-  <button id="backToTop" onclick="window.scrollTo({{top: 0, behavior: 'smooth'}})" aria-label="Back to top" title="Back to top">
+  <button id="backToTop" type="button" onclick="window.scrollTo({{top: 0, behavior: 'smooth'}})" aria-label="Back to top" title="Back to top">
     <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
   </button>
-  <div id="toast" role="status" aria-live="polite">✓ Copied Top 5 UK Finance Briefing!</div>
+  <div id="toast" role="status" aria-live="polite">✓ Copied Top 5 UK Finance Briefing</div>
 
   <script>
     const ITEMS = {cards_json};
@@ -2441,6 +2823,7 @@ def build_dashboard_html(
     let currentLens = 'default';
     let currentTopic = 'all';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
+    if (!['cards', 'rundown', 'table'].includes(currentView)) currentView = 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
     let activeDrawerId = null;
     let currentDisplayedIds = [];
@@ -2452,26 +2835,10 @@ def build_dashboard_html(
 
     const ICON_LINK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
     const ICON_BOOKMARK = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
-    const FLAG_SVG = '<svg class="uk-flag" viewBox="0 0 60 30" width="16" height="11" aria-hidden="true"><clipPath id="flag-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="diag-clip"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#flag-clip)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#diag-clip)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
+    const ICON_MOON = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+    const ICON_SUN = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+    const FLAG_SVG = '<svg class="uk-flag" viewBox="0 0 60 30" width="15" height="10" aria-hidden="true"><clipPath id="flag-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="diag-clip"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#flag-clip)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#diag-clip)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
 
-    /* Slide the shared pill indicator under the active tab / view button */
-    function moveIndicator(container, animate = true) {{
-      if (!container) return;
-      const ind = container.querySelector('.seg-indicator');
-      const active = container.querySelector('.active');
-      if (!ind || !active) return;
-      ind.classList.toggle('no-anim', !animate);
-      ind.style.width = `${{active.offsetWidth}}px`;
-      ind.style.height = `${{active.offsetHeight}}px`;
-      ind.style.transform = `translate(${{active.offsetLeft}}px, ${{active.offsetTop}}px)`;
-      ind.classList.add('ready');
-    }}
-    function moveAllIndicators(animate = true) {{
-      moveIndicator(document.getElementById('filterTabs'), animate);
-      moveIndicator(document.getElementById('viewToggle'), animate);
-    }}
-
-    /* Fade content out, swap it, fade it back in — avoids hard jumps on filter changes */
     function swapContent(renderFn) {{
       const targets = document.querySelectorAll('.swap-target');
       if (REDUCED_MOTION) {{ renderFn(); return; }}
@@ -2480,16 +2847,64 @@ def build_dashboard_html(
       window._swapTimer = setTimeout(() => {{
         renderFn();
         requestAnimationFrame(() => targets.forEach(t => t.classList.remove('is-swapping')));
-      }}, 150);
+      }}, 140);
     }}
 
-    function onSearchInput() {{
+    function getSearchQuery() {{
+      const s = document.getElementById('searchInput');
+      return ((s && s.value) || '').toLowerCase().trim();
+    }}
+
+    function syncSearchInputs(val, exceptEl) {{
+      const s1 = document.getElementById('heroSearchInput');
+      const s2 = document.getElementById('searchInput');
+      if (s1 && s1 !== exceptEl) s1.value = val;
+      if (s2 && s2 !== exceptEl) s2.value = val;
+    }}
+
+    function onSearchInput(sourceEl) {{
+      const val = sourceEl ? sourceEl.value : '';
+      syncSearchInputs(val, sourceEl);
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => {{
         selectedCardIndex = -1;
         renderHero();
         renderMain({{ animate: false }});
-      }}, 100);
+      }}, 90);
+    }}
+
+    function submitHeroSearch(ev) {{
+      if (ev) ev.preventDefault();
+      const target = document.getElementById('stories');
+      if (target) target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }}
+
+    function quickFilterQuery(term) {{
+      syncSearchInputs(term, null);
+      selectedCardIndex = -1;
+      renderHero();
+      renderMain({{ animate: false }});
+      const target = document.getElementById('stories');
+      if (target) target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }}
+
+    function resetAllFilters(ev) {{
+      if (ev) ev.preventDefault();
+      syncSearchInputs('', null);
+      currentTopic = 'all';
+      document.querySelectorAll('.topic-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-topic') === 'all'));
+      setFilterByName('all');
+      renderHero();
+      renderMain();
+      window.scrollTo({{ top: 0, behavior: 'smooth' }});
+    }}
+
+    function jumpToSection(sectionId, filterName) {{
+      if (filterName && filterName !== currentFilter) {{
+        setFilterByName(filterName);
+      }}
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
     }}
 
     function escapeHtml(str) {{
@@ -2500,6 +2915,10 @@ def build_dashboard_html(
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+    }}
+
+    function formatTagHtml(tag) {{
+      return escapeHtml(tag || '').replace(/\\uD83C\\uDDEC\\uD83C\\uDDE7/g, FLAG_SVG);
     }}
 
     function safeUrl(url) {{
@@ -2525,10 +2944,10 @@ def build_dashboard_html(
       const tHigh = document.querySelector('.tab[data-filter="high"]');
       const tOps = document.querySelector('.tab[data-filter="ops"]');
       const tGen = document.querySelector('.tab[data-filter="general"]');
-      if (tAll) tAll.textContent = `All Prioritised (${{total}})`;
+      if (tAll) tAll.textContent = `All news (${{sorted.length}})`;
       if (tHigh) tHigh.innerHTML = `${{FLAG_SVG}} High UK Finance (${{high}})`;
-      if (tOps) tOps.textContent = `⚡ Ops & Security (${{ops}})`;
-      if (tGen) tGen.textContent = `🌐 General AI (${{gen}})`;
+      if (tOps) tOps.textContent = `Ops & Security (${{ops}})`;
+      if (tGen) tGen.textContent = `Global AI & Research (${{gen}})`;
 
       const kHigh = document.querySelector('.kpi-card[data-kpi="high"] .kpi-val');
       const kOps = document.querySelector('.kpi-card[data-kpi="ops"] .kpi-val');
@@ -2549,15 +2968,14 @@ def build_dashboard_html(
       const lHigh = document.querySelector('.sig-pct-high');
       const lOps = document.querySelector('.sig-pct-ops');
       const lGen = document.querySelector('.sig-pct-gen');
-      if (lHigh) lHigh.textContent = `(${{pHigh}}%)`;
-      if (lOps) lOps.textContent = `(${{pOps}}%)`;
-      if (lGen) lGen.textContent = `(${{pGen}}%)`;
-
-      moveIndicator(document.getElementById('filterTabs'));
+      if (lHigh) lHigh.textContent = `${{pHigh}}%`;
+      if (lOps) lOps.textContent = `${{pOps}}%`;
+      if (lGen) lGen.textContent = `${{pGen}}%`;
     }}
 
     function showToast(msg) {{
       const t = document.getElementById('toast');
+      if (!t) return;
       t.textContent = msg;
       t.classList.add('show');
       clearTimeout(window._toastTimer);
@@ -2602,6 +3020,12 @@ def build_dashboard_html(
       return 'badge-gen';
     }}
 
+    function catClass(score) {{
+      if (score >= 85) return 'cat-high';
+      if (score >= 70) return 'cat-ops';
+      return 'cat-gen';
+    }}
+
     function boxClass(score) {{
       if (score >= 85) return '';
       if (score >= 70) return 'ops-box';
@@ -2619,15 +3043,14 @@ def build_dashboard_html(
         text.includes('governance')
       );
       if (isCritical) {{
-        return '<span class="urgency-badge" title="High Governance & Regulatory Relevance">🔴 High Urgency</span>';
+        return '<span class="urgency-badge" title="High Governance & Regulatory Relevance">● High Urgency</span>';
       }}
       return '';
     }}
 
     function updateSavedTabCount() {{
       const btn = document.getElementById('savedTabBtn');
-      if (btn) btn.textContent = `⭐ Saved (${{savedUrls.size}})`;
-      moveIndicator(document.getElementById('filterTabs'));
+      if (btn) btn.textContent = `Saved (${{savedUrls.size}})`;
     }}
 
     function toggleSaveById(id, ev) {{
@@ -2638,10 +3061,10 @@ def build_dashboard_html(
       const nowSaved = !savedUrls.has(url);
       if (nowSaved) {{
         savedUrls.add(url);
-        showToast('Saved to your reading list');
+        showToast('✓ Saved to your reading list');
       }} else {{
         savedUrls.delete(url);
-        showToast('Removed from saved stories');
+        showToast('Removed from saved list');
       }}
       localStorage.setItem('ai-news-saved', JSON.stringify(Array.from(savedUrls)));
       updateSavedTabCount();
@@ -2665,7 +3088,7 @@ def build_dashboard_html(
       const shareUrl = `${{window.location.origin}}${{window.location.pathname}}#${{id}}`;
       if (navigator.clipboard) {{
         navigator.clipboard.writeText(shareUrl).then(() => {{
-          showToast(`Direct story link copied (${{id}})`);
+          showToast(`✓ Direct story link copied (${{id}})`);
         }});
       }}
       try {{
@@ -2695,7 +3118,7 @@ def build_dashboard_html(
 
       if (alreadyOpen && direction && !REDUCED_MOTION) {{
         body.classList.add(direction > 0 ? 'swap-next' : 'swap-prev');
-        setTimeout(paint, 150);
+        setTimeout(paint, 140);
       }} else {{
         paint();
       }}
@@ -2711,14 +3134,14 @@ def build_dashboard_html(
 
     function fillDrawer(item) {{
       const effScore = getActiveScore(item);
-      document.getElementById('drawerBadge').textContent = `${{item.func_tag}} · Priority ${{effScore}}/100`;
-      document.getElementById('drawerReadLink').href = item.url;
+      document.getElementById('drawerBadge').innerHTML = `${{formatTagHtml(item.func_tag)}} · Priority ${{effScore}}/100`;
+      document.getElementById('drawerReadLink').href = safeUrl(item.url);
       const pos = currentDisplayedIds.indexOf(item.id);
       document.getElementById('drawerProgress').textContent =
         pos > -1 ? `${{pos + 1}} of ${{currentDisplayedIds.length}}` : '';
 
       const summaryBlock = item.summary
-        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--blue-text);">📰 Article Summary</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
+        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--ink);">📰 The Rundown</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
         : '';
 
       document.getElementById('drawerBody').innerHTML = `
@@ -2727,22 +3150,22 @@ def build_dashboard_html(
             <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
             ${{escapeHtml(item.source)}}
           </span>
-          <span class="pub-pill">${{escapeHtml(item.category)}}</span>
+          <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.category)}}</span>
           ${{urgencyBadgeHtml(effScore, item)}}
         </div>
         <h2 class="drawer-title">${{escapeHtml(item.title)}}</h2>
         <div class="drawer-meta">Published ${{escapeHtml(formatRelativeTime(item.published_at))}} (${{escapeHtml(item.published_at)}})</div>
         ${{summaryBlock}}
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--gold-text);">🎯 UK CFO & Strategic Impact</div>
+          <div class="drawer-sec-title" style="color:var(--brand-violet);">${{FLAG_SVG}} Why It Matters · UK CFO &amp; Finance</div>
           <p class="drawer-sec-text">${{escapeHtml(item.benefit)}}</p>
         </div>
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--emerald-text);">🛡️ Audit, Risk & FCA Governance Angle</div>
+          <div class="drawer-sec-title" style="color:var(--emerald);">🛡️ Audit, Risk &amp; FCA Governance Angle</div>
           <p class="drawer-sec-text">${{escapeHtml(item.risk_angle)}}</p>
         </div>
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--blue-text);">✅ Recommended Action for UK Finance Team</div>
+          <div class="drawer-sec-title" style="color:var(--brand-blue);">✅ Recommended Action</div>
           <p class="drawer-sec-text">${{escapeHtml(item.action_item)}}</p>
         </div>
       `;
@@ -2776,10 +3199,10 @@ def build_dashboard_html(
       document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       const labels = {{
-        default: '⚡ 60-Second UK Finance Morning Brief — Top 3 Today',
-        cfo: '👔 CFO & Strategy Lens — Top 3 Strategic Priorities',
-        audit: '🛡️ Audit, Risk & FCA Lens — Top 3 Governance Priorities',
-        fpa: '📊 FP&A & Systems Lens — Top 3 Automation & Model Priorities'
+        default: 'Top priorities today',
+        cfo: 'Top priorities for CFO & Strategy',
+        audit: 'Top priorities for Audit, Risk & FCA',
+        fpa: 'Top priorities for FP&A & Systems'
       }};
       swapContent(() => {{
         document.getElementById('heroTitle').textContent = labels[lens] || labels.default;
@@ -2795,7 +3218,7 @@ def build_dashboard_html(
       selectedCardIndex = -1;
       document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      swapContent(() => renderMain());
+      swapContent(() => {{ renderHero(); renderMain(); }});
     }}
 
     function setupScrollReveal() {{
@@ -2809,81 +3232,133 @@ def build_dashboard_html(
         const visible = entries.filter(e => e.isIntersecting);
         visible.forEach((entry, i) => {{
           const el = entry.target;
-          el.style.setProperty('--reveal-delay', `${{Math.min(i, 5) * 55}}ms`);
+          el.style.setProperty('--reveal-delay', `${{Math.min(i, 5) * 45}}ms`);
           el.classList.remove('pre-reveal');
           el.classList.add('in-view');
           el.addEventListener('animationend', () => el.classList.remove('in-view'), {{ once: true }});
           revealObserver.unobserve(el);
         }});
-      }}, {{ threshold: 0.06, rootMargin: '0px 0px -24px 0px' }});
-
+      }}, {{ threshold: 0.05, rootMargin: '0px 0px -20px 0px' }});
       cards.forEach(card => revealObserver.observe(card));
     }}
 
-    function attachSpotlightTracking() {{
-      document.querySelectorAll('.news-card, .kpi-card').forEach(card => {{
-        if (card.dataset.spot) return;
-        card.dataset.spot = '1';
-        let raf = null;
-        card.addEventListener('mousemove', (e) => {{
-          if (raf) return;
-          raf = requestAnimationFrame(() => {{
-            const rect = card.getBoundingClientRect();
-            card.style.setProperty('--mouse-x', `${{e.clientX - rect.left}}px`);
-            card.style.setProperty('--mouse-y', `${{e.clientY - rect.top}}px`);
-            raf = null;
-          }});
-        }}, {{ passive: true }});
-      }});
-    }}
-
+    /* Render Asymmetric Editorial Showcase (#1 Featured Lead + #2-#4 Top Stack) */
     function renderHero() {{
-      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const q = getSearchQuery();
       const sorted = getSortedItems();
-      const top3 = sorted.slice(0, 3);
+      const top4 = sorted.slice(0, 4);
       const heroSec = document.getElementById('heroSection');
       const heroGrid = document.getElementById('heroGrid');
-      if (!top3.length || currentFilter !== 'all' || currentTopic !== 'all' || q) {{
+      if (!top4.length || currentFilter !== 'all' || currentTopic !== 'all' || q) {{
         heroSec.style.display = 'none';
         return;
       }}
       heroSec.style.display = 'block';
+      heroGrid.classList.toggle('single-col', top4.length < 2);
 
-      heroGrid.innerHTML = top3.map((item, idx) => {{
-        const isSaved = savedUrls.has(item.url);
-        const effScore = getActiveScore(item);
-        const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
-        const urgencyBadge = urgencyBadgeHtml(effScore, item);
-        return `
-          <article class="hero-card" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
-            <div>
-              <div class="card-top">
-                <div class="tag-group">
-                  <span class="rank-pill">#${{idx + 1}} · ${{effScore}}/100</span>
-                  ${{urgencyBadge}}
-                  ${{newBadge}}
+      const lead = top4[0];
+      const leadSaved = savedUrls.has(lead.url);
+      const leadScore = getActiveScore(lead);
+      const leadNew = lead.is_new ? '<span class="new-badge">NEW</span>' : '';
+      const leadUrgency = urgencyBadgeHtml(leadScore, lead);
+      const leadSummary = lead.summary
+        ? `<p class="lead-summary">${{escapeHtml(lead.summary)}}</p>`
+        : `<p class="lead-summary">Ranked #1 in today's intelligence feed for direct relevance to UK financial leadership and enterprise AI adoption.</p>`;
+
+      const leadHtml = `
+        <article class="lead-feature-card" data-card-id="${{lead.id}}" onclick="openDrawer('${{lead.id}}', event)">
+          <div>
+            <div class="card-top">
+              <div class="tag-group">
+                <span class="rank-pill">#1 LEAD · ${{leadScore}}/100</span>
+                <span class="cat-eyebrow ${{catClass(leadScore)}}">${{formatTagHtml(lead.func_tag)}}</span>
+                ${{leadUrgency}}
+                ${{leadNew}}
+              </div>
+              <div class="card-actions">
+                <button class="icon-btn" type="button" title="Copy story link" aria-label="Copy story link" onclick="shareById('${{lead.id}}', event)">${{ICON_LINK}}</button>
+                <button class="icon-btn ${{leadSaved ? 'saved' : ''}}" type="button" data-save-id="${{lead.id}}" aria-pressed="${{leadSaved}}" title="Save story" aria-label="Save story" onclick="toggleSaveById('${{lead.id}}', event)">${{ICON_BOOKMARK}}</button>
+              </div>
+            </div>
+
+            <h3 class="lead-title">
+              <a href="${{safeUrl(lead.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(lead.title)}}</a>
+            </h3>
+            ${{leadSummary}}
+
+            <div class="lead-why-box">
+              <div class="benefit-header">
+                <span class="benefit-label">${{FLAG_SVG}} Why It Matters · UK Finance</span>
+                <span class="score-meter-wrap">
+                  <span>${{leadScore}}/100</span>
+                  <span class="score-bar"><span class="score-fill" style="width:${{leadScore}}%"></span></span>
+                </span>
+              </div>
+              <div style="font-size:13.8px;line-height:1.55;color:var(--ink-soft);">${{escapeHtml(lead.benefit)}}</div>
+              <div class="lead-action-line"><strong>Next step:</strong> ${{escapeHtml(lead.action_item)}}</div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <span class="pub-pill">
+              <img class="pub-favicon" src="${{faviconUrl(lead.pub_domain)}}" alt="" loading="lazy" />
+              ${{escapeHtml(lead.source)}} · <span title="${{escapeHtml(lead.published_at)}}">${{escapeHtml(formatRelativeTime(lead.published_at))}}</span>
+            </span>
+            <div class="footer-links">
+              <button class="quick-brief-btn" type="button" onclick="openDrawer('${{lead.id}}', event)">Quick brief</button>
+              <a class="read-link" href="${{safeUrl(lead.url)}}" target="_blank" rel="noopener noreferrer">Read story <span class="arrow">↗</span></a>
+            </div>
+          </div>
+        </article>
+      `;
+
+      const rest = top4.slice(1);
+      if (!rest.length) {{
+        heroGrid.innerHTML = leadHtml;
+        return;
+      }}
+
+      const stackHtml = `
+        <div class="top-stack">
+          ${{rest.map((item, idx) => {{
+            const isSaved = savedUrls.has(item.url);
+            const effScore = getActiveScore(item);
+            const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
+            const urgencyBadge = urgencyBadgeHtml(effScore, item);
+            return `
+              <article class="stack-card" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
+                <div>
+                  <div class="card-top" style="margin-bottom:4px;">
+                    <div class="tag-group">
+                      <span class="rank-pill">#${{idx + 2}} · ${{effScore}}</span>
+                      <span class="cat-eyebrow ${{catClass(effScore)}}">${{formatTagHtml(item.func_tag)}}</span>
+                      ${{urgencyBadge}}
+                      ${{newBadge}}
+                    </div>
+                    <div class="card-actions">
+                      <button class="icon-btn" type="button" title="Copy story link" aria-label="Copy story link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
+                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" type="button" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save story" aria-label="Save story" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
+                    </div>
+                  </div>
+                  <h3 class="stack-title">
+                    <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
+                  </h3>
+                  <p class="stack-plus"><strong>Why it matters:</strong> ${{escapeHtml(item.benefit)}}</p>
+                </div>
+                <div class="card-footer" style="padding-top:10px;">
                   <span class="pub-pill">
                     <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
-                    ${{escapeHtml(item.source)}}
+                    ${{escapeHtml(item.source)}} · ${{escapeHtml(formatRelativeTime(item.published_at))}}
                   </span>
+                  <span class="read-link">Quick brief <span class="arrow">→</span></span>
                 </div>
-                <div class="card-actions">
-                  <button class="icon-btn" title="Copy story link" aria-label="Copy story link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
-                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save for later" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
-                </div>
-              </div>
-              <h3 class="card-title">
-                <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
-              </h3>
-              <p class="card-summary" style="margin-bottom: 12px;">${{escapeHtml(item.benefit)}}</p>
-            </div>
-            <div class="card-footer">
-              <span>${{escapeHtml(item.func_tag)}} · <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span></span>
-              <span class="read-link">Quick Brief <span class="arrow">→</span></span>
-            </div>
-          </article>
-        `;
-      }}).join('');
+              </article>
+            `;
+          }}).join('')}}
+        </div>
+      `;
+
+      heroGrid.innerHTML = leadHtml + stackHtml;
     }}
 
     function setFilter(filter, btn) {{
@@ -2897,9 +3372,7 @@ def build_dashboard_html(
       if (btn) {{
         btn.classList.add('active');
         btn.setAttribute('aria-selected', 'true');
-        btn.scrollIntoView({{ behavior: 'smooth', inline: 'center', block: 'nearest' }});
       }}
-      moveIndicator(document.getElementById('filterTabs'));
       document.querySelectorAll('.kpi-card').forEach(k => {{
         k.classList.toggle('active-kpi', k.getAttribute('data-kpi') === filter);
       }});
@@ -2917,14 +3390,14 @@ def build_dashboard_html(
       selectedCardIndex = -1;
       localStorage.setItem('ai-news-view', mode);
       document.getElementById('viewCardsBtn').classList.toggle('active', mode === 'cards');
+      document.getElementById('viewRundownBtn').classList.toggle('active', mode === 'rundown');
       document.getElementById('viewTableBtn').classList.toggle('active', mode === 'table');
-      moveIndicator(document.getElementById('viewToggle'));
       swapContent(() => renderMain());
     }}
 
     function renderMain(opts = {{}}) {{
       const animate = opts.animate !== false;
-      const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const q = getSearchQuery();
       const container = document.getElementById('mainContainer');
       const sorted = getSortedItems();
 
@@ -2955,12 +3428,18 @@ def build_dashboard_html(
 
       currentDisplayedIds = filtered.map(i => i.id);
 
+      const countLbl = document.getElementById('storiesCountLabel');
+      if (countLbl) {{
+        countLbl.textContent = `${{filtered.length}} ${{filtered.length === 1 ? 'story' : 'stories'}}`;
+      }}
+
       if (!filtered.length) {{
         container.className = 'swap-target';
         container.innerHTML = '<div class="empty-state">No stories match your current filter, topic, or search query.</div>';
         return;
       }}
 
+      /* VIEW MODE 3: COMPACT ANALYST TABLE */
       if (currentView === 'table') {{
         container.className = 'compact-table-wrap swap-target';
         container.innerHTML = `
@@ -2968,10 +3447,10 @@ def build_dashboard_html(
             <thead>
               <tr>
                 <th>Save</th>
-                <th>Area</th>
-                <th>Story & Practical UK Finance Takeaway</th>
+                <th>Category</th>
+                <th>Story &amp; Why It Matters (UK Finance)</th>
                 <th class="compact-hide-mobile">Publisher</th>
-                <th class="compact-hide-mobile">Priority</th>
+                <th class="compact-hide-mobile">Score</th>
                 <th>Time</th>
               </tr>
             </thead>
@@ -2984,10 +3463,10 @@ def build_dashboard_html(
                 return `
                   <tr class="${{animate ? 'row-in' : ''}}" style="--i:${{Math.min(rowIdx, 20)}}" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
                     <td>
-                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
+                      <button class="icon-btn ${{isSaved ? 'saved' : ''}}" type="button" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" aria-label="Save story" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
                     </td>
                     <td>
-                      <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span>
+                      <span class="badge ${{badgeClass(effScore)}}">${{formatTagHtml(item.func_tag)}}</span>
                       ${{urgencyBadge}}
                     </td>
                     <td>
@@ -3003,7 +3482,7 @@ def build_dashboard_html(
                       </span>
                     </td>
                     <td class="compact-hide-mobile"><strong>${{effScore}}</strong>/100</td>
-                    <td style="white-space:nowrap;" title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</td>
+                    <td style="white-space:nowrap;color:var(--mute);" title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</td>
                   </tr>
                 `;
               }}).join('')}}
@@ -3013,6 +3492,58 @@ def build_dashboard_html(
         return;
       }}
 
+      /* VIEW MODE 2: "RUNDOWN" 5-MINUTE NEWSLETTER READING STREAM */
+      if (currentView === 'rundown') {{
+        container.className = 'rundown-stream swap-target';
+        container.innerHTML = filtered.map((item, idx) => {{
+          const isSaved = savedUrls.has(item.url);
+          const effScore = getActiveScore(item);
+          const newBadge = item.is_new ? '<span class="new-badge">NEW</span>' : '';
+          const urgencyBadge = urgencyBadgeHtml(effScore, item);
+          const numStr = String(idx + 1).padStart(2, '0');
+          const rundownLine = item.summary
+            ? `<div class="stream-bullet"><strong>The Rundown:</strong> ${{escapeHtml(item.summary)}}</div>`
+            : '';
+          return `
+            <article class="stream-article" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
+              <div class="card-top">
+                <div class="tag-group">
+                  <span class="stream-num">${{numStr}}</span>
+                  <span class="cat-eyebrow ${{catClass(effScore)}}">${{formatTagHtml(item.func_tag)}}</span>
+                  <span class="badge ${{badgeClass(effScore)}}">${{effScore}}/100</span>
+                  ${{urgencyBadge}}
+                  ${{newBadge}}
+                </div>
+                <div class="card-actions">
+                  <button class="icon-btn" type="button" title="Copy story link" aria-label="Copy story link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
+                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" type="button" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save story" aria-label="Save story" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
+                </div>
+              </div>
+              <h3 class="stream-headline">
+                <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
+              </h3>
+              <div class="stream-bullets">
+                ${{rundownLine}}
+                <div class="stream-bullet"><strong>Why it matters (UK Finance):</strong> ${{escapeHtml(item.benefit)}}</div>
+                <div class="stream-bullet"><strong>Action &amp; Governance:</strong> ${{escapeHtml(item.action_item)}}</div>
+              </div>
+              <div class="card-footer">
+                <span class="pub-pill">
+                  <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
+                  ${{escapeHtml(item.source)}} · ${{escapeHtml(formatRelativeTime(item.published_at))}}
+                </span>
+                <div class="footer-links">
+                  <button class="quick-brief-btn" type="button" onclick="openDrawer('${{item.id}}', event)">Full Risk Brief</button>
+                  <a class="read-link" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">Read story <span class="arrow">↗</span></a>
+                </div>
+              </div>
+            </article>
+          `;
+        }}).join('');
+        return;
+      }}
+
+      /* VIEW MODE 1 (DEFAULT): THERUNDOWN.AI /NEWS 3-COLUMN ROUNDED-3XL CARDS */
       container.className = 'cards-grid swap-target';
       container.innerHTML = filtered.map(item => {{
         const isSaved = savedUrls.has(item.url);
@@ -3027,17 +3558,13 @@ def build_dashboard_html(
             <div>
               <div class="card-top">
                 <div class="tag-group">
-                  <span class="badge ${{badgeClass(effScore)}}">${{escapeHtml(item.func_tag)}}</span>
+                  <span class="cat-eyebrow ${{catClass(effScore)}}">${{formatTagHtml(item.func_tag)}}</span>
                   ${{urgencyBadge}}
                   ${{newBadge}}
-                  <span class="pub-pill">
-                    <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
-                    ${{escapeHtml(item.source)}}
-                  </span>
                 </div>
                 <div class="card-actions">
-                  <button class="icon-btn" title="Share / copy link" aria-label="Share or copy link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
-                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save for later" aria-label="Save for later" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
+                  <button class="icon-btn" type="button" title="Copy direct link" aria-label="Copy direct link" onclick="shareById('${{item.id}}', event)">${{ICON_LINK}}</button>
+                  <button class="icon-btn ${{isSaved ? 'saved' : ''}}" type="button" data-save-id="${{item.id}}" aria-pressed="${{isSaved}}" title="Save story" aria-label="Save story" onclick="toggleSaveById('${{item.id}}', event)">${{ICON_BOOKMARK}}</button>
                 </div>
               </div>
               <h3 class="card-title">
@@ -3048,23 +3575,23 @@ def build_dashboard_html(
             <div>
               <div class="benefit-box ${{boxClass(effScore)}}">
                 <div class="benefit-header">
-                  <span class="benefit-label">${{FLAG_SVG}} UK Finance Team Takeaway</span>
+                  <span class="benefit-label">${{FLAG_SVG}} Why It Matters</span>
                   <span class="score-meter-wrap">
                     <span>${{effScore}}/100</span>
-                    <span class="score-info-trigger" title="Priority Score (1-100) measures direct relevance to UK CFOs, FCA regulatory adherence, and FP&A impact.">ⓘ</span>
+                    <span class="score-info-trigger" title="Priority Score (1-100) measures direct relevance to UK CFOs, FCA regulatory compliance, and FP&A automation.">ⓘ</span>
                     <span class="score-bar"><span class="score-fill" style="width:${{effScore}}%"></span></span>
                   </span>
                 </div>
                 ${{escapeHtml(item.benefit)}}
               </div>
               <div class="card-footer">
-                <div style="display:inline-flex;align-items:center;gap:8px;">
-                  <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
-                  <span class="time-chip" title="Executive takeaway read time">⚡ 30s brief</span>
-                </div>
+                <span class="pub-pill">
+                  <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
+                  ${{escapeHtml(item.source)}} · <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
+                </span>
                 <div class="footer-links">
-                  <button class="quick-brief-btn" onclick="openDrawer('${{item.id}}', event)">⚡ Quick Brief</button>
-                  <a class="read-link" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">Source <span class="arrow">↗</span></a>
+                  <button class="quick-brief-btn" type="button" onclick="openDrawer('${{item.id}}', event)">Brief</button>
+                  <a class="read-link" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">Read story <span class="arrow">↗</span></a>
                 </div>
               </div>
             </div>
@@ -3073,13 +3600,12 @@ def build_dashboard_html(
       }}).join('');
 
       setupScrollReveal();
-      attachSpotlightTracking();
     }}
 
     function animateKpiCounters() {{
       document.querySelectorAll('.kpi-val[data-count]').forEach(el => {{
         const target = parseInt(el.getAttribute('data-count'), 10) || 0;
-        const duration = 650;
+        const duration = 600;
         const start = performance.now();
         function step(now) {{
           const p = Math.min((now - start) / duration, 1);
@@ -3094,34 +3620,34 @@ def build_dashboard_html(
     function copyTeamBriefing() {{
       const top5 = getSortedItems().slice(0, 5);
       const lines = [
-        `*UK Finance & AI Morning Briefing (${{DATE_STR}})*`,
+        `*The Finance Rundown — UK Finance & AI Briefing (${{DATE_STR}})*`,
         `Live Dashboard: https://mhutt97.github.io/ai-news-daily/`,
         ``
       ];
       top5.forEach((it, idx) => {{
         lines.push(`${{idx + 1}}. *${{it.title}}* (${{it.source}} — ${{it.func_tag}})`);
-        lines.push(`   ↳ Takeaway: ${{(it.benefit || '')}}`);
-        lines.push(`   ↳ Recommended Action: ${{(it.action_item || '')}}`);
+        lines.push(`   ↳ Why it matters: ${{(it.benefit || '')}}`);
+        lines.push(`   ↳ Next step: ${{(it.action_item || '')}}`);
         lines.push(`   ${{it.url}}`);
         lines.push(``);
       }});
       navigator.clipboard.writeText(lines.join('\\n')).then(() => {{
-        showToast('✓ Copied Top 5 briefing for Teams / Slack');
+        showToast('✓ Copied Top 5 Rundown for Teams / Slack');
       }});
     }}
 
     function openEmailDraft() {{
       const top5 = getSortedItems().slice(0, 5);
-      const subject = encodeURIComponent(`Executive AI Briefing for UK Finance — ${{DATE_STR}}`);
-      let body = `UK FINANCE & CFO AI INTELLIGENCE BRIEFING\\nDate: ${{DATE_STR}}\\nLive Dashboard: https://mhutt97.github.io/ai-news-daily/\\n\\n` +
-        `TOP 5 PRIORITIES & ACTION ITEMS FOR UK FINANCE LEADERSHIP:\\n\\n`;
+      const subject = encodeURIComponent(`The Finance Rundown: UK Finance & AI Briefing — ${{DATE_STR}}`);
+      let body = `THE RUNDOWN — UK FINANCE & CFO AI INTELLIGENCE\\nDate: ${{DATE_STR}}\\nLive Dashboard: https://mhutt97.github.io/ai-news-daily/\\n\\n` +
+        `TOP 5 STORIES & WHY THEY MATTER FOR UK FINANCE:\\n\\n`;
       top5.forEach((it, idx) => {{
         body += `${{idx + 1}}. ${{it.title}} [${{it.func_tag}}]\\n`;
-        body += `Takeaway: ${{it.benefit}}\\n`;
-        body += `Action: ${{it.action_item}}\\n`;
-        body += `Link: ${{it.url}}\\n\\n`;
+        body += `Why it matters: ${{it.benefit}}\\n`;
+        body += `Recommended action: ${{it.action_item}}\\n`;
+        body += `Story: ${{it.url}}\\n\\n`;
       }});
-      body += `Note: Algorithmic executive aggregation curated for internal management discussion.`;
+      body += `Note: Algorithmic executive aggregation curated for internal UK finance discussion.`;
       window.location.href = `mailto:?subject=${{subject}}&body=${{encodeURIComponent(body)}}`;
     }}
 
@@ -3129,7 +3655,7 @@ def build_dashboard_html(
       const shareUrl = `${{window.location.origin}}${{window.location.pathname}}`;
       if (navigator.clipboard) {{
         navigator.clipboard.writeText(shareUrl).then(() => {{
-          showToast('✓ Live Dashboard URL copied to clipboard');
+          showToast('✓ Live Dashboard URL copied');
         }});
       }}
     }}
@@ -3142,8 +3668,8 @@ def build_dashboard_html(
         "Tier",
         "Area / Tag",
         "Title",
-        "Summary",
-        "UK Finance Takeaway",
+        "The Rundown (Summary)",
+        "Why It Matters (UK Finance)",
         "Audit & FCA Governance Risk",
         "Recommended Action",
         "Publisher",
@@ -3177,12 +3703,12 @@ def build_dashboard_html(
       const link = document.createElement("a");
       const datePart = new Date().toISOString().slice(0, 10);
       link.setAttribute("href", url);
-      link.setAttribute("download", `UK_Finance_AI_Briefing_${{datePart}}.csv`);
+      link.setAttribute("download", `UK_Finance_AI_Rundown_${{datePart}}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      showToast("✓ Exported CSV for Excel & Risk Registers");
+      showToast("✓ Exported CSV Risk Register");
     }}
 
     function openShareModal() {{
@@ -3219,7 +3745,6 @@ def build_dashboard_html(
         currentTopic = 'all';
         document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-filter') === 'all'));
         document.querySelectorAll('.topic-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-topic') === 'all'));
-        moveIndicator(document.getElementById('filterTabs'));
         renderMain({{ animate: false }});
       }}
 
@@ -3235,12 +3760,18 @@ def build_dashboard_html(
       }}, 120);
     }}
 
+    function syncThemeIcon(theme) {{
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.innerHTML = theme === 'dark' ? ICON_SUN : ICON_MOON;
+    }}
+
     function toggleTheme() {{
       const root = document.documentElement;
-      const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       const apply = () => {{
         root.setAttribute('data-theme', next);
-        localStorage.setItem('ai-news-theme', next);
+        localStorage.setItem('rundown-theme', next);
+        syncThemeIcon(next);
       }};
       if (REDUCED_MOTION) {{ apply(); return; }}
       if (document.startViewTransition) {{
@@ -3249,7 +3780,7 @@ def build_dashboard_html(
       }}
       root.classList.add('theme-anim');
       apply();
-      setTimeout(() => root.classList.remove('theme-anim'), 320);
+      setTimeout(() => root.classList.remove('theme-anim'), 300);
     }}
 
     let scrollTicking = false;
@@ -3266,18 +3797,11 @@ def build_dashboard_html(
       }});
     }}, {{ passive: true }});
 
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {{
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => moveAllIndicators(false), 100);
-    }});
-
     window.addEventListener('hashchange', checkUrlHash);
 
     window.addEventListener('keydown', (e) => {{
-      const isInput = document.activeElement === document.getElementById('searchInput') ||
-                      document.activeElement.tagName === 'INPUT' ||
-                      document.activeElement.tagName === 'TEXTAREA';
+      const activeEl = document.activeElement;
+      const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
 
       if (e.key === 'Escape') {{
         if (document.getElementById('shareModalBackdrop').classList.contains('open')) {{
@@ -3293,7 +3817,7 @@ def build_dashboard_html(
           return;
         }}
         if (isInput) {{
-          document.activeElement.blur();
+          activeEl.blur();
           return;
         }}
       }}
@@ -3311,8 +3835,10 @@ def build_dashboard_html(
 
       if (e.key === '/') {{
         e.preventDefault();
-        const inp = document.getElementById('searchInput');
-        if (inp) inp.focus();
+        const heroSearch = document.getElementById('heroSearchInput');
+        const mainSearch = document.getElementById('searchInput');
+        const targetInput = (window.scrollY < 320 && heroSearch) ? heroSearch : mainSearch;
+        if (targetInput) targetInput.focus();
         return;
       }}
 
@@ -3346,8 +3872,7 @@ def build_dashboard_html(
         return;
       }}
 
-      // Keyboard navigation through list of cards
-      const navigableCards = Array.from(document.querySelectorAll('.cards-grid .news-card, .compact-table tbody tr'));
+      const navigableCards = Array.from(document.querySelectorAll('.cards-grid .news-card, .rundown-stream .stream-article, .compact-table tbody tr'));
       if (!navigableCards.length) return;
 
       if (e.key === 'j' || e.key === 'ArrowDown') {{
@@ -3379,27 +3904,25 @@ def build_dashboard_html(
     }});
 
     (function init() {{
-      const bFlag = document.getElementById('brandFlagSlot');
-      if (bFlag) bFlag.innerHTML = FLAG_SVG;
-      const kFlag = document.getElementById('kpiFlagSlot');
-      if (kFlag) kFlag.innerHTML = FLAG_SVG;
-      const tFlag = document.getElementById('tabFlagSlot');
-      if (tFlag) tFlag.innerHTML = FLAG_SVG;
-      const fFlag = document.getElementById('footerFlagSlot');
-      if (fFlag) fFlag.innerHTML = FLAG_SVG;
+      ['brandFlagSlot', 'heroFlagSlot', 'kpiFlagSlot', 'tabFlagSlot', 'footerFlagSlot'].forEach(slotId => {{
+        const slot = document.getElementById(slotId);
+        if (slot) slot.innerHTML = FLAG_SVG;
+      }});
 
-      const savedTheme = localStorage.getItem('ai-news-theme');
-      if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+      const savedTheme = localStorage.getItem('rundown-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      syncThemeIcon(savedTheme);
+
       document.getElementById('viewCardsBtn').classList.toggle('active', currentView === 'cards');
+      document.getElementById('viewRundownBtn').classList.toggle('active', currentView === 'rundown');
       document.getElementById('viewTableBtn').classList.toggle('active', currentView === 'table');
+
       updateSavedTabCount();
       updateDynamicMetrics();
       renderHero();
       renderMain();
       animateKpiCounters();
-      requestAnimationFrame(() => moveAllIndicators(false));
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => moveAllIndicators(false));
-      setTimeout(checkUrlHash, 250);
+      setTimeout(checkUrlHash, 220);
     }})();
   </script>
 </body>
