@@ -172,34 +172,34 @@ def _section_theme(section_title: str) -> tuple[str, str]:
     """Return (eyebrow_label, accent_hex) for a digest section heading."""
     low = section_title.lower()
     if "uk finance" in low or "cfo" in low:
-        return ("UK CFO · AUDIT · FCA SPOTLIGHT", "#8b4cd4")
+        return ("UK CFO · AUDIT · FCA SPOTLIGHT", "#2563eb")
     if "must-read" in low or "top 5" in low:
-        return ("EXECUTIVE PRIORITY STORIES", "#8b4cd4")
+        return ("EXECUTIVE PRIORITY STORIES", "#2563eb")
     if "labs" in low or "official" in low:
-        return ("FRONTIER AI LABS & RELEASES", "#009767")
+        return ("FRONTIER AI LABS & RELEASES", "#059669")
     if "news" in low or "industry" in low:
-        return ("ENTERPRISE & INDUSTRY COVERAGE", "#009767")
+        return ("ENTERPRISE & INDUSTRY COVERAGE", "#059669")
     if "research" in low or "paper" in low:
-        return ("TECHNICAL & INFERENCE RESEARCH", "#6254ff")
+        return ("TECHNICAL & INFERENCE RESEARCH", "#0284c7")
     if "community" in low or "hacker news" in low or "reddit" in low:
-        return ("ENGINEERING & COMMUNITY PULSE", "#6254ff")
-    return ("INTELLIGENCE BRIEFING", "#8b4cd4")
+        return ("ENGINEERING & COMMUNITY PULSE", "#0284c7")
+    return ("INTELLIGENCE BRIEFING", "#2563eb")
 
 
 def _tier_colors(score: int | None, default_accent: str) -> tuple[str, str, str, str]:
     """Return (accent_hex, badge_bg, badge_text, badge_border) for a story card."""
     if score is not None:
         if score >= 85:
-            return ("#8b4cd4", "#f3ecfb", "#7133b8", "#dec9f6")
+            return ("#2563eb", "#eff6ff", "#1d4ed8", "#bfdbfe")
         if score >= 70:
-            return ("#009767", "#e6f6f0", "#007a53", "#bce8d8")
-        return ("#6254ff", "#eeedff", "#4f42e6", "#d2ceff")
+            return ("#059669", "#ecfdf5", "#047857", "#a7f3d0")
+        return ("#0284c7", "#f0f9ff", "#0369a1", "#bae6fd")
 
-    if default_accent == "#009767":
-        return ("#009767", "#e6f6f0", "#007a53", "#bce8d8")
-    if default_accent == "#6254ff":
-        return ("#6254ff", "#eeedff", "#4f42e6", "#d2ceff")
-    return ("#8b4cd4", "#f3ecfb", "#7133b8", "#dec9f6")
+    if default_accent == "#059669":
+        return ("#059669", "#ecfdf5", "#047857", "#a7f3d0")
+    if default_accent == "#0284c7":
+        return ("#0284c7", "#f0f9ff", "#0369a1", "#bae6fd")
+    return ("#2563eb", "#eff6ff", "#1d4ed8", "#bfdbfe")
 
 
 def _parse_story_bullet(
@@ -425,7 +425,7 @@ def markdown_to_html(
 
     sections_html: list[str] = []
     current_sec_eyebrow = "EXECUTIVE BRIEFING"
-    current_sec_accent = "#8b4cd4"
+    current_sec_accent = "#2563eb"
     total_stories = 0
     uk_spotlight_count = 0
     high_priority_count = 0
@@ -547,7 +547,7 @@ def markdown_to_html(
     }}
     @supports (-webkit-background-clip: text) {{
       .hero-tri-gradient {{
-        background: linear-gradient(90deg, #cd408f 0%, #8b4cd4 50%, #6254ff 100%);
+        background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 55%, #2dd4bf 100%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -562,61 +562,61 @@ def markdown_to_html(
     }}
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#171717;color:#171717;-webkit-font-smoothing:antialiased;">
+<body style="margin:0;padding:0;background-color:#070d19;color:#0f172a;-webkit-font-smoothing:antialiased;">
   <!-- Inbox Preview Preheader -->
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">
     UK Finance &amp; AI intelligence in 5 minutes &mdash; {display_total} curated stories ranked for UK CFOs, Audit, FP&amp;A &amp; FCA compliance ({safe_date}).
   </div>
 
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#171717" style="background-color:#171717;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#070d19" style="background-color:#070d19;">
     <tr>
       <td align="center" class="outer-pad" style="padding:12px 12px 28px 12px;">
 
-        <!-- 1. OBSIDIAN MASTHEAD -->
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:680px;border-bottom:1px solid #2a2a2a;">
+        <!-- 1. MIDNIGHT NAVY MASTHEAD -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:680px;border-bottom:1px solid #1e293b;">
           <tr>
             <td align="left" valign="middle" style="padding:14px 10px;">
               <a href="{safe_dash_url}" target="_blank" style="text-decoration:none;color:#ffffff;">
-                <span style="display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;border-radius:8px;background-color:#ffffff;color:#171717;font-size:13.5px;font-weight:900;letter-spacing:-0.04em;vertical-align:middle;margin-right:9px;">AI</span><span style="font-size:17.5px;font-weight:800;letter-spacing:-0.03em;color:#ffffff;vertical-align:middle;margin-right:8px;">UK Finance &amp; AI</span><span style="display:inline-block;background-color:#262626;border:1px solid #383838;color:#e5e5e5;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border-radius:999px;vertical-align:middle;">Daily Briefing</span>
+                <span style="display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;border-radius:8px;background-color:#2563eb;color:#ffffff;font-size:13.5px;font-weight:900;letter-spacing:-0.04em;vertical-align:middle;margin-right:9px;">AI</span><span style="font-size:17.5px;font-weight:800;letter-spacing:-0.03em;color:#ffffff;vertical-align:middle;margin-right:8px;">UK Finance &amp; AI</span><span style="display:inline-block;background-color:#111d36;border:1px solid #1e3a8a;color:#bfdbfe;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border-radius:999px;vertical-align:middle;">Intelligence</span>
               </a>
             </td>
             <td align="right" valign="middle" style="padding:14px 10px;white-space:nowrap;">
-              <a href="{safe_dash_url}" target="_blank" style="display:inline-block;background-color:#ffffff;color:#171717;font-size:12px;font-weight:800;padding:7px 14px;border-radius:999px;text-decoration:none;">
+              <a href="{safe_dash_url}" target="_blank" style="display:inline-block;background-color:#2563eb;color:#ffffff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:10px;text-decoration:none;">
                 Web Dashboard &#8599;
               </a>
             </td>
           </tr>
         </table>
 
-        <!-- 2. EDITORIAL HERO STAGE -->
+        <!-- 2. MODERN BLUE HERO STAGE -->
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:680px;">
           <tr>
             <td align="center" class="hero-pad" style="padding:34px 20px 36px 20px;text-align:center;">
               <!-- Live Date Eyebrow Pill -->
               <div style="margin-bottom:18px;">
-                <span style="display:inline-block;background-color:#222222;border:1px solid #333333;border-radius:999px;padding:6px 14px;font-size:11.5px;font-weight:700;color:#d4d4d4;letter-spacing:0.02em;">
-                  <span style="display:inline-block;width:7px;height:7px;border-radius:999px;background-color:#00c758;margin-right:7px;vertical-align:middle;"></span><span style="vertical-align:middle;">{safe_date} &middot; Morning Intelligence Edition</span>
+                <span style="display:inline-block;background-color:#0f1b33;border:1px solid #1e3a8a;border-radius:999px;padding:6px 14px;font-size:11.5px;font-weight:700;color:#dbeafe;letter-spacing:0.02em;">
+                  <span style="display:inline-block;width:7px;height:7px;border-radius:999px;background-color:#10b981;margin-right:7px;vertical-align:middle;"></span><span style="vertical-align:middle;">{safe_date} &middot; Morning Intelligence Edition</span>
                 </span>
               </div>
 
               <!-- Hero Display Headline -->
-              <h1 class="hero-h1" style="margin:0 0 14px 0;color:#ffffff;font-size:40px;font-weight:800;line-height:1.08;letter-spacing:-0.038em;">
-                UK Finance &amp; AI news<br />
-                in <span class="hero-tri-gradient" style="color:#b56bff;">5 minutes</span> a day.
+              <h1 class="hero-h1" style="margin:0 0 14px 0;color:#ffffff;font-size:38px;font-weight:800;line-height:1.1;letter-spacing:-0.038em;">
+                UK Finance &amp; AI intelligence,<br />
+                built for <span class="hero-tri-gradient" style="color:#60a5fa;">5-minute decisions.</span>
               </h1>
 
-              <p style="margin:0 auto 24px auto;max-width:500px;color:#a3a3a3;font-size:15.5px;line-height:1.55;font-weight:400;">
-                Get the latest AI breakthroughs, understand why they matter for UK CFOs, Audit &amp; FCA compliance, and apply them in your work.
+              <p style="margin:0 auto 24px auto;max-width:510px;color:#94a3b8;font-size:15.5px;line-height:1.55;font-weight:400;">
+                Executive summaries, UK financial services impact analysis, and concrete actionable outcomes across FCA compliance, audit, FP&amp;A, and frontier AI.
               </p>
 
-              <!-- White Rounded Pill CTA Bar (mirrors Dashboard Hero Bar) -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background-color:#ffffff;border-radius:14px;border-collapse:separate;">
+              <!-- Sleek Rounded CTA Bar -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background-color:#0f172a;border:1px solid #1e3a8a;border-radius:14px;border-collapse:separate;">
                 <tr>
-                  <td align="left" valign="middle" class="pill-cta-desc" style="padding:10px 14px 10px 18px;font-size:13px;font-weight:600;color:#525252;">
+                  <td align="left" valign="middle" class="pill-cta-desc" style="padding:10px 14px 10px 18px;font-size:13px;font-weight:600;color:#cbd5e1;">
                     Filter by CFO / Audit / FP&amp;A Role Lens &amp; export CSV
                   </td>
                   <td align="right" valign="middle" style="padding:7px 7px 7px 10px;white-space:nowrap;">
-                    <a href="{safe_dash_url}" target="_blank" style="display:inline-block;background-color:#171717;color:#ffffff;font-size:13px;font-weight:800;padding:11px 18px;border-radius:10px;text-decoration:none;letter-spacing:-0.01em;">
+                    <a href="{safe_dash_url}" target="_blank" style="display:inline-block;background-color:#2563eb;color:#ffffff;font-size:13px;font-weight:800;padding:11px 18px;border-radius:10px;text-decoration:none;letter-spacing:-0.01em;">
                       Open Interactive Dashboard &rarr;
                     </a>
                   </td>
@@ -624,23 +624,23 @@ def markdown_to_html(
               </table>
 
               <!-- Signal Snapshot Pills -->
-              <div style="margin-top:20px;font-size:12px;color:#a3a3a3;">
-                <span style="display:inline-block;background-color:#222222;border:1px solid #303030;border-radius:999px;padding:4px 11px;margin:3px;color:#e5e5e5;font-weight:700;">
-                  <span style="color:#b56bff;">{display_high}</span> High UK Finance
+              <div style="margin-top:20px;font-size:12px;color:#94a3b8;">
+                <span style="display:inline-block;background-color:#0f172a;border:1px solid #1e293b;border-radius:999px;padding:4px 11px;margin:3px;color:#e2e8f0;font-weight:700;">
+                  <span style="color:#60a5fa;">{display_high}</span> High UK Finance
                 </span>
-                <span style="display:inline-block;background-color:#222222;border:1px solid #303030;border-radius:999px;padding:4px 11px;margin:3px;color:#e5e5e5;font-weight:700;">
-                  <span style="color:#00c758;">{total_stories}</span> Briefed Below
+                <span style="display:inline-block;background-color:#0f172a;border:1px solid #1e293b;border-radius:999px;padding:4px 11px;margin:3px;color:#e2e8f0;font-weight:700;">
+                  <span style="color:#34d399;">{total_stories}</span> Briefed Below
                 </span>
-                <span style="display:inline-block;background-color:#222222;border:1px solid #303030;border-radius:999px;padding:4px 11px;margin:3px;color:#e5e5e5;font-weight:700;">
-                  {display_total} Curated Today
+                <span style="display:inline-block;background-color:#0f172a;border:1px solid #1e293b;border-radius:999px;padding:4px 11px;margin:3px;color:#e2e8f0;font-weight:700;">
+                  <span style="color:#38bdf8;">{display_total}</span> Curated Today
                 </span>
               </div>
             </td>
           </tr>
         </table>
 
-        <!-- 3. ROUNDED WHITE .sheet EDITORIAL PAPER BODY -->
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="max-width:680px;background-color:#ffffff;border-radius:26px;border-collapse:separate;">
+        <!-- 3. ROUNDED WHITE .sheet BENTO PAPER BODY -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f8fafc" style="max-width:680px;background-color:#f8fafc;border-radius:24px;border-collapse:separate;">
           <tr>
             <td class="sheet-pad" style="padding:30px 26px 22px 26px;">
               {body_cards_html}
@@ -648,19 +648,19 @@ def markdown_to_html(
           </tr>
         </table>
 
-        <!-- 4. OBSIDIAN FOOTER -->
+        <!-- 4. MIDNIGHT NAVY FOOTER -->
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:680px;margin-top:16px;">
           <tr>
             <td align="center" style="padding:22px 18px 10px 18px;text-align:center;">
               <div style="margin-bottom:10px;">
-                <span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:6px;background-color:#ffffff;color:#171717;font-size:10.5px;font-weight:900;vertical-align:middle;margin-right:7px;">AI</span><span style="font-size:14.5px;font-weight:800;color:#ffffff;vertical-align:middle;">UK Finance &amp; AI &middot; Daily Intelligence</span>
+                <span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:6px;background-color:#2563eb;color:#ffffff;font-size:10.5px;font-weight:900;vertical-align:middle;margin-right:7px;">AI</span><span style="font-size:14.5px;font-weight:800;color:#ffffff;vertical-align:middle;">UK Finance &amp; AI &middot; Daily Intelligence</span>
               </div>
-              <p style="margin:0 0 14px 0;font-size:12.5px;line-height:1.6;color:#8a8a8a;">
-                <a href="{safe_dash_url}" target="_blank" style="color:#d4d4d4;font-weight:700;text-decoration:underline;">Live Dashboard</a>
+              <p style="margin:0 0 14px 0;font-size:12.5px;line-height:1.6;color:#64748b;">
+                <a href="{safe_dash_url}" target="_blank" style="color:#93c5fd;font-weight:700;text-decoration:underline;">Live Dashboard</a>
                 &nbsp;&middot;&nbsp;
-                <a href="{safe_dash_url}#stories" target="_blank" style="color:#d4d4d4;font-weight:700;text-decoration:underline;">All {display_total} Stories &amp; Search</a>
+                <a href="{safe_dash_url}#stories" target="_blank" style="color:#93c5fd;font-weight:700;text-decoration:underline;">All {display_total} Stories &amp; Search</a>
               </p>
-              <p style="margin:0;font-size:11px;line-height:1.55;color:#666666;">
+              <p style="margin:0;font-size:11px;line-height:1.55;color:#64748b;">
                 Algorithmic executive briefing curated for UK CFO, Audit, FP&amp;A &amp; FCA compliance discussion. Does not constitute regulated FCA financial or legal advice.
               </p>
             </td>

@@ -1643,7 +1643,7 @@ def build_dashboard_html(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#171717" />
+  <meta name="theme-color" content="#070d19" />
   <meta name="description" content="UK Finance & AI News in 5 Minutes a Day — curated & ranked daily for UK CFOs, Accounting, Audit, FCA Compliance & FP&A teams." />
   <meta property="og:title" content="UK Finance & AI Daily Intelligence — {html.escape(date_str)}" />
   <meta property="og:description" content="Get the latest AI news, understand why it matters for UK Finance & CFO teams, and apply it in 5 minutes a day." />
@@ -1661,39 +1661,42 @@ def build_dashboard_html(
       --font-sans: "Satoshi", "Satoshi Variable", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
-      /* Core Editorial Palette (Light Paper Default + Obsidian Masthead) */
-      --stage-bg: #171717;
-      --paper: #ffffff;
+      /* Modern Cobalt & Ice-Slate Palette (Slick Institutional Blue) */
+      --stage-bg: #070d19;
+      --paper: #f8fafc;
       --card-bg: #ffffff;
-      --mist: #f5f5f5;
-      --mist-soft: #fafafa;
-      --ink: #171717;
-      --ink-soft: #1f1f1f;
-      --body-copy: #383838;
-      --mute: #636366;
-      --line: #e5e5e5;
-      --line-subtle: #efefef;
-      --glass-sheet: rgba(255, 255, 255, 0.9);
+      --mist: #f1f5f9;
+      --mist-soft: #f8fafc;
+      --ink: #0f172a;
+      --ink-soft: #1e293b;
+      --body-copy: #334155;
+      --mute: #64748b;
+      --line: #e2e8f0;
+      --line-subtle: #f1f5f9;
+      --glass-sheet: rgba(248, 250, 252, 0.92);
 
-      /* Editorial Tri-Tone Accents */
-      --brand-pink: #cd408f;
-      --brand-violet: #8b4cd4;
-      --brand-violet-bg: rgba(139, 76, 212, 0.09);
-      --brand-violet-border: rgba(139, 76, 212, 0.28);
-      --brand-blue: #6254ff;
-      --brand-blue-bg: rgba(98, 84, 255, 0.09);
-      --brand-blue-border: rgba(98, 84, 255, 0.25);
-      --emerald: #009767;
-      --emerald-bg: rgba(0, 151, 103, 0.09);
-      --emerald-border: rgba(0, 151, 103, 0.26);
-      --green-live: #00c758;
-      --danger: #e40014;
-      --danger-bg: rgba(228, 0, 20, 0.08);
-      --danger-border: rgba(228, 0, 20, 0.28);
+      /* Sapphire, Cobalt & Sky Cyan Accents (Zero Purple) */
+      --brand-blue: #2563eb;
+      --brand-blue-bg: rgba(37, 99, 235, 0.08);
+      --brand-blue-border: rgba(37, 99, 235, 0.26);
+      --brand-sky: #0284c7;
+      --brand-sky-bg: rgba(2, 132, 199, 0.08);
+      --brand-sky-border: rgba(2, 132, 199, 0.25);
+      --brand-cyan: #0ea5e9;
+      --brand-violet: #2563eb;
+      --brand-violet-bg: rgba(37, 99, 235, 0.08);
+      --brand-violet-border: rgba(37, 99, 235, 0.26);
+      --emerald: #059669;
+      --emerald-bg: rgba(5, 150, 105, 0.08);
+      --emerald-border: rgba(5, 150, 105, 0.26);
+      --green-live: #10b981;
+      --danger: #e11d48;
+      --danger-bg: rgba(225, 29, 72, 0.08);
+      --danger-border: rgba(225, 29, 72, 0.28);
 
-      --heading-grad: linear-gradient(91.69deg, #000000 0.85%, #4c4c4c 96.98%);
-      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-      --card-hover-shadow: 0 20px 44px -18px rgba(23, 23, 23, 0.13);
+      --heading-grad: linear-gradient(92deg, #0f172a 0%, #1e3a8a 55%, #0284c7 100%);
+      --card-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
+      --card-hover-shadow: 0 20px 42px -16px rgba(37, 99, 235, 0.14), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
 
       --spring: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -1704,35 +1707,39 @@ def build_dashboard_html(
     }}
 
     [data-theme="dark"] {{
-      --stage-bg: #0c0c0c;
-      --paper: #141414;
-      --card-bg: #1c1c1c;
-      --mist: #232323;
-      --mist-soft: #191919;
-      --ink: #ffffff;
-      --ink-soft: #ededf0;
-      --body-copy: #d8d8dc;
-      --mute: #a1a1aa;
-      --line: #2e2e2e;
-      --line-subtle: #242424;
-      --glass-sheet: rgba(20, 20, 20, 0.9);
+      --stage-bg: #040811;
+      --paper: #0b1120;
+      --card-bg: #111a2e;
+      --mist: #17233b;
+      --mist-soft: #0e1627;
+      --ink: #f8fafc;
+      --ink-soft: #e2e8f0;
+      --body-copy: #cbd5e1;
+      --mute: #94a3b8;
+      --line: #1e293b;
+      --line-subtle: #162033;
+      --glass-sheet: rgba(11, 17, 32, 0.92);
 
-      --brand-violet: #b380ff;
-      --brand-violet-bg: rgba(179, 128, 255, 0.13);
-      --brand-violet-border: rgba(179, 128, 255, 0.35);
-      --brand-blue: #8c82ff;
-      --brand-blue-bg: rgba(140, 130, 255, 0.13);
-      --brand-blue-border: rgba(140, 130, 255, 0.32);
+      --brand-blue: #3b82f6;
+      --brand-blue-bg: rgba(59, 130, 246, 0.14);
+      --brand-blue-border: rgba(59, 130, 246, 0.36);
+      --brand-sky: #38bdf8;
+      --brand-sky-bg: rgba(56, 189, 248, 0.13);
+      --brand-sky-border: rgba(56, 189, 248, 0.34);
+      --brand-cyan: #38bdf8;
+      --brand-violet: #3b82f6;
+      --brand-violet-bg: rgba(59, 130, 246, 0.14);
+      --brand-violet-border: rgba(59, 130, 246, 0.36);
       --emerald: #34d399;
       --emerald-bg: rgba(52, 211, 153, 0.12);
       --emerald-border: rgba(52, 211, 153, 0.32);
-      --danger: #ff6470;
-      --danger-bg: rgba(255, 100, 112, 0.14);
-      --danger-border: rgba(255, 100, 112, 0.36);
+      --danger: #fb7185;
+      --danger-bg: rgba(251, 113, 133, 0.14);
+      --danger-border: rgba(251, 113, 133, 0.36);
 
-      --heading-grad: linear-gradient(91.69deg, #ffffff 0.85%, #a3a3a3 96.98%);
-      --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-      --card-hover-shadow: 0 22px 48px -18px rgba(0, 0, 0, 0.65);
+      --heading-grad: linear-gradient(92deg, #ffffff 0%, #93c5fd 60%, #38bdf8 100%);
+      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+      --card-hover-shadow: 0 22px 48px -16px rgba(37, 99, 235, 0.28), 0 8px 20px rgba(0, 0, 0, 0.5);
     }}
 
     *, *::before, *::after {{
@@ -1759,22 +1766,22 @@ def build_dashboard_html(
       overflow-x: hidden;
     }}
 
-    /* Tri-Tone Top Reading Progress */
+    /* Cobalt-to-Cyan Top Reading Progress */
     #scrollProgress {{
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 2.5px;
+      height: 3px;
       transform-origin: 0 50%;
       transform: scaleX(0);
-      background: linear-gradient(90deg, var(--brand-pink) 0%, var(--brand-violet) 50%, var(--brand-blue) 100%);
+      background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 45%, #0ea5e9 100%);
       z-index: 1000;
       will-change: transform;
     }}
 
     :focus-visible {{
-      outline: 2px solid var(--brand-violet);
+      outline: 2px solid var(--brand-blue);
       outline-offset: 2px;
       border-radius: 8px;
     }}
@@ -1813,9 +1820,9 @@ def build_dashboard_html(
       flex-shrink: 0;
     }}
 
-    /* Editorial Text Gradients */
+    /* Blue-Cyan Text Gradients */
     .text-gradient {{
-      background-image: linear-gradient(45deg, var(--brand-pink), var(--brand-violet) 50%, var(--brand-blue));
+      background-image: linear-gradient(90deg, #60a5fa 0%, #38bdf8 55%, #2dd4bf 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -1830,23 +1837,23 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       1. TOP STICKY OBSIDIAN MASTHEAD
+       1. TOP STICKY MIDNIGHT NAVY GLASS COMMAND BAR
        ========================================================= */
     .site-nav {{
       position: sticky;
       top: 0;
       z-index: 80;
-      background: rgba(23, 23, 23, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(7, 13, 25, 0.86);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.14);
       color: #ffffff;
     }}
     .site-nav-inner {{
-      max-width: 1280px;
+      max-width: 1340px;
       margin: 0 auto;
-      height: 68px;
-      padding: 0 22px;
+      height: 66px;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1861,22 +1868,22 @@ def build_dashboard_html(
       flex-shrink: 0;
     }}
     .brand-monogram {{
-      width: 35px;
-      height: 35px;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #171717;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+      color: #ffffff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 14.5px;
+      font-size: 14px;
       letter-spacing: -0.04em;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
       flex-shrink: 0;
     }}
     .brand-wordmark {{
-      font-size: 19px;
+      font-size: 18.5px;
       font-weight: 800;
       letter-spacing: -0.035em;
       color: #ffffff;
@@ -1886,52 +1893,58 @@ def build_dashboard_html(
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       padding: 4px 9px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: rgba(255, 255, 255, 0.88);
+      background: rgba(37, 99, 235, 0.18);
+      border: 1px solid rgba(96, 165, 250, 0.28);
+      color: #bfdbfe;
     }}
 
     .nav-links {{
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 22px;
+      gap: 4px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }}
     .nav-link {{
       background: transparent;
       border: none;
-      padding: 6px 2px;
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 14px;
-      font-weight: 500;
+      padding: 6px 13px;
+      border-radius: 999px;
+      color: rgba(226, 232, 240, 0.78);
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       text-decoration: none;
-      transition: color var(--dur-fast) ease;
+      transition: all var(--dur-fast) ease;
       white-space: nowrap;
     }}
     .nav-link:hover {{
       color: #ffffff;
+      background: rgba(37, 99, 235, 0.25);
     }}
 
     .nav-actions {{
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       flex-shrink: 0;
     }}
     .nav-btn {{
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(255, 255, 255, 0.06);
-      color: #ffffff;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.65);
+      color: #e2e8f0;
       padding: 7px 13px;
       height: 36px;
-      border-radius: 999px;
+      border-radius: 10px;
       font-size: 12.5px;
       font-weight: 600;
       display: inline-flex;
@@ -1942,19 +1955,21 @@ def build_dashboard_html(
       white-space: nowrap;
     }}
     .nav-btn:hover {{
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(255, 255, 255, 0.32);
+      background: rgba(37, 99, 235, 0.22);
+      border-color: rgba(96, 165, 250, 0.45);
+      color: #ffffff;
     }}
     .nav-btn:active {{ transform: scale(0.97); }}
     .nav-btn-primary {{
-      background: #ffffff;
-      color: #171717;
-      border-color: #ffffff;
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+      color: #ffffff;
+      border-color: rgba(96, 165, 250, 0.4);
       font-weight: 700;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
     }}
     .nav-btn-primary:hover {{
-      background: #f0f0f0;
-      border-color: #f0f0f0;
+      background: linear-gradient(135deg, #1d4ed8 0%, #0369a1 100%);
+      border-color: rgba(147, 197, 253, 0.6);
     }}
     .nav-btn-icon {{
       width: 36px;
@@ -1962,16 +1977,46 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       2. EDITORIAL HERO STAGE
+       2. MODERN SPLIT-GRID BENTO HERO STAGE
        ========================================================= */
     .editorial-hero {{
       background:
-        radial-gradient(680px circle at 50% 0%, rgba(139, 76, 212, 0.18), transparent 68%),
-        var(--stage-bg);
+        radial-gradient(850px circle at 16% 0%, rgba(37, 99, 235, 0.28), transparent 60%),
+        radial-gradient(720px circle at 86% 12%, rgba(14, 165, 233, 0.20), transparent 58%),
+        linear-gradient(180deg, #070d19 0%, #0b1326 100%);
       color: #ffffff;
-      padding: 54px 20px 64px;
-      text-align: center;
+      padding: 40px 24px 52px;
+      position: relative;
+      overflow: hidden;
       animation: fadeSlideDown 0.55s var(--spring) both;
+    }}
+    .editorial-hero::before {{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 25%, #000 35%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 25%, #000 35%, transparent 100%);
+      pointer-events: none;
+    }}
+    .hero-bento-shell {{
+      position: relative;
+      z-index: 1;
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.22fr 0.98fr;
+      gap: 32px;
+      align-items: center;
+      text-align: left;
+    }}
+    .hero-left-col {{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }}
     .hero-eyebrow-pill {{
       display: inline-flex;
@@ -1979,57 +2024,65 @@ def build_dashboard_html(
       gap: 8px;
       padding: 6px 14px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      font-size: 11.5px;
+      background: rgba(37, 99, 235, 0.16);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.86);
-      margin-bottom: 22px;
+      color: #dbeafe;
+      margin-bottom: 18px;
     }}
     .live-dot {{
       width: 7px;
       height: 7px;
       border-radius: 50%;
       background: var(--green-live);
-      box-shadow: 0 0 0 0 rgba(0, 199, 88, 0.7);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
       animation: pulseDot 2s infinite;
       flex-shrink: 0;
     }}
     .editorial-hero h1 {{
-      margin: 0 auto;
-      max-width: 820px;
-      font-size: clamp(2.25rem, 5.3vw, 4.35rem);
+      margin: 0;
+      max-width: 680px;
+      font-size: clamp(2.15rem, 4.1vw, 3.55rem);
       font-weight: 800;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.038em;
       line-height: 1.07;
       color: #ffffff;
     }}
     .hero-subtitle {{
-      margin: 22px auto 0;
-      max-width: 540px;
-      font-size: clamp(15.5px, 1.6vw, 18px);
-      line-height: 1.55;
-      color: rgba(255, 255, 255, 0.76);
+      margin: 16px 0 0;
+      max-width: 580px;
+      font-size: clamp(15px, 1.35vw, 17px);
+      line-height: 1.58;
+      color: #94a3b8;
       font-weight: 400;
     }}
 
-    /* White Pill Search Bar in Hero */
+    /* Sleek Search Command Bar in Hero */
     .hero-search-form {{
-      margin: 30px auto 0;
-      max-width: 530px;
+      margin: 24px 0 0;
+      width: 100%;
+      max-width: 580px;
       display: flex;
       align-items: center;
       gap: 6px;
-      background: #ffffff;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 6px 6px 6px 15px;
       border-radius: 14px;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(96, 165, 250, 0.28);
+      transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+    }}
+    .hero-search-form:focus-within {{
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2), 0 18px 44px rgba(0, 0, 0, 0.45);
     }}
     .hero-search-form .svg-icon {{
-      color: #737373;
+      color: #60a5fa;
       width: 18px;
       height: 18px;
     }}
@@ -2038,21 +2091,21 @@ def build_dashboard_html(
       min-width: 0;
       border: none;
       background: transparent;
-      color: #171717;
-      font-size: 15px;
+      color: #f8fafc;
+      font-size: 14.5px;
       font-weight: 500;
       padding: 9px 6px;
       outline: none;
     }}
     .hero-search-input::placeholder {{
-      color: #737373;
+      color: #64748b;
     }}
     .hero-kbd {{
       font-size: 11px;
       font-weight: 700;
-      color: #737373;
-      background: #f5f5f5;
-      border: 1px solid #e5e5e5;
+      color: #94a3b8;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.22);
       padding: 2px 7px;
       border-radius: 6px;
       pointer-events: none;
@@ -2060,140 +2113,132 @@ def build_dashboard_html(
     .hero-search-submit {{
       cursor: pointer;
       border: none;
-      background: #171717;
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       padding: 10px 18px;
       border-radius: 10px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      transition: filter var(--dur-fast) ease, transform var(--dur-fast) ease;
       flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
     }}
     .hero-search-submit:hover {{
-      background: #000000;
+      filter: brightness(1.1);
     }}
 
-    /* Trusted Sources Social Proof Strip */
+    /* Institutional Feed Chips */
     .hero-proof {{
-      margin: 36px auto 0;
-      max-width: 880px;
+      margin: 22px 0 0;
+      max-width: 620px;
     }}
     .hero-proof-label {{
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.65);
-      margin: 0 0 14px;
+      font-size: 12px;
+      color: #94a3b8;
+      margin: 0 0 9px;
     }}
     .hero-proof-label strong {{
-      color: #ffffff;
+      color: #e2e8f0;
       font-weight: 700;
     }}
     .hero-proof-logos {{
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      gap: 10px 24px;
+      gap: 6px;
     }}
     .proof-source {{
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       letter-spacing: -0.01em;
-      color: rgba(255, 255, 255, 0.56);
-      transition: color var(--dur-fast) ease;
+      color: #cbd5e1;
+      background: rgba(30, 41, 59, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 999px;
+      padding: 4px 11px;
+      transition: all var(--dur-fast) ease;
       cursor: pointer;
-      background: none;
-      border: none;
-      padding: 2px 4px;
     }}
     .proof-source:hover {{
       color: #ffffff;
+      background: rgba(37, 99, 235, 0.3);
+      border-color: rgba(96, 165, 250, 0.5);
+      transform: translateY(-1px);
     }}
 
-    /* =========================================================
-       3. ROUNDED .sheet EDITORIAL PAPER BODY
-       ========================================================= */
-    .main-sheet-wrap {{
-      padding: 0 10px 12px;
-    }}
-    .main-sheet {{
-      background-color: var(--paper);
-      color: var(--ink);
-      border-radius: 28px;
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 36px 28px 68px;
-      box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.14);
-    }}
-    .sheet-container {{
-      max-width: 1220px;
-      margin: 0 auto;
-    }}
-
-    /* Role Lens & Signal Snapshot Bar */
+    /* Right Hero Column: Live Intelligence Command Bento Deck */
     .executive-strip {{
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(96, 165, 250, 0.22);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding-bottom: 26px;
-      border-bottom: 1px solid var(--line);
-      margin-bottom: 34px;
+      flex-direction: column;
+      gap: 18px;
     }}
     .lens-group-wrap {{
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 8px;
     }}
     .strip-micro-label {{
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 10.5px;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      color: var(--mute);
-    }}
-    /* Segmented Role Lens Switcher */
-    .segmented-box {{
-      display: inline-flex;
-      flex-wrap: wrap;
+      color: #93c5fd;
+      display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px;
+      justify-content: space-between;
+    }}
+    /* Segmented Role Lens Switcher inside Dark Bento Deck */
+    .segmented-box {{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+      padding: 5px;
       border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--mist);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(7, 13, 25, 0.65);
     }}
     .lens-btn {{
       cursor: pointer;
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
-      color: var(--ink);
-      padding: 7px 13px;
+      color: #cbd5e1;
+      padding: 7px 10px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
-      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      transition: all var(--dur-fast) ease;
       white-space: nowrap;
+      text-align: center;
     }}
     .lens-btn:hover {{
-      background: var(--paper);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
     }}
     .lens-btn.active {{
-      background: var(--ink);
-      color: var(--paper);
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+      border-color: rgba(147, 197, 253, 0.35);
+      color: #ffffff;
       font-weight: 700;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
     }}
 
-    /* Sleek Editorial KPI Chips + Signal Mix */
+    /* Sleek 2x2 or 4-col Bento KPI Chips + Signal Mix */
     .signal-cluster {{
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      min-width: min(100%, 460px);
+      gap: 12px;
+      width: 100%;
     }}
     .kpi-strip {{
       display: grid;
@@ -2202,33 +2247,35 @@ def build_dashboard_html(
     }}
     .kpi-card {{
       cursor: pointer;
-      background: var(--mist-soft);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 8px 11px;
+      background: rgba(30, 41, 59, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 14px;
+      padding: 11px 12px;
       text-align: left;
       transition: border-color var(--dur-fast) ease, transform var(--dur-fast) ease, background-color var(--dur-fast) ease;
     }}
     .kpi-card:hover {{
-      border-color: var(--brand-violet);
+      border-color: #60a5fa;
+      background: rgba(37, 99, 235, 0.18);
       transform: translateY(-1px);
     }}
     .kpi-card.active-kpi {{
-      border-color: var(--ink);
-      background: var(--mist);
+      border-color: #38bdf8;
+      background: rgba(37, 99, 235, 0.24);
+      box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.25);
     }}
     .kpi-val {{
-      font-size: 19px;
+      font-size: 21px;
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1.1;
-      color: var(--ink);
+      color: #ffffff;
     }}
     .kpi-label {{
       font-size: 10.5px;
       font-weight: 600;
-      color: var(--mute);
-      margin-top: 2px;
+      color: #94a3b8;
+      margin-top: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -2240,14 +2287,18 @@ def build_dashboard_html(
       display: flex;
       align-items: center;
       gap: 10px;
+      background: rgba(7, 13, 25, 0.55);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
     }}
     .signal-track {{
       flex: 1;
-      height: 5px;
+      height: 6px;
       border-radius: 999px;
       overflow: hidden;
       display: flex;
-      background: var(--line);
+      background: rgba(255, 255, 255, 0.08);
       gap: 2px;
     }}
     .signal-seg {{
@@ -2258,16 +2309,37 @@ def build_dashboard_html(
       display: flex;
       gap: 10px;
       font-size: 10.5px;
-      font-weight: 600;
-      color: var(--mute);
+      font-weight: 700;
+      color: #cbd5e1;
       white-space: nowrap;
+    }}
+
+    /* =========================================================
+       3. ROUNDED .sheet MODERN BENTO WORKSPACE
+       ========================================================= */
+    .main-sheet-wrap {{
+      padding: 0 12px 16px;
+    }}
+    .main-sheet {{
+      background-color: var(--paper);
+      color: var(--ink);
+      border-radius: 26px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 38px 30px 68px;
+      box-shadow: 0 -6px 36px rgba(0, 0, 0, 0.22);
+      border: 1px solid var(--line);
+    }}
+    .sheet-container {{
+      max-width: 1260px;
+      margin: 0 auto;
     }}
 
     /* =========================================================
        4. TODAY'S EXECUTIVE BRIEFING — FEATURED #1 + TOP STACK
        ========================================================= */
     .editorial-showcase {{
-      margin-bottom: 48px;
+      margin-bottom: 44px;
     }}
     .section-head {{
       display: flex;
@@ -2275,14 +2347,14 @@ def build_dashboard_html(
       justify-content: space-between;
       align-items: flex-end;
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }}
     .eyebrow {{
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--brand-violet);
+      letter-spacing: 0.16em;
+      color: var(--brand-blue);
       margin: 0 0 6px;
       display: flex;
       align-items: center;
@@ -2292,54 +2364,59 @@ def build_dashboard_html(
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: var(--brand-violet);
+      background: var(--brand-blue);
+      box-shadow: 0 0 0 3px var(--brand-blue-bg);
       display: inline-block;
     }}
     .section-h2 {{
       margin: 0;
-      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      font-size: clamp(1.6rem, 2.7vw, 2.2rem);
       font-weight: 800;
       letter-spacing: -0.035em;
-      line-height: 1.1;
+      line-height: 1.12;
     }}
     .section-sub {{
-      margin: 6px 0 0;
-      font-size: 14px;
+      margin: 5px 0 0;
+      font-size: 13.5px;
       color: var(--mute);
+      font-weight: 500;
     }}
 
     .showcase-grid {{
       display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 22px;
+      grid-template-columns: 1.18fr 1fr;
+      gap: 20px;
       align-items: stretch;
     }}
     .showcase-grid.single-col {{
       grid-template-columns: 1fr;
     }}
 
-    /* #1 Lead Feature Card */
+    /* #1 Lead Feature Bento Card */
     .lead-feature-card {{
-      background: var(--mist-soft);
+      background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 30px 32px;
+      border-top: 3px solid var(--brand-blue);
+      border-radius: 20px;
+      padding: 28px 30px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+      box-shadow: var(--card-shadow);
       transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring), transform var(--dur-slow) var(--spring);
     }}
     .lead-feature-card:hover {{
-      border-color: var(--brand-violet-border);
+      border-color: var(--brand-blue-border);
+      border-top-color: var(--brand-blue);
       box-shadow: var(--card-hover-shadow);
       transform: translateY(-2px);
     }}
     .lead-title {{
       margin: 14px 0 12px;
-      font-size: clamp(22px, 2.35vw, 30px);
+      font-size: clamp(22px, 2.3vw, 29px);
       font-weight: 800;
-      line-height: 1.18;
+      line-height: 1.2;
       letter-spacing: -0.028em;
     }}
     .lead-title a {{
@@ -2348,19 +2425,19 @@ def build_dashboard_html(
       transition: color var(--dur-fast) ease;
     }}
     .lead-feature-card:hover .lead-title a {{
-      color: var(--brand-violet);
+      color: var(--brand-blue);
     }}
     .lead-summary {{
       margin: 0 0 18px;
-      font-size: 15.5px;
+      font-size: 15px;
       line-height: 1.65;
       color: var(--body-copy);
     }}
     .lead-why-box {{
-      background: var(--card-bg);
+      background: var(--mist-soft);
       border: 1px solid var(--line);
-      border-left: 3px solid var(--brand-violet);
-      border-radius: 16px;
+      border-left: 3px solid var(--brand-blue);
+      border-radius: 14px;
       padding: 16px 18px;
       margin-bottom: 20px;
     }}
@@ -2368,14 +2445,14 @@ def build_dashboard_html(
       margin-top: 9px;
       padding-top: 9px;
       border-top: 1px dashed var(--line);
-      font-size: 12.5px;
-      color: var(--mute);
+      font-size: 12.8px;
+      color: var(--body-copy);
     }}
     .lead-action-line strong {{
-      color: var(--ink);
+      color: var(--brand-blue);
     }}
 
-    /* #2-#4 Right Column Stack */
+    /* #2-#4 Right Column Bento Stack */
     .top-stack {{
       display: flex;
       flex-direction: column;
@@ -2385,24 +2462,27 @@ def build_dashboard_html(
       flex: 1;
       background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 20px;
+      border-left: 3px solid var(--brand-sky);
+      border-radius: 18px;
       padding: 18px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
+      box-shadow: var(--card-shadow);
       transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring), transform var(--dur-slow) var(--spring);
     }}
     .stack-card:hover {{
-      border-color: var(--brand-violet-border);
+      border-color: var(--brand-blue-border);
+      border-left-color: var(--brand-blue);
       box-shadow: var(--card-hover-shadow);
       transform: translateY(-2px);
     }}
     .stack-title {{
       margin: 8px 0 6px;
-      font-size: 17.5px;
+      font-size: 17px;
       font-weight: 700;
-      line-height: 1.28;
+      line-height: 1.3;
       letter-spacing: -0.02em;
     }}
     .stack-title a {{
@@ -2411,11 +2491,11 @@ def build_dashboard_html(
       transition: color var(--dur-fast) ease;
     }}
     .stack-card:hover .stack-title a {{
-      color: var(--brand-violet);
+      color: var(--brand-blue);
     }}
     .stack-summary {{
       margin: 0 0 8px;
-      font-size: 13.4px;
+      font-size: 13.3px;
       line-height: 1.52;
       color: var(--body-copy);
       display: -webkit-box;
@@ -2425,7 +2505,7 @@ def build_dashboard_html(
     }}
     .stack-plus {{
       margin: 0 0 6px;
-      font-size: 13.2px;
+      font-size: 13px;
       line-height: 1.5;
       color: var(--ink-soft);
       display: -webkit-box;
@@ -2441,7 +2521,7 @@ def build_dashboard_html(
       margin: 0 0 10px;
       padding-top: 6px;
       border-top: 1px dashed var(--line);
-      font-size: 12.6px;
+      font-size: 12.5px;
       line-height: 1.48;
       color: var(--body-copy);
       display: -webkit-box;
@@ -2450,16 +2530,16 @@ def build_dashboard_html(
       overflow: hidden;
     }}
     .stack-outcome strong {{
-      color: var(--brand-violet);
+      color: var(--brand-blue);
       font-weight: 800;
     }}
 
     /* =========================================================
-       5. EXPLORE THE LATEST — STICKY PILL CONTROLS & 3 VIEWS
+       5. EXPLORE THE LATEST — FLOATING GLASS COMMAND DOCK
        ========================================================= */
     .explore-section {{
       border-top: 1px solid var(--line);
-      padding-top: 38px;
+      padding-top: 36px;
       scroll-margin-top: 80px;
     }}
     .explore-top-row {{
@@ -2468,7 +2548,7 @@ def build_dashboard_html(
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }}
     .explore-right-tools {{
       display: flex;
@@ -2477,12 +2557,12 @@ def build_dashboard_html(
       gap: 10px;
     }}
 
-    /* Rounded-Full Pill Search in #stories */
+    /* Sleek Pill Search in #stories */
     .pill-search-wrap {{
       display: flex;
       align-items: center;
       gap: 8px;
-      border-radius: 999px;
+      border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--card-bg);
       padding: 5px 14px;
@@ -2490,11 +2570,11 @@ def build_dashboard_html(
       transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
     }}
     .pill-search-wrap:focus-within {{
-      border-color: var(--brand-violet);
-      box-shadow: 0 0 0 3px var(--brand-violet-bg);
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px var(--brand-blue-bg);
     }}
     .pill-search-wrap .svg-icon {{
-      color: var(--mute);
+      color: var(--brand-blue);
       width: 15px;
       height: 15px;
     }}
@@ -2515,7 +2595,7 @@ def build_dashboard_html(
       align-items: center;
       gap: 2px;
       padding: 3px;
-      border-radius: 999px;
+      border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--mist);
     }}
@@ -2525,7 +2605,7 @@ def build_dashboard_html(
       background: transparent;
       color: var(--mute);
       padding: 6px 12px;
-      border-radius: 999px;
+      border-radius: 9px;
       font-size: 12.5px;
       font-weight: 600;
       display: inline-flex;
@@ -2535,55 +2615,59 @@ def build_dashboard_html(
     }}
     .view-btn:hover {{ color: var(--ink); }}
     .view-btn.active {{
-      background: var(--ink);
-      color: var(--paper);
+      background: var(--brand-blue);
+      color: #ffffff;
       font-weight: 700;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
     }}
     .view-btn .svg-icon {{ width: 13.5px; height: 13.5px; }}
 
-    /* Rounded-Full Category Pills */
+    /* Floating Glass Command Dock */
     .controls-bar {{
       margin-bottom: 26px;
-      padding: 12px 0;
+      padding: 14px 18px;
       position: sticky;
-      top: 68px;
+      top: 74px;
       z-index: 40;
       background: var(--glass-sheet);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line-subtle);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.08);
     }}
     .tabs {{
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }}
     .tab {{
       cursor: pointer;
-      border-radius: 999px;
+      border-radius: 10px;
       border: 1px solid var(--line);
       background: var(--card-bg);
       color: var(--ink);
-      padding: 8px 17px;
-      font-size: 13.5px;
+      padding: 7px 15px;
+      font-size: 13px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+      transition: all var(--dur-fast) ease;
       white-space: nowrap;
     }}
     .tab:hover {{
-      border-color: var(--brand-violet);
-      color: var(--brand-violet);
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
     }}
     .tab:active {{ transform: scale(0.98); }}
     .tab.active, .tab.active:hover {{
-      background: var(--ink);
-      border-color: var(--ink);
-      color: var(--paper);
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+      border-color: transparent;
+      color: #ffffff;
       font-weight: 700;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }}
 
     /* Secondary Topic Chips */
@@ -2600,7 +2684,7 @@ def build_dashboard_html(
       background: var(--mist);
       color: var(--mute);
       padding: 5px 11px;
-      border-radius: 999px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 600;
       display: inline-flex;
@@ -2614,25 +2698,25 @@ def build_dashboard_html(
       border-color: var(--line);
     }}
     .topic-pill.active {{
-      background: var(--brand-violet-bg);
-      border-color: var(--brand-violet-border);
-      color: var(--brand-violet);
+      background: var(--brand-blue-bg);
+      border-color: var(--brand-blue-border);
+      color: var(--brand-blue);
       font-weight: 700;
     }}
 
     /* =========================================================
-       6. STORY CARDS GRID (rounded-3xl editorial cards)
+       6. STORY CARDS BENTO GRID
        ========================================================= */
     .cards-grid {{
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 22px;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
     }}
     .news-card {{
       background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 25px 26px;
+      border-radius: 18px;
+      padding: 23px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -2650,8 +2734,8 @@ def build_dashboard_html(
       animation-delay: var(--reveal-delay, 0ms);
     }}
     .news-card:hover {{
-      transform: translateY(-2px);
-      border-color: var(--brand-violet-border);
+      transform: translateY(-3px);
+      border-color: var(--brand-blue-border);
       box-shadow: var(--card-hover-shadow);
     }}
     .news-card:active {{
@@ -2673,7 +2757,7 @@ def build_dashboard_html(
       gap: 6px;
     }}
 
-    /* Editorial Category Eyebrows & Badges */
+    /* Category Eyebrows & Badges (Sapphire / Emerald / Sky Cyan) */
     .cat-eyebrow {{
       font-size: 11px;
       font-weight: 800;
@@ -2683,9 +2767,9 @@ def build_dashboard_html(
       align-items: center;
       gap: 5px;
     }}
-    .cat-high {{ color: var(--brand-violet); }}
+    .cat-high {{ color: var(--brand-blue); }}
     .cat-ops {{ color: var(--emerald); }}
-    .cat-gen {{ color: var(--brand-blue); }}
+    .cat-gen {{ color: var(--brand-sky); }}
 
     .badge {{
       font-size: 11px;
@@ -2697,9 +2781,9 @@ def build_dashboard_html(
       gap: 4px;
     }}
     .badge-high {{
-      background: var(--brand-violet-bg);
-      border: 1px solid var(--brand-violet-border);
-      color: var(--brand-violet);
+      background: var(--brand-blue-bg);
+      border: 1px solid var(--brand-blue-border);
+      color: var(--brand-blue);
     }}
     .badge-ops {{
       background: var(--emerald-bg);
@@ -2707,17 +2791,17 @@ def build_dashboard_html(
       color: var(--emerald);
     }}
     .badge-gen {{
-      background: var(--brand-blue-bg);
-      border: 1px solid var(--brand-blue-border);
-      color: var(--brand-blue);
+      background: var(--brand-sky-bg);
+      border: 1px solid var(--brand-sky-border);
+      color: var(--brand-sky);
     }}
     .rank-pill {{
       font-size: 11px;
       font-weight: 800;
       padding: 3px 9px;
       border-radius: 6px;
-      background: var(--ink);
-      color: var(--paper);
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #ffffff;
       letter-spacing: 0.02em;
     }}
     .new-badge {{
@@ -2786,16 +2870,16 @@ def build_dashboard_html(
       color: var(--ink);
     }}
     .icon-btn:active {{ transform: scale(0.9); }}
-    .icon-btn.saved {{ color: var(--brand-violet); }}
+    .icon-btn.saved {{ color: var(--brand-blue); }}
     .icon-btn.saved .svg-icon {{ fill: currentColor; }}
     .icon-btn.just-saved .svg-icon {{ animation: savePop 0.45s var(--spring); }}
 
     .card-title {{
       margin: 0 0 10px;
-      font-size: 20px;
+      font-size: 19.5px;
       font-weight: 700;
-      line-height: 1.28;
-      letter-spacing: -0.022em;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
     }}
     .card-title a {{
       color: var(--ink);
@@ -2804,12 +2888,12 @@ def build_dashboard_html(
     }}
     .news-card:hover .card-title a,
     .card-title a:hover {{
-      color: var(--brand-violet);
+      color: var(--brand-blue);
     }}
     .card-summary {{
-      font-size: 14.5px;
+      font-size: 14.3px;
       color: var(--body-copy);
-      margin: 0 0 16px;
+      margin: 0 0 15px;
       line-height: 1.62;
       display: -webkit-box;
       -webkit-line-clamp: 3;
@@ -2819,18 +2903,18 @@ def build_dashboard_html(
 
     /* "Why It Matters" Inset Callout Box */
     .benefit-box {{
-      background: var(--mist);
-      border: 1px solid var(--line-subtle);
-      border-left: 3px solid var(--brand-violet);
+      background: var(--mist-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--brand-blue);
       padding: 13px 15px;
-      border-radius: 14px;
-      font-size: 13.5px;
-      line-height: 1.58;
+      border-radius: 12px;
+      font-size: 13.4px;
+      line-height: 1.56;
       color: var(--ink-soft);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }}
     .benefit-box.ops-box {{ border-left-color: var(--emerald); }}
-    .benefit-box.gen-box {{ border-left-color: var(--brand-blue); }}
+    .benefit-box.gen-box {{ border-left-color: var(--brand-sky); }}
     .benefit-lead {{
       color: var(--ink);
       font-weight: 800;
@@ -2844,7 +2928,7 @@ def build_dashboard_html(
       color: var(--body-copy);
     }}
     .card-outcome-label {{
-      color: var(--brand-violet);
+      color: var(--brand-blue);
       font-weight: 800;
       text-transform: uppercase;
       font-size: 10px;
@@ -2852,7 +2936,7 @@ def build_dashboard_html(
       margin-right: 4px;
     }}
     .ops-box .card-outcome-label {{ color: var(--emerald); }}
-    .gen-box .card-outcome-label {{ color: var(--brand-blue); }}
+    .gen-box .card-outcome-label {{ color: var(--brand-sky); }}
 
     /* Comfort Reading Font Size Mode (A+) */
     html[data-font-size="large"] .lead-title {{ font-size: clamp(24px, 2.7vw, 33px); }}
@@ -2873,9 +2957,9 @@ def build_dashboard_html(
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid var(--line-subtle);
+      padding-bottom: 11px;
+      margin-bottom: 11px;
+      border-bottom: 1px solid var(--line);
     }}
     .date-filter-left {{
       display: flex;
@@ -2889,11 +2973,11 @@ def build_dashboard_html(
     }}
     .date-filter-left::-webkit-scrollbar {{ display: none; }}
     .date-bar-label {{
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--mute);
+      color: var(--brand-blue);
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
@@ -2908,11 +2992,11 @@ def build_dashboard_html(
     }}
     .date-pill {{
       cursor: pointer;
-      border-radius: 999px;
+      border-radius: 8px;
       border: 1px solid var(--line);
       background: var(--card-bg);
       color: var(--body-copy);
-      padding: 5px 12px;
+      padding: 5px 11px;
       font-size: 12px;
       font-weight: 600;
       display: inline-flex;
@@ -2922,18 +3006,19 @@ def build_dashboard_html(
       transition: all var(--dur-fast) ease;
     }}
     .date-pill:hover {{
-      border-color: var(--brand-violet);
-      color: var(--brand-violet);
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
     }}
     .date-pill.active {{
-      background: var(--brand-violet);
-      border-color: var(--brand-violet);
+      background: var(--brand-blue);
+      border-color: var(--brand-blue);
       color: #ffffff;
       font-weight: 700;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
     }}
     .date-pill-count {{
       font-size: 10.5px;
-      opacity: 0.82;
+      opacity: 0.85;
       font-weight: 700;
     }}
     .date-picker-wrap {{
@@ -2946,7 +3031,7 @@ def build_dashboard_html(
       border: 1px solid var(--line);
       background: var(--card-bg);
       color: var(--ink);
-      border-radius: 999px;
+      border-radius: 8px;
       padding: 4px 11px;
       font-size: 12px;
       font-weight: 600;
@@ -2954,7 +3039,7 @@ def build_dashboard_html(
       outline: none;
     }}
     .date-picker-input:focus {{
-      border-color: var(--brand-violet);
+      border-color: var(--brand-blue);
     }}
     .sort-btn {{
       cursor: pointer;
@@ -2962,7 +3047,7 @@ def build_dashboard_html(
       background: var(--card-bg);
       color: var(--ink);
       padding: 6px 13px;
-      border-radius: 999px;
+      border-radius: 10px;
       font-size: 12.5px;
       font-weight: 700;
       display: inline-flex;
@@ -2972,8 +3057,8 @@ def build_dashboard_html(
       white-space: nowrap;
     }}
     .sort-btn:hover {{
-      border-color: var(--brand-violet);
-      color: var(--brand-violet);
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
     }}
     .active-filter-banner {{
       display: flex;
@@ -3011,8 +3096,8 @@ def build_dashboard_html(
       margin: 10px 0 4px;
       background: var(--mist);
       border: 1px solid var(--line);
-      border-left: 4px solid var(--brand-violet);
-      border-radius: 14px;
+      border-left: 4px solid var(--brand-blue);
+      border-radius: 12px;
       font-size: 13.5px;
       font-weight: 800;
       color: var(--ink);
@@ -3046,13 +3131,13 @@ def build_dashboard_html(
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--brand-violet);
+      color: var(--brand-blue);
       display: inline-flex;
       align-items: center;
       gap: 5px;
     }}
     .ops-box .benefit-label {{ color: var(--emerald); }}
-    .gen-box .benefit-label {{ color: var(--brand-blue); }}
+    .gen-box .benefit-label {{ color: var(--brand-sky); }}
 
     .score-meter-wrap {{
       display: inline-flex;
@@ -3086,10 +3171,10 @@ def build_dashboard_html(
     .score-fill {{
       height: 100%;
       border-radius: 99px;
-      background: var(--brand-violet);
+      background: var(--brand-blue);
     }}
     .ops-box .score-fill {{ background: var(--emerald); }}
-    .gen-box .score-fill {{ background: var(--brand-blue); }}
+    .gen-box .score-fill {{ background: var(--brand-sky); }}
 
     .card-footer {{
       display: flex;
@@ -3116,12 +3201,12 @@ def build_dashboard_html(
       font-size: 11.5px;
       font-weight: 600;
       padding: 4px 10px;
-      border-radius: 999px;
+      border-radius: 8px;
       transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
     }}
     .quick-brief-btn:hover {{
-      border-color: var(--ink);
-      color: var(--ink);
+      border-color: var(--brand-blue);
+      color: var(--brand-blue);
     }}
     .read-link {{
       color: var(--ink);
@@ -3133,7 +3218,7 @@ def build_dashboard_html(
       gap: 3px;
       transition: color var(--dur-fast) ease;
     }}
-    .read-link:hover {{ color: var(--brand-violet); }}
+    .read-link:hover {{ color: var(--brand-blue); }}
     .read-link span.arrow {{
       display: inline-block;
       transition: transform var(--dur) var(--spring);
@@ -3148,31 +3233,35 @@ def build_dashboard_html(
        7. VIEW 2: "BRIEFING" 5-MINUTE EDITORIAL STREAM
        ========================================================= */
     .briefing-stream {{
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }}
     .stream-article {{
       background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 26px 30px;
+      border-left: 3px solid var(--brand-blue);
+      border-radius: 18px;
+      padding: 24px 28px;
       cursor: pointer;
-      transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring);
+      box-shadow: var(--card-shadow);
+      transition: border-color var(--dur) ease, box-shadow var(--dur-slow) var(--spring), transform var(--dur-slow) var(--spring);
     }}
     .stream-article:hover {{
-      border-color: var(--brand-violet-border);
+      border-color: var(--brand-blue-border);
+      border-left-color: var(--brand-blue);
       box-shadow: var(--card-hover-shadow);
+      transform: translateY(-2px);
     }}
     .stream-num {{
-      font-size: 12px;
-      font-weight: 900;
+      font-size: 11.5px;
+      font-weight: 800;
       padding: 3px 9px;
-      border-radius: 999px;
-      background: var(--ink);
-      color: var(--paper);
+      border-radius: 6px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #ffffff;
     }}
     .stream-headline {{
       margin: 12px 0 14px;
@@ -3185,16 +3274,16 @@ def build_dashboard_html(
       color: var(--ink);
       text-decoration: none;
     }}
-    .stream-article:hover .stream-headline a {{ color: var(--brand-violet); }}
+    .stream-article:hover .stream-headline a {{ color: var(--brand-blue); }}
     .stream-bullets {{
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin: 0 0 16px;
       padding: 15px 18px;
-      border-radius: 16px;
+      border-radius: 14px;
       background: var(--mist-soft);
-      border: 1px solid var(--line-subtle);
+      border: 1px solid var(--line);
       font-size: 14px;
       line-height: 1.58;
       color: var(--ink-soft);
@@ -3205,12 +3294,12 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       8. VIEW 3: COMPACT ANALYST TABLE (AlphaSignal Style)
+       8. VIEW 3: COMPACT ANALYST TABLE
        ========================================================= */
     .compact-table-wrap {{
       background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 18px;
       overflow-x: auto;
       box-shadow: var(--card-shadow);
     }}
@@ -3254,7 +3343,7 @@ def build_dashboard_html(
       margin-bottom: 4px;
       letter-spacing: -0.01em;
     }}
-    .compact-headline:hover {{ color: var(--brand-violet); }}
+    .compact-headline:hover {{ color: var(--brand-blue); }}
     .compact-takeaway {{
       font-size: 12.8px;
       color: var(--mute);
@@ -3263,19 +3352,19 @@ def build_dashboard_html(
     /* Deep-Link Target Glow & Keyboard Selection */
     .news-card.target-highlight, .lead-feature-card.target-highlight, .stack-card.target-highlight, .stream-article.target-highlight {{
       animation: targetGlow 2.4s ease-out;
-      border-color: var(--brand-violet) !important;
+      border-color: var(--brand-blue) !important;
     }}
     .news-card.kbd-selected, .stream-article.kbd-selected {{
-      outline: 2px solid var(--brand-violet);
+      outline: 2px solid var(--brand-blue);
       outline-offset: 2px;
     }}
     .compact-table tr.kbd-selected td {{
       background: var(--mist);
-      outline: 1px solid var(--brand-violet);
+      outline: 1px solid var(--brand-blue);
     }}
     @keyframes targetGlow {{
-      0% {{ box-shadow: 0 0 0 4px var(--brand-violet-bg), 0 18px 40px rgba(139, 76, 212, 0.25); }}
-      70% {{ box-shadow: 0 0 0 4px var(--brand-violet-bg), 0 18px 40px rgba(139, 76, 212, 0.25); }}
+      0% {{ box-shadow: 0 0 0 4px var(--brand-blue-bg), 0 18px 40px rgba(37, 99, 235, 0.25); }}
+      70% {{ box-shadow: 0 0 0 4px var(--brand-blue-bg), 0 18px 40px rgba(37, 99, 235, 0.25); }}
       100% {{ box-shadow: var(--card-shadow); }}
     }}
 
@@ -3285,9 +3374,9 @@ def build_dashboard_html(
     .drawer-backdrop {{
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.55);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(7, 13, 25, 0.62);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
@@ -3300,11 +3389,11 @@ def build_dashboard_html(
       top: 0;
       right: 0;
       bottom: 0;
-      width: min(540px, 100vw);
-      background: var(--paper);
+      width: min(550px, 100vw);
+      background: var(--card-bg);
       color: var(--ink);
       border-left: 1px solid var(--line);
-      box-shadow: -24px 0 60px rgba(0, 0, 0, 0.28);
+      box-shadow: -24px 0 60px rgba(7, 13, 25, 0.35);
       z-index: 210;
       display: flex;
       flex-direction: column;
@@ -3328,7 +3417,7 @@ def build_dashboard_html(
       align-items: center;
       position: sticky;
       top: 0;
-      background: var(--paper);
+      background: var(--card-bg);
       z-index: 5;
     }}
     .drawer-body {{
@@ -3356,7 +3445,7 @@ def build_dashboard_html(
     .drawer-section {{
       background: var(--mist-soft);
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 16px 18px;
       margin-bottom: 14px;
     }}
@@ -3385,7 +3474,7 @@ def build_dashboard_html(
       gap: 10px;
       position: sticky;
       bottom: 0;
-      background: var(--paper);
+      background: var(--card-bg);
     }}
     .drawer-nav {{ display: inline-flex; gap: 6px; align-items: center; }}
     .drawer-progress {{ font-size: 12px; font-weight: 600; color: var(--mute); margin-left: 6px; }}
@@ -3397,7 +3486,7 @@ def build_dashboard_html(
       color: var(--ink);
       padding: 9px 16px;
       min-height: 40px;
-      border-radius: 999px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 700;
       display: inline-flex;
@@ -3408,17 +3497,18 @@ def build_dashboard_html(
       transition: all var(--dur-fast) ease;
     }}
     .btn:hover {{
-      border-color: var(--ink);
+      border-color: var(--brand-blue);
       background: var(--mist);
     }}
     .btn-primary {{
-      background: var(--ink);
-      border-color: var(--ink);
-      color: var(--paper);
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
     }}
     .btn-primary:hover {{
-      background: var(--brand-violet);
-      border-color: var(--brand-violet);
+      background: linear-gradient(135deg, #1d4ed8 0%, #0369a1 100%);
+      border-color: transparent;
       color: #ffffff;
     }}
 
@@ -3426,7 +3516,7 @@ def build_dashboard_html(
     .modal-backdrop {{
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.6);
+      background: rgba(7, 13, 25, 0.65);
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       z-index: 300;
@@ -3440,13 +3530,13 @@ def build_dashboard_html(
     }}
     .modal-backdrop.open {{ opacity: 1; pointer-events: auto; }}
     .modal-dialog {{
-      background: var(--paper);
+      background: var(--card-bg);
       color: var(--ink);
       border: 1px solid var(--line);
-      border-radius: 24px;
+      border-radius: 20px;
       max-width: 520px;
       width: 100%;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 25px 60px rgba(7, 13, 25, 0.4);
       transform: translateY(14px) scale(0.97);
       transition: transform var(--dur-slow) var(--spring);
       overflow: hidden;
@@ -3473,7 +3563,7 @@ def build_dashboard_html(
     .share-channel-card {{
       background: var(--mist-soft);
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 14px 16px;
       display: flex;
       align-items: center;
@@ -3483,7 +3573,7 @@ def build_dashboard_html(
       transition: all var(--dur-fast) ease;
     }}
     .share-channel-card:hover {{
-      border-color: var(--brand-violet);
+      border-color: var(--brand-blue);
       background: var(--mist);
       transform: translateY(-1px);
     }}
@@ -3520,22 +3610,22 @@ def build_dashboard_html(
     }}
 
     /* =========================================================
-       10. ROUNDED FOOTER SHEET
+       10. ROUNDED MIDNIGHT NAVY FOOTER SHEET
        ========================================================= */
     .site-footer-wrap {{
-      padding: 0 10px 16px;
+      padding: 0 12px 18px;
     }}
     .footer-sheet {{
-      max-width: 1380px;
+      max-width: 1400px;
       margin: 0 auto;
-      background: #171717;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 28px;
+      background: linear-gradient(180deg, #0b1326 0%, #070d19 100%);
+      border: 1px solid rgba(96, 165, 250, 0.16);
+      border-radius: 26px;
       padding: 44px 36px;
       color: #ffffff;
     }}
     .footer-grid {{
-      max-width: 1220px;
+      max-width: 1260px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 1.4fr 1fr 1fr;
@@ -3545,15 +3635,15 @@ def build_dashboard_html(
       margin: 14px 0 16px;
       font-size: 13.5px;
       line-height: 1.6;
-      color: rgba(255, 255, 255, 0.65);
+      color: #94a3b8;
       max-width: 44ch;
     }}
     .footer-col-title {{
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      color: rgba(255, 255, 255, 0.48);
+      color: #60a5fa;
       margin: 0 0 14px;
     }}
     .footer-links-list {{
@@ -3568,7 +3658,7 @@ def build_dashboard_html(
       background: none;
       border: none;
       padding: 0;
-      color: rgba(255, 255, 255, 0.78);
+      color: #cbd5e1;
       font-size: 13.5px;
       font-weight: 500;
       cursor: pointer;
@@ -3576,19 +3666,19 @@ def build_dashboard_html(
       text-align: left;
       transition: color var(--dur-fast) ease;
     }}
-    .footer-links-list button:hover, .footer-links-list a:hover {{ color: #ffffff; }}
+    .footer-links-list button:hover, .footer-links-list a:hover {{ color: #38bdf8; }}
     .footer-bottom {{
-      max-width: 1220px;
+      max-width: 1260px;
       margin: 32px auto 0;
       padding-top: 22px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(148, 163, 184, 0.14);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.52);
+      color: #64748b;
     }}
 
     /* Floating Back-to-Top & Toast */
@@ -3598,15 +3688,15 @@ def build_dashboard_html(
       left: 24px;
       width: 42px;
       height: 42px;
-      border-radius: 50%;
-      border: 1px solid var(--line);
-      background: var(--ink);
-      color: var(--paper);
+      border-radius: 12px;
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+      color: #ffffff;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
       opacity: 0;
       transform: translateY(12px) scale(0.92);
       pointer-events: none;
@@ -3614,20 +3704,20 @@ def build_dashboard_html(
       z-index: 90;
     }}
     #backToTop.visible {{ opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }}
-    #backToTop:hover {{ background: var(--brand-violet); border-color: var(--brand-violet); color: #ffffff; }}
+    #backToTop:hover {{ filter: brightness(1.12); }}
 
     #toast {{
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #171717;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: #0f172a;
+      border: 1px solid rgba(96, 165, 250, 0.35);
       color: #ffffff;
       font-weight: 600;
       font-size: 13px;
       padding: 12px 18px;
-      border-radius: 999px;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
+      border-radius: 12px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -3644,9 +3734,9 @@ def build_dashboard_html(
       text-align: center;
       padding: 56px 20px;
       color: var(--mute);
-      background: var(--mist-soft);
+      background: var(--card-bg);
       border: 1px dashed var(--line);
-      border-radius: 24px;
+      border-radius: 18px;
     }}
 
     @keyframes fadeSlideDown {{
@@ -3654,9 +3744,9 @@ def build_dashboard_html(
       to {{ opacity: 1; transform: translateY(0); }}
     }}
     @keyframes pulseDot {{
-      0% {{ box-shadow: 0 0 0 0 rgba(0, 199, 88, 0.7); }}
-      70% {{ box-shadow: 0 0 0 7px rgba(0, 199, 88, 0); }}
-      100% {{ box-shadow: 0 0 0 0 rgba(0, 199, 88, 0); }}
+      0% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }}
+      70% {{ box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }}
+      100% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }}
     }}
     @keyframes savePop {{
       0% {{ transform: scale(1); }}
@@ -3677,8 +3767,9 @@ def build_dashboard_html(
       animation-timing-function: var(--ease-in-out);
     }}
 
-    @media (max-width: 1020px) {{
+    @media (max-width: 1040px) {{
       .nav-links {{ display: none; }}
+      .hero-bento-shell {{ grid-template-columns: 1fr; gap: 24px; }}
       .showcase-grid {{ grid-template-columns: 1fr; }}
       .footer-grid {{ grid-template-columns: 1fr 1fr; }}
     }}
@@ -3686,42 +3777,43 @@ def build_dashboard_html(
       .site-nav-inner {{ padding: 0 14px; height: 60px; }}
       .brand-edition-pill {{ display: none; }}
       .nav-btn span.hide-sm {{ display: none; }}
-      .editorial-hero {{ padding: 38px 16px 46px; }}
+      .editorial-hero {{ padding: 28px 14px 36px; }}
       .hero-kbd {{ display: none; }}
+      .segmented-box {{ grid-template-columns: 1fr 1fr; }}
       .main-sheet-wrap {{ padding: 0 4px 10px; }}
-      .main-sheet {{ padding: 24px 16px 48px; border-radius: 22px; }}
+      .main-sheet {{ padding: 24px 14px 48px; border-radius: 20px; }}
       .kpi-strip {{ grid-template-columns: repeat(2, 1fr); }}
-      .lead-feature-card {{ padding: 22px 20px; border-radius: 22px; }}
-      .controls-bar {{ top: 60px; }}
+      .lead-feature-card {{ padding: 22px 18px; border-radius: 18px; }}
+      .controls-bar {{ top: 64px; padding: 12px 14px; }}
       .pill-search-wrap {{ width: 100%; min-width: 0; }}
       .explore-right-tools {{ width: 100%; justify-content: space-between; }}
       .cards-grid {{ grid-template-columns: 1fr; gap: 16px; }}
-      .news-card {{ padding: 20px; border-radius: 20px; }}
+      .news-card {{ padding: 20px; border-radius: 16px; }}
       .stream-article {{ padding: 20px; }}
       .compact-hide-mobile {{ display: none; }}
-      .footer-sheet {{ padding: 32px 20px; border-radius: 22px; }}
+      .footer-sheet {{ padding: 32px 20px; border-radius: 20px; }}
       .footer-grid {{ grid-template-columns: 1fr; gap: 24px; }}
       #toast {{ left: 14px; right: 14px; bottom: 16px; justify-content: center; }}
     }}
 
     /* Boardroom A4 Print / PDF Memo Stylesheet */
     @media print {{
-      body {{ background: #ffffff !important; color: #171717 !important; font-size: 10.5pt; }}
+      body {{ background: #ffffff !important; color: #0f172a !important; font-size: 10.5pt; }}
       #scrollProgress, .site-nav, .editorial-hero, .executive-strip, .controls-bar, .explore-right-tools,
       .card-actions, .quick-brief-btn, #backToTop, #toast, .drawer-backdrop, .drawer-panel, .modal-backdrop, .site-footer-wrap {{
         display: none !important;
       }}
-      .main-sheet-wrap, .main-sheet {{ padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; background: #ffffff !important; }}
+      .main-sheet-wrap, .main-sheet {{ padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; background: #ffffff !important; border: none !important; }}
       .print-memo-header {{
         display: block !important;
-        border-bottom: 2px solid #171717;
+        border-bottom: 2px solid #0f172a;
         padding-bottom: 10px;
         margin-bottom: 18px;
       }}
       .lead-feature-card, .stack-card, .news-card, .stream-article {{
         background: #ffffff !important;
-        color: #171717 !important;
-        border: 1px solid #d4d4d4 !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
         box-shadow: none !important;
         opacity: 1 !important;
         transform: none !important;
@@ -3729,7 +3821,7 @@ def build_dashboard_html(
         page-break-inside: avoid;
       }}
       .cards-grid {{ grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }}
-      .benefit-box, .lead-why-box {{ background: #f8f8f8 !important; color: #171717 !important; border-left: 3px solid #171717 !important; }}
+      .benefit-box, .lead-why-box {{ background: #f8fafc !important; color: #0f172a !important; border-left: 3px solid #2563eb !important; }}
     }}
 
     @media (prefers-reduced-motion: reduce) {{
@@ -3745,20 +3837,20 @@ def build_dashboard_html(
 <body>
   <div id="scrollProgress"></div>
 
-  <!-- 1. TOP STICKY OBSIDIAN MASTHEAD -->
+  <!-- 1. TOP STICKY MIDNIGHT NAVY GLASS COMMAND BAR -->
   <header class="site-nav">
     <div class="site-nav-inner">
       <a class="brand-lockup" href="#" onclick="resetAllFilters(event)" aria-label="UK Finance & AI Daily Intelligence Home">
         <span class="brand-monogram" aria-hidden="true">AI</span>
         <span class="brand-wordmark">UK Finance &amp; AI</span>
-        <span class="brand-edition-pill"><span id="brandFlagSlot"></span> Daily Briefing</span>
+        <span class="brand-edition-pill"><span id="brandFlagSlot"></span> Intelligence</span>
       </a>
 
       <nav class="nav-links" aria-label="Primary sections">
         <button class="nav-link" type="button" onclick="jumpToSection('heroSection', 'all')">Top Briefing</button>
-        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'all')">Latest News</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'all')">Latest Feed</button>
         <button class="nav-link" type="button" onclick="jumpToSection('stories', 'high')">UK CFO &amp; FCA</button>
-        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'ops')">AI Ops &amp; Agents</button>
+        <button class="nav-link" type="button" onclick="jumpToSection('stories', 'ops')">AI Ops &amp; Security</button>
         <button class="nav-link" type="button" onclick="jumpToSection('stories', 'saved')">Saved</button>
       </nav>
 
@@ -3788,113 +3880,120 @@ def build_dashboard_html(
     </div>
   </header>
 
-  <!-- 2. EDITORIAL HERO STAGE -->
+  <!-- 2. MODERN SPLIT-GRID BENTO HERO STAGE -->
   <section class="editorial-hero">
-    <div class="hero-eyebrow-pill">
-      <span class="live-dot"></span>
-      <span id="heroFlagSlot"></span>
-      <span>{html.escape(date_str)} · Refreshed {updated_str}</span>
-    </div>
-    <h1>
-      UK Finance &amp; AI news<br />
-      in <span class="text-gradient">5 minutes</span> a day.
-    </h1>
-    <p class="hero-subtitle">
-      Get the latest AI breakthroughs, understand why they matter for UK CFOs, Audit &amp; FCA compliance, and apply them in your work.
-    </p>
+    <div class="hero-bento-shell">
+      <div class="hero-left-col">
+        <div class="hero-eyebrow-pill">
+          <span class="live-dot"></span>
+          <span id="heroFlagSlot"></span>
+          <span>{html.escape(date_str)} · Refreshed {updated_str}</span>
+        </div>
+        <h1>
+          UK Finance &amp; AI intelligence,<br />
+          built for <span class="text-gradient">5-minute decisions.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Executive summaries, UK financial services impact analysis, and concrete actionable outcomes across FCA compliance, audit, FP&amp;A, and frontier AI.
+        </p>
 
-    <form class="hero-search-form" role="search" onsubmit="submitHeroSearch(event)">
-      <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input
-        type="search"
-        id="heroSearchInput"
-        class="hero-search-input"
-        placeholder="Search FCA, Deloitte, OpenAI, audit, agents…"
-        aria-label="Search AI news and UK finance takeaways"
-        oninput="onSearchInput(this)"
-      />
-      <span class="hero-kbd">/</span>
-      <button type="submit" class="hero-search-submit">
-        Explore
-        <span aria-hidden="true">→</span>
-      </button>
-    </form>
+        <form class="hero-search-form" role="search" onsubmit="submitHeroSearch(event)">
+          <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input
+            type="search"
+            id="heroSearchInput"
+            class="hero-search-input"
+            placeholder="Search FCA, Deloitte, OpenAI, audit, agents…"
+            aria-label="Search AI news and UK finance takeaways"
+            oninput="onSearchInput(this)"
+          />
+          <span class="hero-kbd">/</span>
+          <button type="submit" class="hero-search-submit">
+            Explore
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
 
-    <div class="hero-proof">
-      <p class="hero-proof-label">
-        Curated daily across <strong>{sources_count} verified feeds</strong> from leading institutions &amp; labs:
-      </p>
-      <div class="hero-proof-logos" aria-label="Featured intelligence sources">
-        <button type="button" class="proof-source" onclick="quickFilterQuery('UK Finance')">UK Finance</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('Deloitte')">Deloitte</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('PwC')">PwC UK</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('OpenAI')">OpenAI</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('Google')">Google DeepMind</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('MIT')">MIT Tech Review</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('TechCrunch')">TechCrunch</button>
-        <button type="button" class="proof-source" onclick="quickFilterQuery('ArXiv')">ArXiv</button>
+        <div class="hero-proof">
+          <p class="hero-proof-label">
+            Instant source filter across <strong>{sources_count} verified feeds</strong>:
+          </p>
+          <div class="hero-proof-logos" aria-label="Featured intelligence sources">
+            <button type="button" class="proof-source" onclick="quickFilterQuery('UK Finance')">UK Finance</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('Deloitte')">Deloitte</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('PwC')">PwC UK</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('OpenAI')">OpenAI</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('Google')">Google DeepMind</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('MIT')">MIT Tech Review</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('TechCrunch')">TechCrunch</button>
+            <button type="button" class="proof-source" onclick="quickFilterQuery('ArXiv')">ArXiv</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Hero Bento Deck: Role Lens Switcher + Live Signal Telemetry -->
+      <div class="executive-strip">
+        <div class="lens-group-wrap">
+          <span class="strip-micro-label">
+            <span>Executive Role Lens</span>
+            <span style="color:#64748b;font-weight:600;letter-spacing:0.04em;">Re-ranks feed in real time</span>
+          </span>
+          <div class="segmented-box" role="group" aria-label="Finance Role Lens">
+            <button class="lens-btn active" type="button" data-lens="default" onclick="setRoleLens('default', this)">All Roles</button>
+            <button class="lens-btn" type="button" data-lens="cfo" onclick="setRoleLens('cfo', this)">CFO &amp; Strategy</button>
+            <button class="lens-btn" type="button" data-lens="audit" onclick="setRoleLens('audit', this)">Audit, Risk &amp; FCA</button>
+            <button class="lens-btn" type="button" data-lens="fpa" onclick="setRoleLens('fpa', this)">FP&amp;A &amp; Systems</button>
+          </div>
+        </div>
+
+        <div class="signal-cluster">
+          <div class="kpi-strip">
+            <button type="button" class="kpi-card" data-kpi="high" onclick="setFilterByName('high')">
+              <div class="kpi-val" style="color:#60a5fa;" data-count="{high_impact_count}">{high_impact_count}</div>
+              <div class="kpi-label"><span id="kpiFlagSlot"></span> UK Finance</div>
+            </button>
+            <button type="button" class="kpi-card" data-kpi="ops" onclick="setFilterByName('ops')">
+              <div class="kpi-val" style="color:#34d399;" data-count="{ops_count}">{ops_count}</div>
+              <div class="kpi-label">Ops &amp; Security</div>
+            </button>
+            <button type="button" class="kpi-card" data-kpi="general" onclick="setFilterByName('general')">
+              <div class="kpi-val" style="color:#38bdf8;" data-count="{general_count}">{general_count}</div>
+              <div class="kpi-label">Global Research</div>
+            </button>
+            <button type="button" class="kpi-card active-kpi" data-kpi="all" onclick="setFilterByName('all')">
+              <div class="kpi-val" style="color:#f8fafc;" data-count="{len(cards)}">{len(cards)}</div>
+              <div class="kpi-label">7-Day Archive</div>
+            </button>
+          </div>
+          <div class="signal-bar-row">
+            <div class="signal-track" aria-hidden="true">
+              <div class="signal-seg" style="width:{high_pct}%;background:#3b82f6;"></div>
+              <div class="signal-seg" style="width:{ops_pct}%;background:#10b981;"></div>
+              <div class="signal-seg" style="width:{gen_pct}%;background:#38bdf8;"></div>
+            </div>
+            <div class="signal-legend-inline">
+              <span>UK <span class="sig-pct-high">{high_pct}%</span></span>
+              <span>Ops <span class="sig-pct-ops">{ops_pct}%</span></span>
+              <span>AI <span class="sig-pct-gen">{gen_pct}%</span></span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. MAIN ROUNDED .sheet EDITORIAL CANVAS -->
+  <!-- 3. MAIN ROUNDED .sheet BENTO WORKSPACE -->
   <main class="main-sheet-wrap">
     <div class="main-sheet">
       <div class="sheet-container">
 
         <div class="print-memo-header" style="display:none;">
           <h2 style="margin:0 0 4px;font-size:18pt;font-weight:800;">UK FINANCE &amp; AI — DAILY EXECUTIVE BRIEFING</h2>
-          <div style="font-size:10pt;color:#404040;margin-bottom:6px;">
+          <div style="font-size:10pt;color:#334155;margin-bottom:6px;">
             <strong>Date:</strong> {html.escape(date_str)} · {updated_str} | <strong>Scope:</strong> CFO Strategy, FCA/PRA Compliance, Internal Audit &amp; FP&amp;A
           </div>
-          <div style="font-size:8.5pt;color:#737373;text-transform:uppercase;letter-spacing:0.06em;">
+          <div style="font-size:8.5pt;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">
             PREPARED FOR UK FINANCE EXECUTIVE LEADERSHIP
-          </div>
-        </div>
-
-        <!-- Role Priority Switcher + Compact Signal Snapshot -->
-        <div class="executive-strip">
-          <div class="lens-group-wrap">
-            <span class="strip-micro-label">Role Lens</span>
-            <div class="segmented-box" role="group" aria-label="Finance Role Lens">
-              <button class="lens-btn active" type="button" data-lens="default" onclick="setRoleLens('default', this)">All Roles</button>
-              <button class="lens-btn" type="button" data-lens="cfo" onclick="setRoleLens('cfo', this)">CFO &amp; Strategy</button>
-              <button class="lens-btn" type="button" data-lens="audit" onclick="setRoleLens('audit', this)">Audit, Risk &amp; FCA</button>
-              <button class="lens-btn" type="button" data-lens="fpa" onclick="setRoleLens('fpa', this)">FP&amp;A &amp; Systems</button>
-            </div>
-          </div>
-
-          <div class="signal-cluster">
-            <div class="kpi-strip">
-              <button type="button" class="kpi-card" data-kpi="high" onclick="setFilterByName('high')">
-                <div class="kpi-val" style="color:var(--brand-violet);" data-count="{high_impact_count}">{high_impact_count}</div>
-                <div class="kpi-label"><span id="kpiFlagSlot"></span> UK Finance</div>
-              </button>
-              <button type="button" class="kpi-card" data-kpi="ops" onclick="setFilterByName('ops')">
-                <div class="kpi-val" style="color:var(--emerald);" data-count="{ops_count}">{ops_count}</div>
-                <div class="kpi-label">Ops &amp; Security</div>
-              </button>
-              <button type="button" class="kpi-card" data-kpi="general" onclick="setFilterByName('general')">
-                <div class="kpi-val" style="color:var(--brand-blue);" data-count="{general_count}">{general_count}</div>
-                <div class="kpi-label">Global Research</div>
-              </button>
-              <button type="button" class="kpi-card active-kpi" data-kpi="all" onclick="setFilterByName('all')">
-                <div class="kpi-val" data-count="{len(cards)}">{len(cards)}</div>
-                <div class="kpi-label">Total Stories</div>
-              </button>
-            </div>
-            <div class="signal-bar-row">
-              <div class="signal-track" aria-hidden="true">
-                <div class="signal-seg" style="width:{high_pct}%;background:var(--brand-violet);"></div>
-                <div class="signal-seg" style="width:{ops_pct}%;background:var(--emerald);"></div>
-                <div class="signal-seg" style="width:{gen_pct}%;background:var(--brand-blue);"></div>
-              </div>
-              <div class="signal-legend-inline">
-                <span>UK <span class="sig-pct-high">{high_pct}%</span></span>
-                <span>Ops <span class="sig-pct-ops">{ops_pct}%</span></span>
-                <span>AI <span class="sig-pct-gen">{gen_pct}%</span></span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -4640,11 +4739,11 @@ def build_dashboard_html(
         <div class="drawer-meta">Briefing Date: <strong>${{escapeHtml(item.date_label || item.date_key || '')}}</strong> · Published ${{escapeHtml(formatRelativeTime(item.published_at))}} (${{escapeHtml(item.published_at)}})</div>
         ${{summaryBlock}}
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--brand-violet);">${{FLAG_SVG}} Why It Matters · UK CFO &amp; Finance</div>
+          <div class="drawer-sec-title" style="color:var(--brand-blue);">${{FLAG_SVG}} Why It Matters · UK CFO &amp; Finance</div>
           <p class="drawer-sec-text">${{formatBenefitHtml(item.benefit)}}</p>
         </div>
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--brand-blue);">🎯 Actionable Outcome</div>
+          <div class="drawer-sec-title" style="color:var(--brand-sky);">🎯 Actionable Outcome</div>
           <p class="drawer-sec-text">${{escapeHtml(item.action_item)}}</p>
         </div>
         <div class="drawer-section">
