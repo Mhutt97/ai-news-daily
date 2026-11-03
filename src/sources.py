@@ -149,7 +149,12 @@ def fetch_rss_feed(
         for elem in rss_items:
             raw_title = _clean_html(elem.findtext("title") or "", max_len=220)
             link = (elem.findtext("link") or "").strip()
-            desc = _clean_html(elem.findtext("description") or "")
+            raw_desc = (
+                elem.findtext("description")
+                or elem.findtext("{http://purl.org/rss/1.0/modules/content/}encoded")
+                or ""
+            )
+            desc = _clean_html(raw_desc)
             source_tag = _clean_html(elem.findtext("source") or "", max_len=60)
 
             title = raw_title
@@ -209,21 +214,22 @@ def fetch_rss_feed(
             if href and not link:
                 link = href
 
-        summary_el = (
-            entry.find("atom:summary", ns)
-            or entry.find("atom:content", ns)
-            or entry.find("summary")
-            or entry.find("content")
-        )
-        desc = _clean_html(summary_el.text if summary_el is not None and summary_el.text else "")
+        raw_atom_desc = ""
+        for tag_path in ("atom:summary", "atom:content", "summary", "content"):
+            el = entry.find(tag_path, ns) if tag_path.startswith("atom:") else entry.find(tag_path)
+            if el is not None:
+                candidate = "".join(el.itertext()).strip()
+                if candidate:
+                    raw_atom_desc = candidate
+                    break
+        desc = _clean_html(raw_atom_desc)
 
-        pub_el = (
-            entry.find("atom:published", ns)
-            or entry.find("atom:updated", ns)
-            or entry.find("published")
-            or entry.find("updated")
-        )
-        pub_raw = pub_el.text if pub_el is not None and pub_el.text else ""
+        pub_raw = (
+            entry.findtext("atom:published", default="", namespaces=ns)
+            or entry.findtext("atom:updated", default="", namespaces=ns)
+            or entry.findtext("published", default="")
+            or entry.findtext("updated", default="")
+        ).strip()
         dt = _parse_datetime(pub_raw)
         if dt and dt < cutoff:
             continue

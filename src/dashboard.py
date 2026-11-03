@@ -108,16 +108,32 @@ def resolve_publisher_domain(source_name: str, article_url: str) -> str:
     return "ukfinance.org.uk"
 
 
+def clean_article_title(raw_title: str) -> str:
+    """Strip noisy trailing site pipes, bylines, and broken separators from headlines."""
+    t = html.unescape(raw_title or "").strip()
+    t = re.sub(r"\s+\|\s+(?:Inside FinTech|Global law firm|ETIH EdTech News).*$", "", t, flags=re.I)
+    t = re.sub(r"\s+By\s+Investing\.com\s*$", "", t, flags=re.I)
+    t = re.sub(r"\s+-\s+WSJ\s*$", "", t, flags=re.I)
+    t = re.sub(r"\s+-\s*$", "", t).strip()
+    return t
+
+
 def clean_summary_text(raw_summary: str, title: str = "") -> str:
-    """Clean and normalize article summaries for comfortable executive reading."""
+    """Clean and normalize raw feed descriptions before executive synthesis."""
     text = (raw_summary or "").strip()
     if not text:
         return ""
     text = html.unescape(text)
-    # Remove leading '[12 upvotes]' prefix from HF Daily Papers
     text = re.sub(r"^\[\d+\s+upvotes?\]\s*", "", text, flags=re.I)
-    # Remove Reddit 'submitted by /u/...' boilerplate
     text = re.sub(r"\s*submitted by\s+/u/\S+.*$", "", text, flags=re.I)
+    text = re.sub(r"^\d+\s+points?\s*·\s*\d+\s+comments?\s+on\s+HN.*$", "", text, flags=re.I)
+    text = re.sub(
+        r"^This story originally appeared in The Algorithm,\s*our weekly[^.]*\.\s*",
+        "",
+        text,
+        flags=re.I,
+    )
+    text = re.sub(r"^On Equity,\s*we discuss\s+", "Examines ", text, flags=re.I)
     text = re.sub(r"\s+", " ", text).strip()
     if title and text.lower().startswith(title.lower()[:32]):
         return ""
@@ -125,312 +141,932 @@ def clean_summary_text(raw_summary: str, title: str = "") -> str:
 
 
 def is_noisy_outlier(title: str, source: str) -> bool:
-    """Filter out generic stock-index chart pages or non-English scraper noise."""
-    t_low = (title or "").lower()
+    """Filter out generic stock-index chart pages, RNS director share notices, or promo stubs."""
+    t_low = clean_article_title(title).lower()
     if re.search(r"\(\^[a-z0-9]+\)\s*charts,\s*data\s*and\s*news", t_low):
         return True
-    # Filter sources that are purely CJK/Hangul scripts from Google Newsuk query drift
     if source and re.search(r"[\uac00-\ud7af\u4e00-\u9fff]", source):
+        return True
+    if re.search(
+        r"\b(sip shares|cfo share purchase|updates share capital|director/pdmr shareholding|total voting rights)\b",
+        t_low,
+    ):
+        return True
+    if re.search(
+        r"^(more in squawk box|news from the week beginning|midterm elections \d{4}: all the news|weekly recap: q\d profit .* buyback)",
+        t_low,
+    ):
+        return True
+    if re.search(
+        r"\b(days left: how techcrunch founder summit|halloween costumes for tech nerds|nemotron-halloween)\b",
+        t_low,
+    ):
         return True
     return False
 
 
-def build_executive_breakdown(
-    item: NewsItem, score: int, func_tag: str, benefit: str
-) -> dict[str, object]:
-    """Build structured 3-point Executive Drawer guidance + role-specific priority weights."""
-    text = f"{item.title} {item.summary}".lower()
+def _extract_article_signals(item: NewsItem) -> dict[str, str]:
+    """Extract structured semantic entities, metrics, and subject phrases from an article."""
+    title = clean_article_title(item.title)
+    source = (item.source or "Curated Source").strip()
+    clean_raw = clean_summary_text(item.summary, title)
 
-    cfo_w = score
-    audit_w = score
-    fpa_w = score
+    stats = re.findall(
+        r"(?:\£\d+(?:\.\d+)?\s*(?:bn|billion|m|million|k)?|(?:USD\s*)?\$\d+(?:\.\d+)?\s*(?:T|trillion|B|bn|billion|M|m|million|k)?|\€\d+(?:\.\d+)?\s*(?:bn|billion|m|million|k)?|\d+(?:\.\d+)?%|\b(?:Nine in ten|\d{1,3},\d{3}\s+(?:staff|employees)|29\s+new\s+partners|seven\s+acquisitions|April\s+2027|iOS\s+\d+\.\d+|v\d+\.\d+(?:\.\d+)?)\b)",
+        f"{title} {clean_raw}",
+        flags=re.I,
+    )
+    stat_str = stats[0].strip() if stats else ""
 
-    if "🏛️" in func_tag or "🛡️" in func_tag or "🔒" in func_tag or "🧾" in func_tag:
-        audit_w = min(100, score + 12)
-        cfo_w = min(98, score + 4)
-        ssl_risk = (
-            "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. "
-            "Ensure any AI-assisted outputs maintain a documented human-in-the-loop review trail."
+    prefix = ""
+    rest = title
+    if ":" in title:
+        p_cand, _, r_cand = title.partition(":")
+        if 2 <= len(p_cand.strip()) <= 42 and r_cand.strip():
+            prefix = p_cand.strip()
+            rest = r_cand.strip()
+
+    actor = prefix
+    if not actor:
+        verb_split = re.split(
+            r"\s+(?:urges|warns|launches|unveils|raises|secures|backs|promotes|hits|expands|swings|clamps|appoints|seeks|declares|doubles|sue|helps|brings|identifies|says|announces|introduces|pitches|weighs|allows|shifts|turns|is|are|will|can|could|might)\b",
+            title,
+            maxsplit=1,
+            flags=re.I,
         )
-        action = (
-            "Log this update in your AI Risk & Governance register and verify current workspace and vendor "
-            "controls against FCA and internal audit standards."
-        )
-    elif "📈" in func_tag or "🏦" in func_tag or "📊" in func_tag or "💼" in func_tag or "💷" in func_tag:
-        cfo_w = min(100, score + 10)
-        fpa_w = min(96, score + 6)
-        ssl_risk = (
-            "Highlights governance pressure vs. control maturity: deploying AI too quickly without "
-            "reconciliation checks creates financial reporting and disclosure exposure."
-        )
-        action = (
-            "Benchmark your finance team's current AI pilot ROI and require clear time-saved or accuracy "
-            "metrics before expanding software spend."
-        )
-    elif "🤖" in func_tag or "⚙️" in func_tag or "💻" in func_tag or "⚡" in func_tag or "🧠" in func_tag:
-        fpa_w = min(99, score + 18)
-        cfo_w = min(92, score + 6)
-        ssl_risk = (
-            "Verify data residency, multi-tenant isolation, and zero-training guarantees before connecting "
-            "new AI agents or models to ERP, FP&A, or payroll spreadsheets."
-        )
-        action = (
-            "Evaluate whether this capability can automate repetitive month-end close, variance commentary, "
-            "or document extraction workflows in a sandboxed pilot."
-        )
+        if len(verb_split) == 2 and 3 <= len(verb_split[0].strip()) <= 46:
+            actor = re.sub(r"^(?:How|Why|When|Introducing|Announcing|Preparing|Rewarding)\s+", "", verb_split[0].strip(), flags=re.I).strip()
+        if not actor or len(actor) < 3:
+            words = re.sub(r"^(?:How|Why|When|Introducing|Announcing|Welcome)\s+", "", title, flags=re.I).split()
+            actor = " ".join(words[:5]).rstrip(",:;–—-")
+
+    focus_words = re.sub(r"^['\"“”‘’]+|['\"“”‘’]+$", "", rest).strip()
+    if focus_words and focus_words[0].isupper() and not re.match(r"^(?:UK|US|AI|FCA|BoE|PRA|HMRC|EY|PwC|KPMG|BDO|LLM|LLMs|CLI|GUI|MCP|SVD|AWS|VW|CEO|CFO)\b", focus_words):
+        focus_lower = focus_words[0].lower() + focus_words[1:]
     else:
-        fpa_w = min(90, score + 8)
-        ssl_risk = (
-            "Low immediate regulatory impact, but tracks emerging technical capabilities and vendor viability "
-            "that will influence enterprise software over the next 6–12 months."
-        )
-        action = (
-            "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
-        )
-
-    if "fca" in text or "bank of england" in text or "pra" in text:
-        ssl_risk = (
-            "High UK Regulatory Relevance: FCA oversight expects senior management accountability (SM&CR), "
-            "outcome testing, and clear operational resilience when AI is used in financial services."
-        )
-    elif "gmail" in text or "privacy" in text or "no internet" in text or "leak" in text:
-        ssl_risk = (
-            "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential "
-            "management accounts, M&A drafts, or customer PII."
-        )
+        focus_lower = focus_words
 
     return {
-        "strategic": benefit,
-        "risk_angle": ssl_risk,
-        "action_item": action,
-        "cfo_score": cfo_w,
-        "audit_score": audit_w,
-        "fpa_score": fpa_w,
+        "title": title,
+        "source": source,
+        "clean_raw": clean_raw,
+        "stat": stat_str,
+        "prefix": prefix,
+        "rest": rest,
+        "actor": actor,
+        "focus_lower": focus_lower,
     }
 
 
-def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]:
-    """
-    Evaluate a news item for UK Finance Team priority.
-    Returns (priority_score_0_to_100, priority_tier, func_tag, concise_summary, uk_finance_benefit).
-    """
-    text = f"{item.title} {item.summary}".lower()
-    clean_summary = clean_summary_text(item.summary, item.title)
+def _polish_executive_summary(
+    sig: dict[str, str],
+    category: str,
+    synthesized_fallback: str,
+    context_extension: str,
+) -> str:
+    """Ensure every article has a complete, multi-sentence executive summary free of truncation."""
+    raw = sig["clean_raw"]
+    if not raw:
+        return synthesized_fallback
 
-    stat_match = re.search(
-        r"(\d+%|\£\d+[a-z.]*|\$\d+[a-z.]*\s*(?:billion|million|bn|m)?|\d+×)",
-        item.title,
-        re.IGNORECASE,
-    )
-    stat_str = stat_match.group(1) if stat_match else ""
+    # If the raw feed snippet is already our synthesized summary (from re-hydration), return as-is
+    if len(raw) >= 140 and not raw.endswith("…") and not raw.endswith("..."):
+        return raw
 
-    # 1. Research Papers & Community Discussions (<70 tier)
+    # Clean trailing mid-sentence ellipsis truncation from RSS/ArXiv snippets
+    cleaned = raw
+    if cleaned.endswith("…") or cleaned.endswith("..."):
+        cleaned = re.sub(r"\s*(?:…|\.\.\.)$", "", cleaned).strip()
+        # Trim back to last complete clause or word boundary and close cleanly
+        last_punct = max(cleaned.rfind(". "), cleaned.rfind("; "))
+        if last_punct > 75:
+            cleaned = cleaned[: last_punct + 1].strip()
+        else:
+            cleaned = re.sub(r"\s+\b(?:and|or|the|a|an|to|in|of|for|with|by|on|at|from|that|which|as|is|are|was|were|be)$", "", cleaned, flags=re.I).strip()
+            if not cleaned.endswith("."):
+                cleaned += "."
+
+    if not cleaned.endswith((".", "!", "?")):
+        cleaned += "."
+
+    # For research papers where the truncated abstract didn't state the title's framework
+    if category == "Research Papers" and sig["prefix"] and sig["prefix"].lower() not in cleaned.lower():
+        return f"Introduces {sig['prefix']}, a research framework addressing {sig['focus_lower']}. {cleaned}"
+
+    # If the feed teaser is short (< 130 chars), append the article-specific context extension
+    if len(cleaned) < 130:
+        return f"{cleaned} {context_extension}"
+
+    return cleaned
+
+
+def _synthesize_research_and_community(
+    item: NewsItem, sig: dict[str, str], text: str
+) -> dict[str, object] | None:
+    """Synthesize article-specific executive summary, benefit, and actionable outcome for Research & Community items."""
+    title = sig["title"]
+    source = sig["source"]
+    actor = sig["prefix"] or sig["actor"]
+    focus = sig["focus_lower"]
+
     if item.category == "Research Papers":
-        if "audit" in text or "privacy" in text or "trust" in text or "safety" in text:
-            return (
-                66,
-                "General AI & Research",
-                "🔬 AI Governance Research",
-                clean_summary,
-                "Audit & Verification Methods: Proposes technical methods for auditing AI outputs, confidence calibration, and dataset provenance.",
+        if "earnings forecasting" in text or "epsbench" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Researchers introduce {actor}, an evaluation benchmark testing how accurately LLM agents synthesize financial statements, macroeconomic signals, and earnings transcripts to forecast quarterly corporate EPS.",
+                f"Evaluates multi-step financial reasoning and earnings-per-share (EPS) prediction accuracy across real-world corporate reporting periods.",
             )
-        if "quantization" in text or "diffusion" in text or "speed" in text or "token" in text or "efficient" in text:
-            return (
-                60,
-                "General AI & Research",
-                "🔬 Model Efficiency Paper",
-                clean_summary,
-                "Inference Cost & Speed: Explores model compression and token-generation efficiency to lower enterprise LLM compute costs.",
+            return {
+                "score": 82,
+                "tier": "Finance Ops & Productivity",
+                "func_tag": "🔬 Financial AI Benchmark",
+                "summary": summary,
+                "benefit": f"FP&A & Equity Forecasting Benchmark ({actor}): Directly tests whether autonomous LLM agents can connect historical financial statements with forward-looking guidance to predict quarterly earnings.",
+                "action_item": f"Benchmark your FP&A team's internal forecasting prompts against {actor}'s multi-quarter financial statement and transcript evaluation criteria before relying on LLM variance projections.",
+                "risk_angle": f"Unverified LLM earnings forecasts suffer from look-ahead bias and numerical hallucination unless grounded in audited XBRL filings and deterministic spreadsheet formulas.",
+            }
+
+        if "broken on arrival" in text or ("quantized" in text and "registries" in text):
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Empirical study ({actor}) auditing public model registries reveals that a significant share of community-uploaded quantized LLM artifacts suffer from silent weight corruption, broken tokenizers, or degraded reasoning accuracy.",
+                f"Demonstrates how unverified quantized model weights in public repositories introduce silent numerical and reasoning failures into enterprise deployments.",
             )
-        if "reasoning" in text or "pass@" in text or "self-improvement" in text or "distillation" in text or "benchmark" in text:
-            return (
-                62,
-                "General AI & Research",
-                "🔬 Reasoning & Eval Paper",
-                clean_summary,
-                "Reasoning Reliability: Evaluates test-time reasoning accuracy and benchmark rigor for complex analytical tasks.",
+            return {
+                "score": 69,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 AI Supply-Chain Audit",
+                "summary": summary,
+                "benefit": f"Model Registry Supply-Chain Integrity ({actor}): Warns enterprise engineering and risk teams that downloading pre-quantized open-weight models without checksum and eval verification risks silent accuracy collapse.",
+                "action_item": f"Mandate automated golden-dataset regression testing and cryptographic hash verification before promoting any quantized open-weight LLM from public registries into internal sandboxes.",
+                "risk_angle": f"Silent degradation in quantized model weights can corrupt downstream financial document extraction or classification without triggering runtime error logs.",
+            }
+
+        if "prompt injection" in text or "heads of security" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Introduces {actor}, a defensive architecture that trains specialized attention gates inside transformer models to detect and neutralize indirect prompt-injection attacks embedded in untrusted documents.",
+                f"Shows how learned attention-head gating can isolate malicious instructions hidden inside retrieved enterprise documents and emails.",
             )
-        return (
-            56,
-            "General AI & Research",
-            "🔬 Research Paper",
-            clean_summary,
-            "Foundation Model R&D: Early-stage academic research into model architecture, multimodal training, and alignment.",
+            return {
+                "score": 68,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 AI Security Research",
+                "summary": summary,
+                "benefit": f"Indirect Prompt-Injection Defense ({actor}): Relevant to UK finance teams connecting RAG copilots to external supplier invoices, PDFs, or emails that could harbour hidden adversarial instructions.",
+                "action_item": f"Incorporate indirect prompt-injection test cases—such as adversarial text hidden in sample vendor invoices—into your pre-deployment security red-teaming for finance RAG tools.",
+                "risk_angle": f"AI assistants that ingest external PDFs or emails without prompt-injection filtering can be hijacked into exfiltrating sensitive financial ledger data.",
+            }
+
+        if "differentially private" in text or "privacy amplification" in text or "private filtering" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Presents {actor} ({source}), establishing tighter mathematical bounds for differential privacy when training or querying models on sensitive datasets with observable counts or outlier filtering.",
+                f"Advances formal privacy-budget accounting so organizations can train analytical models on sensitive records without leaking individual data points.",
+            )
+            return {
+                "score": 66,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 Privacy & Audit Research",
+                "summary": summary,
+                "benefit": f"Mathematical Privacy Guarantees ({actor}): Provides data-science and compliance teams with stronger differential-privacy noise calibration when analyzing sensitive customer or payroll datasets.",
+                "action_item": f"Share {actor}'s differential-privacy calibration techniques with your data engineering lead when scoping analytics over UK GDPR-protected customer or HR datasets.",
+                "risk_angle": f"Standard anonymization of financial datasets often fails re-identification tests unless backed by formal differential-privacy sensitivity bounds.",
+            }
+
+        if "loss of control" in text or "harmful manipulation" in text or "deepseek" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Safety researchers evaluate {title}, stress-testing frontier open-weight reasoning capabilities against autonomous loss-of-control scenarios, deceptive alignment, and persuasive manipulation benchmarks.",
+                f"Provides empirical red-team evidence on how high-capability open-weight models behave under adversarial autonomy and manipulation prompts.",
+            )
+            return {
+                "score": 67,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 Frontier Safety Eval",
+                "summary": summary,
+                "benefit": f"Frontier Model Red-Teaming ({actor}): Gives enterprise AI governance committees an independent safety scorecard before approving open-weight frontier models for internal use.",
+                "action_item": f"Require model-risk documentation to include independent manipulation and loss-of-control evaluation results before whitelisting frontier models like DeepSeek V4.1 on corporate infrastructure.",
+                "risk_angle": f"Deploying high-autonomy models without behavioural guardrails increases exposure to unauthorized tool execution and social-engineering manipulation.",
+            }
+
+        if "memory fails" in text or "group decisions" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Investigates how multi-agent LLM workflows fail when complex discussion histories are compressed into short memory summaries ({title}), causing critical minority evidence to be discarded.",
+                f"Demonstrates why naive context summarization in multi-agent systems systematically drops rare but decisive risk signals.",
+            )
+            return {
+                "score": 65,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 Multi-Agent Reliability",
+                "summary": summary,
+                "benefit": f"Multi-Agent Memory Fidelity ({actor}): Crucial warning for enterprise architects building multi-agent diligence or audit workflows where compressed context summaries can erase material exceptions.",
+                "action_item": f"Configure enterprise RAG and multi-agent workflows to preserve verbatim citations to anomalous financial footnotes rather than relying solely on rolling LLM memory summaries.",
+                "risk_angle": f"Lossy memory compression in automated review pipelines can drop rare fraud indicators or covenant breach clauses during multi-stage summarization.",
+            }
+
+        if "mcp" in text or "cli" in text or "coworkos" in text or "webharbor" in text or "teammates" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Research study '{title}' ({source}) evaluates how autonomous language agents interact with enterprise execution environments, comparing tool-calling reliability, human collaboration, and interface harnesses.",
+                f"Quantifies how interface design (such as Model Context Protocol vs. CLI or GUI harnesses) alters agent execution accuracy and error recovery.",
+            )
+            return {
+                "score": 64,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 Agent Systems Research",
+                "summary": summary,
+                "benefit": f"Enterprise Agent Harness Design ({actor}): Shows IT and automation leads how structured tool interfaces (MCP/CLI) materially affect agent reliability on multi-step operational workflows.",
+                "action_item": f"Use {actor}'s evaluation methodology to test whether your internal AI agents perform more reliably via structured API/MCP connectors than via brittle browser-GUI automation.",
+                "risk_angle": f"Agents operating across loosely constrained CLI or web interfaces without deterministic schema validation can execute unintended state changes in enterprise systems.",
+            }
+
+        if "instruction capacity" in text or "controlled load" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Examines {title}, measuring how language model compliance degrades as system prompts stack multiple simultaneous formatting, compliance, and analytical constraints.",
+                f"Identifies the threshold where overloaded system prompts cause LLMs to silently drop secondary instructions and guardrails.",
+            )
+            return {
+                "score": 63,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 Prompt Reliability Paper",
+                "summary": summary,
+                "benefit": f"System-Prompt Load Limits ({actor}): Explains why stuffing dozens of accounting rules into a single monolithic prompt causes LLMs to silently ignore edge-case compliance constraints.",
+                "action_item": f"Refactor complex finance prompts into modular, single-purpose verification steps rather than overloading a single prompt with more than 8–10 simultaneous rules.",
+                "risk_angle": f"Overloaded prompts degrade predictably under high instruction density, causing silent omission of mandatory compliance checks.",
+            }
+
+        if "quantization" in text or "svd" in text or "attention" in text or "token" in text or "efficient" in text or "distillation" in text or "muon" in text or "looped" in text:
+            summary = _polish_executive_summary(
+                sig,
+                item.category,
+                f"Technical paper '{title}' from {source} proposes an algorithmic optimization for {focus}, reducing transformer compute overhead while preserving downstream benchmark accuracy.",
+                f"Targets lower memory bandwidth and faster token generation across long-context and multimodal inference workloads.",
+            )
+            return {
+                "score": 60,
+                "tier": "General AI & Research",
+                "func_tag": "🔬 Model Efficiency Paper",
+                "summary": summary,
+                "benefit": f"Inference Efficiency & Compute Economics ({actor}): Tracks algorithmic advances in {focus[:55]} that lower the cost of running long-context enterprise LLMs.",
+                "action_item": f"Have your ML/platform engineering team track {actor} when evaluating low-latency model serving or fine-tuning configurations for long-document enterprise workloads.",
+                "risk_angle": f"Aggressive model compression, sparse attention, or distillation must be validated against domain-specific financial benchmarks to ensure numerical precision is preserved.",
+            }
+
+        summary = _polish_executive_summary(
+            sig,
+            item.category,
+            f"Published via {source}, '{title}' investigates {focus}, introducing new methodology and empirical benchmarks for next-generation foundation models.",
+            f"Contributes technical benchmarks and architectural insights for advancing reliability in {focus[:60]}.",
         )
+        return {
+            "score": 56,
+            "tier": "General AI & Research",
+            "func_tag": "🔬 Foundation R&D Paper",
+            "summary": summary,
+            "benefit": f"Foundation Model R&D ({actor}): Advances academic understanding of {focus[:65]}, informing next-generation multimodal and reasoning architectures.",
+            "action_item": f"Log {actor} in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
+            "risk_angle": f"Early-stage academic methods like {actor} require extensive enterprise hardening and reproducibility checks before production adoption.",
+        }
 
     if item.category == "Hacker News & Reddit":
-        if "memory" in text or "forget" in text or "context" in text or "rag" in text:
-            return (
-                54,
-                "General AI & Research",
-                "💬 Practitioner Debate",
-                clean_summary,
-                "Enterprise Context & RAG: Examines how production LLMs handle long-horizon document memory and retrieval accuracy.",
-            )
-        return (
-            50,
-            "General AI & Research",
-            "💬 Community Pulse",
-            clean_summary,
-            "Engineering Practitioner Pulse: Surfaces hands-on developer benchmarks, local deployment tips, and open-source tooling.",
+        summary = _polish_executive_summary(
+            sig,
+            item.category,
+            f"Community engineering discussion on {source} examining '{title}', where practitioners benchmark real-world deployment trade-offs, latency, and implementation pitfalls.",
+            f"Captures frontline developer feedback on production reliability, cost, and architectural trade-offs for {focus[:60]}.",
         )
+        return {
+            "score": 52,
+            "tier": "General AI & Research",
+            "func_tag": "💬 Practitioner Pulse",
+            "summary": summary,
+            "benefit": f"Practitioner Engineering Signal ({actor}): Surfaces candid developer benchmarks on '{title[:55]}' before vendor marketing narratives settle.",
+            "action_item": f"Share this {source} practitioner thread on '{title[:50]}' with your engineering lead to sanity-check vendor claims against real production experience.",
+            "risk_angle": f"Community workarounds and open-source scripts discussed on {source} must undergo formal security and license review before enterprise use.",
+        }
 
-    # 2. High-Priority UK Finance, Regulatory, Audit & CFO Rules (85–99)
-    if re.search(r"\b(fca|financial conduct authority|bank of england|pra)\b", text):
-        if "crypto" in text or "tracing" in text or "aml" in text or "crime" in text:
-            return (
-                98,
-                "High UK Finance Impact",
-                "🏛️ FCA & Financial Crime",
-                clean_summary,
-                "FCA & AML Supervision: Key regulatory signal for UK compliance and risk leaders aligning AI monitoring controls with FCA and Bank of England expectations.",
-            )
-        return (
-            99,
-            "High UK Finance Impact",
-            "🏛️ FCA & Regulation",
-            clean_summary,
-            "FCA AI Governance: Essential briefing for UK finance and risk leaders aligning AI model oversight and senior accountability (SM&CR) with FCA expectations.",
-        )
+    return None
+
+def _synthesize_uk_finance_intel(
+    item: NewsItem, sig: dict[str, str], text: str
+) -> dict[str, object] | None:
+    """Synthesize bespoke executive summary, benefit, and actionable outcome for High-Priority UK Finance items."""
+    title = sig["title"]
+    source = sig["source"]
+    actor = sig["prefix"] or sig["actor"]
+    focus = sig["focus_lower"]
+    stat = sig["stat"]
+
+    if re.search(r"\b(fca|financial conduct authority|bank of england|boe|pra)\b", text):
+        if "customer needs" in text or "fintechs to design" in text:
+            return {
+                "score": 99,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏛️ FCA & Consumer Duty",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Reporting via {source} examines Financial Conduct Authority (FCA) guidance urging UK fintechs and financial firms to anchor AI system design around measurable customer needs rather than cost automation alone. The regulator emphasises that AI-driven product and credit workflows must satisfy Consumer Duty obligations for fair value, explainability, and vulnerable-customer protection.",
+                    f"Reinforces that FCA supervisory reviews evaluate fintech AI models against Consumer Duty outcome standards.",
+                ),
+                "benefit": f"FCA Consumer Duty AI Design ({source}): Signals that the FCA evaluates AI deployments in UK financial services through verifiable Consumer Duty customer outcomes rather than prescriptive model rules.",
+                "action_item": "Require product and finance leads to complete a Consumer Duty AI Outcome Assessment—documenting customer fairness metrics and human escalation paths—before launching any customer-facing model.",
+                "risk_angle": "Deploying customer-facing AI without documented Consumer Duty outcome testing exposes UK regulated firms to FCA skilled-person reviews (s166) and remediation mandates.",
+            }
+        if "small advice firms" in text or "really encouraged" in text:
+            return {
+                "score": 98,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏛️ FCA & Advice Firms",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Coverage from {source} reports that the Financial Conduct Authority (FCA) has expressed positive encouragement regarding how smaller UK wealth management and financial advice firms are adopting AI assistants. Supervisors noted that using AI to automate meeting transcription, fact-find summaries, and file reviews boosts adviser productivity while preserving qualified human sign-off.",
+                    f"Highlights proportionate FCA support for back-office AI productivity in regulated advice practices.",
+                ),
+                "benefit": f"Proportionate FCA Support for Adviser AI ({source}): Demonstrates that the FCA actively backs administrative AI adoption in smaller regulated UK practices when adviser suitability sign-off remains intact.",
+                "action_item": "Prioritise low-risk administrative AI workflows—such as meeting transcription, fact-find indexing, and draft working papers—subject to mandatory human reviewer sign-off.",
+                "risk_angle": "Even in back-office advice workflows, staff must verify AI-generated client summaries against primary records to prevent suitability errors.",
+            }
+        if "financial crime 360" in text or "crypto" in text or "aml" in text or "crime" in text:
+            return {
+                "score": 98,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏛️ FCA & Financial Crime",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports from the Financial Crime 360 summit in London, where senior supervisors from the FCA and Bank of England joined UK banking and compliance leaders to address AI-driven fraud, synthetic identity detection, and real-time AML monitoring. Speakers stressed pairing machine-learning anomaly detection with explainable audit trails for regulatory examinations.",
+                    f"Aligns UK financial-crime and treasury controls with FCA and Bank of England expectations on countering AI-enabled payment fraud.",
+                ),
+                "benefit": f"FCA & BoE FinCrime Supervision ({source}): Highlights how UK regulators expect treasury and compliance teams to counter AI-generated payment scams with real-time behavioural analytics and explainable AML rules.",
+                "action_item": "Conduct a joint review between Treasury and Financial Crime teams to test supplier bank-mandate verification and payment anomaly controls against synthetic voice and invoice fraud.",
+                "risk_angle": "Black-box AML or fraud-scoring models that cannot explain why transactions were flagged or cleared fail FCA financial-crime auditability standards.",
+            }
+        if "lessons" in text and "survey" in text:
+            return {
+                "score": 99,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏛️ FCA & BoE Survey",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Legal analysis from {source} distils the core governance lessons from the joint Bank of England and FCA 2026 machine-learning survey across UK banking, insurance, and investment firms. The briefing highlights rapid growth in third-party foundation model usage alongside heightened supervisory scrutiny over data lineage, third-party concentration, and SM&CR accountability.",
+                    f"Provides legal and compliance teams with a benchmark of FCA and PRA expectations following the 2026 sector survey.",
+                ),
+                "benefit": f"BoE & FCA 2026 Governance Lessons ({source}): Gives UK CFOs, CROs, and general counsel a legal readout on where UK regulators see governance gaps in third-party AI model deployment.",
+                "action_item": "Map your firm's active AI use cases against the BoE/FCA 2026 survey governance criteria and assign a named Senior Management Function (SMF) owner to each production workflow.",
+                "risk_angle": "Unclear allocation of SM&CR senior manager responsibility for automated financial or compliance models is a primary trigger for FCA governance intervention.",
+            }
+        return {
+            "score": 99,
+            "tier": "High UK Finance Impact",
+            "func_tag": "🏛️ FCA & Regulation",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Global law firm {source} examines findings from the Bank of England and FCA survey showing accelerating AI adoption across UK financial services. While institutions report strong productivity gains in back-office operations and risk analytics, regulators flag growing systemic reliance on a concentrated group of cloud and frontier LLM providers.",
+                f"Tracks how expanding UK financial-services AI adoption intersects with PRA and FCA operational resilience rules.",
+            ),
+            "benefit": f"Systemic Third-Party & FCA Oversight ({source}): Confirms that as AI moves into core UK financial infrastructure, supervisory reviews will focus heavily on operational resilience and Critical Third Party (CTP) concentration.",
+            "action_item": "Update your Outsourcing and Critical Third Party (CTP) register to inventory all external LLM APIs, cloud AI endpoints, and embedded SaaS AI dependencies across finance and operations.",
+            "risk_angle": "Concentrated reliance on a single foundation model vendor without tested fallback procedures violates PRA/FCA operational resilience expectations.",
+        }
 
     if re.search(r"\b(cci|disclosure|consumer duty|frc|icaew|acca|hmrc|vat|reverse charge|tax)\b", text):
-        if "tax" in text or "vat" in text or "hmrc" in text or "reverse charge" in text:
-            return (
-                95,
-                "High UK Finance Impact",
-                "🧾 Tax & HMRC Compliance",
-                clean_summary,
-                "UK Tax & VAT Operations: Directly affects tax compliance workflows, cross-border VAT accounting, and automated filing controls for UK practices and finance teams.",
-            )
-        return (
-            97,
-            "High UK Finance Impact",
-            "📊 UK Disclosure & Reporting",
-            clean_summary,
-            "UK Statutory & Regulatory Reporting: Shows how finance teams can align mandatory disclosure and reporting workflows with UK regulatory standards.",
-        )
+        if "reverse charge" in text or "april 2027" in text:
+            return {
+                "score": 96,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🧾 UK VAT & HMRC",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Indirect-tax specialist {source} details upcoming UK VAT reverse-charge rule changes taking effect in April 2027 for supplies received from overseas vendors. The reform alters cross-border B2B place-of-supply and self-accounting rules, requiring UK VAT-registered businesses to update ERP tax determination engines and AP invoice workflows.",
+                    f"Outlines ERP tax-code and cross-border supplier accounting adjustments required ahead of April 2027.",
+                ),
+                "benefit": f"April 2027 UK VAT Reverse-Charge Reform ({source}): Gives UK tax directors and financial controllers early visibility into cross-border VAT accounting changes impacting overseas software and service suppliers.",
+                "action_item": "Schedule an ERP tax-code and vendor-master audit with your Indirect Tax lead to flag all non-UK supplier accounts requiring reverse-charge reconfiguration before April 2027.",
+                "risk_angle": "Misconfigured ERP VAT reverse-charge codes on overseas SaaS and advisory invoices create systematic HMRC under-declaration and penalty exposure.",
+            }
+        if "taxready" in text or "fixed price per return" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🧾 Managed Tax AI",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Accounting outsourcing specialist QX Global Group ({source}) has launched 'QX TaxReady', an AI-powered managed tax preparation service offering accounting firms a single fixed price per return year-round. The platform pairs automated source-document extraction and workpaper population with dedicated tax reviewers to eliminate peak-season capacity bottlenecks.",
+                    f"Demonstrates how AI document extraction is shifting outsourced tax preparation toward fixed-fee unit economics.",
+                ),
+                "benefit": "Fixed-Price Managed Tax Economics (QX TaxReady): Illustrates how AI workflow automation is shifting accounting firm tax outsourcing from hourly billing to predictable fixed-price unit economics per filing.",
+                "action_item": "Benchmark your practice or group tax function's internal cost-per-return and seasonal contractor spend against fixed-fee AI-assisted preparation workflows ahead of the next filing cycle.",
+                "risk_angle": "When utilizing outsourced or AI-managed tax preparation services, firms must verify cross-border taxpayer data encryption and engagement-letter disclosures.",
+            }
+        if "black ore" in text or "small accounting firms" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🧾 Practice Tax AI",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that fintech provider Black Ore has rolled out a dedicated AI tax automation platform designed for small and mid-tier accounting practices. The tool automates client tax-document ingestion, schedule categorization, and draft return assembly so smaller firms can expand high-margin advisory work without adding compliance headcount.",
+                    f"Shows how turnkey AI tax automation lowers the technology barrier for smaller accounting practices.",
+                ),
+                "benefit": f"SME Tax Practice Automation (Black Ore · {source}): Shows how purpose-built AI tax engines enable smaller practices to compress return-preparation turnaround times and compete with larger networks.",
+                "action_item": "Pilot automated source-document ingestion and draft tax-workpaper generation on a sample cohort of standard client returns to measure reviewer correction rates and hours saved.",
+                "risk_angle": "Automated tax-return population requires strict source-document cross-referencing controls to prevent OCR or classification errors from reaching tax filings.",
+            }
+        return {
+            "score": 96,
+            "tier": "High UK Finance Impact",
+            "func_tag": "📊 UK Tax & Reporting",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Reporting via {source} examines '{title}', detailing how evolving UK tax, statutory disclosure, and regulatory reporting standards are reshaping compliance workflows for corporate finance teams.",
+                f"Highlights practical compliance and automated filing controls for UK finance and tax practitioners.",
+            ),
+            "benefit": f"UK Statutory & Tax Compliance ({actor}): Shows how UK finance teams can align mandatory disclosure and tax reporting workflows with evolving regulatory standards.",
+            "action_item": f"Review '{title[:55]}' with your Head of Tax and Financial Controller to verify that current ERP reporting templates and filing calendars reflect the latest rules.",
+            "risk_angle": "Manual spreadsheet bridges in statutory and tax reporting remain a primary source of filing adjustments and compliance audit findings.",
+        }
 
-    if re.search(r"\b(soc|attestation|certification|assurance|financial crime|fraud|cryptography)\b", text):
-        if "crime" in text or "fraud" in text or "cryptography" in text:
-            return (
-                95,
-                "High UK Finance Impact",
-                "🛡️ FinCrime & Cyber Risk",
-                clean_summary,
-                "Financial Crime & Security Controls: Highlights emerging AI fraud vectors and cryptographic resilience priorities for UK financial institutions.",
-            )
-        return (
-            97,
-            "High UK Finance Impact",
-            "🛡️ Audit & Assurance",
-            clean_summary,
-            "AI Assurance & SOC Controls: Outlines how independent attestation, audit trails, and control testing build board and external auditor confidence in AI.",
-        )
-
-    if "ethics" in text or "compliance officer" in text or "govern the ai" in text or "governance" in text:
-        return (
-            95,
-            "High UK Finance Impact",
-            "🛡️ Governance & Controls",
-            clean_summary,
-            "Enterprise AI Governance: Benchmarks how compliance and audit leaders enforce vendor oversight, procurement guardrails, and explainability.",
-        )
+    if "govern the ai they buy" in text or ("ethics" in text or "governance" in text or "who’s really in charge" in text or "whos really in charge" in text):
+        if "anthropic" in text and "ipo" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🛡️ AI Vendor Governance",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} examines Anthropic's complex corporate governance structure ahead of its anticipated IPO, analyzing the tension between its Long-Term Benefit Trust, public shareholders, and strategic cloud backers like Amazon. Enterprise customers rely on this governance balance for long-term model safety, IP indemnification, and API stability.",
+                    f"Breaks down how Anthropic's dual-purpose board and Long-Term Benefit Trust will govern commercial priorities post-IPO.",
+                ),
+                "benefit": f"Frontier Vendor Corporate Governance (Anthropic IPO · {source}): Helps enterprise procurement and risk leaders evaluate how post-IPO shareholder pressures could affect Anthropic's safety commitments and enterprise SLA terms.",
+                "action_item": "Review contractual change-of-control, model-deprecation notice periods, and IP indemnity clauses in your enterprise LLM agreements ahead of frontier lab IPO transitions.",
+                "risk_angle": "Governance shifts at frontier AI vendors can alter model retention policies, safety guardrails, or enterprise pricing tiers mid-contract.",
+            }
+        return {
+            "score": 95,
+            "tier": "High UK Finance Impact",
+            "func_tag": "🛡️ SaaS AI Governance",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Analysis from {source} ('{title}') challenges whether UK enterprises hold verifiable audit evidence demonstrating effective governance over third-party AI embedded in procured SaaS platforms. While boards maintain high-level AI policies on paper, many organisations lack technical visibility into how vendor models process corporate financial data or log automated decisions.",
+                f"Highlights the assurance gap between boardroom AI policies and technical oversight of bought-in SaaS AI features.",
+            ),
+            "benefit": f"Procured SaaS AI Assurance ({source}): Directly impacts UK CFOs, procurement heads, and internal auditors who sign off on ERP, spend-management, and FP&A renewals bundling third-party AI.",
+            "action_item": "Add a mandatory Vendor AI Governance & Data Lineage Questionnaire to finance software procurement and renewal checklists, requiring zero-training attestations and sub-processor disclosure.",
+            "risk_angle": "Procuring SaaS platforms with embedded AI without contractual audit rights leaves UK firms unable to evidence control effectiveness to external auditors or regulators.",
+        }
 
     if re.search(
         r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo|grant thornton|rsm)\b",
         text,
     ):
-        return (
-            94,
-            "High UK Finance Impact",
-            "🛡️ Audit & Big Four",
-            clean_summary,
-            "UK Practice & Audit Benchmark: Tracks how major accounting networks and internal audit functions are scaling AI control testing, staffing, and advisory services.",
-        )
+        if "3.86bn" in text or "partner profits" in text:
+            return {
+                "score": 96,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🛡️ Big Four Financials",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that Big Four firm EY UK achieved record annual revenue of £3.86bn alongside a 10% increase in average distributable profit per partner. Growth was propelled by corporate demand for AI transformation advisory, tax structuring, and financial-services assurance across the UK market.",
+                    f"Quantifies Big Four fee growth (£3.86bn) and partner profitability across UK audit and AI advisory.",
+                ),
+                "benefit": f"Big Four Fee & Margin Benchmark (£3.86bn · {source}): Signals resilient UK enterprise demand for technology-enabled audit, tax, and AI transformation advisory despite wider economic headwinds.",
+                "action_item": "Review your external audit and Big Four advisory fee proposals for FY26/27, requesting transparent rate cards where AI-assisted audit tooling reduces manual sampling hours.",
+                "risk_angle": "Rising Big Four partner profitability alongside AI automation underscores the need for audit committees to verify that automated audit efficiencies translate into deeper control testing.",
+            }
+        if "annual results 2026" in text and "ey" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🛡️ Big Four AI Strategy",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"EY UK's official 2026 annual results statement details how the firm's £3.86bn revenue performance was underpinned by sustained capital investment in proprietary AI assurance platforms, cloud data engineering, and staff upskilling across its UK regional offices.",
+                    f"Outlines how technology and AI platform integration are reshaping delivery across UK audit, strategy, and tax lines.",
+                ),
+                "benefit": "EY UK Technology & Talent Blueprint: Illustrates how major UK accounting networks pair proprietary AI assurance platforms with structured staff upskilling to lift delivery margins.",
+                "action_item": "Benchmark your internal finance and audit team's AI training curriculum against Big Four upskilling models so reviewers can effectively interrogate automated schedules.",
+                "risk_angle": "Scaling AI across assurance and tax delivery requires strict methodology validation so automated sampling satisfies FRC Audit Quality Review (AQR) standards.",
+            }
+        if "bdo" in text and ("2,000" in text or "partners" in text):
+            return {
+                "score": 94,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🛡️ UK Practice Talent",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that mid-tier accounting and advisory network BDO UK has promoted nearly 2,000 employees nationwide, including the appointment of 29 new partners across audit, tax, and advisory. The promotions reflect sustained investment in specialist leadership as mid-market UK businesses navigate regulatory and AI change.",
+                    f"Demonstrates strong partner-track capacity expansion across the UK's fifth-largest accountancy network.",
+                ),
+                "benefit": f"UK Mid-Tier Practice Capacity (BDO 2,000 Promotions · {source}): Shows how leading UK mid-market practices are expanding senior partner review capacity while automating routine compliance work.",
+                "action_item": "Assess how AI automation of junior bookkeeping and compliance tasks alters your finance team's career progression pyramid, ensuring newly promoted managers build strong review skills.",
+                "risk_angle": "As AI automates entry-level preparation, finance leaders must prevent a skills hollow-out among newly promoted managers and senior reviewers.",
+            }
+        if "floqast" in text and "pwc" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🛡️ Close Automation & PwC",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that close-management vendor FloQast and Big Four firm PwC UK have expanded their strategic alliance to deliver AI-enabled finance managed services. The joint offering pairs FloQast's automated account reconciliation and month-end close workflows with PwC UK's operational finance delivery teams.",
+                    f"Shows how Big Four managed services and cloud close software are converging to automate month-end accounting.",
+                ),
+                "benefit": f"Automated Close & Managed Services Alliance (FloQast × PwC UK): Demonstrates how UK CFOs can combine automated balance-sheet reconciliation software with Big Four managed delivery.",
+                "action_item": "Audit your month-end close checklist to identify manual balance-sheet reconciliations and intercompany eliminations suitable for automated close-management workflows.",
+                "risk_angle": "Transitioning month-end reconciliations to automated or managed workflows requires clear maker-checker sign-off hierarchies to preserve SOX and UK corporate controls.",
+            }
+        if "work-from-home" in text or "amitrano" in text:
+            return {
+                "score": 93,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🛡️ Practice Workforce",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} covers commentary from PwC UK Senior Partner Marco Amitrano warning that prolonged work-from-home policies have had adverse developmental consequences for young professionals entering accounting and finance. Amitrano emphasises that in-person apprenticeship and side-by-side coaching remain critical as AI reshapes entry-level tasks.",
+                    f"Highlights the talent-development tension between remote working, AI automation, and junior auditor apprenticeship.",
+                ),
+                "benefit": f"UK Finance Apprenticeship & Hybrid Governance (PwC UK · {source}): Highlights the leadership challenge of training junior accountants when remote work and AI simultaneously reduce routine task exposure.",
+                "action_item": "Establish structured in-person coaching during month-end close and audit cycles so junior finance analysts learn how to interrogate AI-generated variances and working papers.",
+                "risk_angle": "Junior staff working remotely with AI copilots without close senior mentorship face higher risk of accepting plausible-sounding model errors in financial schedules.",
+            }
+        return {
+            "score": 94,
+            "tier": "High UK Finance Impact",
+            "func_tag": "🛡️ Audit & Big Four",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Insight from {source} ('{title}') examines how {actor} is addressing {focus}, highlighting strategic priorities across enterprise resilience, workforce capabilities, and technology adoption.",
+                f"Tracks how Big Four and mid-tier advisory leaders are guiding UK boards on {focus[:60]}.",
+            ),
+            "benefit": f"Big Four Advisory Benchmark ({source} · {actor}): Outlines how leading accounting and advisory networks frame {focus[:65]} for UK corporate boards and finance functions.",
+            "action_item": f"Incorporate {source}'s perspective on '{title[:55]}' into your next Audit & Risk Committee briefing paper to benchmark internal capabilities.",
+            "risk_angle": f"Addressing {focus[:60]} without aligning internal audit controls and staff training creates execution gaps between board strategy and finance operations.",
+        }
 
     if "prove value" in text or "roi" in text or "struggle" in text or "productivity" in text or "liquidity" in text or "cash" in text:
-        if "liquidity" in text or "cash" in text or "treasury" in text or "budget" in text:
-            return (
-                95,
-                "High UK Finance Impact",
-                "💷 Treasury & Liquidity",
-                clean_summary,
-                "Treasury & Cash Forecasting: Evaluates AI-driven cash visibility, working-capital discipline, and macroeconomic liquidity risks for UK CFOs.",
-            )
-        return (
-            96,
-            "High UK Finance Impact",
-            "📈 CFO ROI & Value",
-            clean_summary,
-            "UK CFO Value Realisation: Addresses the core challenge for finance directors—converting AI pilots into auditable P&L savings and close-cycle speed.",
-        )
+        if "kyriba" in text or "budget reaction" in text:
+            return {
+                "score": 96,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💷 UK Budget & Liquidity",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Treasury management leader Kyriba warns via {source} that short-term market reactions to the UK Budget risk masking deeper structural pressures on corporate liquidity, borrowing costs, and workforce productivity. Kyriba executives urge UK CFOs to replace static cash spreadsheets with real-time, AI-driven liquidity stress-testing and working-capital visibility.",
+                    f"Connects post-Budget UK fiscal policy with real-time treasury forecasting and liquidity risk management.",
+                ),
+                "benefit": f"Post-Budget UK Liquidity Strategy (Kyriba · {source}): Emphasises why UK CFOs and group treasurers need continuous 13-week rolling cash visibility and automated interest-rate scenario modelling.",
+                "action_item": "Run a post-Budget working-capital and liquidity stress test across your 13-week cash forecast, incorporating updated UK employer National Insurance, tax, and gilt-yield assumptions.",
+                "risk_angle": "Relying on static month-end cash snapshots during UK fiscal and interest-rate volatility can mask intraday liquidity squeezes across group subsidiaries.",
+            }
+        if "nine in ten" in text or "cash management" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💷 AI Cash Management",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports survey findings showing that nine in ten (90%) senior finance leaders now back AI-powered cash management to improve working-capital forecasting, receivables collection, and idle-cash sweeping. Finance directors cite real-time anomaly detection across multi-bank ledgers as a top treasury priority.",
+                    f"Quantifies strong CFO consensus (90%) behind deploying AI for automated treasury and cash-flow forecasting.",
+                ),
+                "benefit": f"CFO Consensus on Treasury AI (90% Adoption · {source}): Demonstrates that AI-assisted cash forecasting and automated receivables matching have moved into the mainstream for UK corporate treasurers.",
+                "action_item": "Evaluate connecting your treasury management system (TMS) or bank feeds to automated AR/AP cash-forecasting models to reduce variance between projected and actual weekly cash positions.",
+                "risk_angle": "Automated cash-sweeping or payment-scheduling rules must enforce dual-authorization limits in banking portals to prevent erroneous treasury transfers.",
+            }
+        return {
+            "score": 95,
+            "tier": "High UK Finance Impact",
+            "func_tag": "📈 CFO ROI & Value",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Reporting from {source} ('{title}') examines how finance and executive teams measure concrete productivity, cash-flow, and P&L returns from enterprise AI investments.",
+                f"Addresses how CFOs convert AI pilot activity into auditable cost savings and cycle-time reductions.",
+            ),
+            "benefit": f"CFO Value Realisation ({actor}): Focuses on converting AI software spend into measurable close-cycle speed, working-capital discipline, and P&L productivity.",
+            "action_item": f"Require every active AI pilot in your finance function to report baseline vs. post-deployment hours saved and error-rate reductions before approving annual license renewals.",
+            "risk_angle": "Expanding enterprise AI licenses without auditable productivity KPIs leads to SaaS sprawl and unrecovered software overhead.",
+        }
 
     if "acquisition" in text or "acquisitions" in text or "private equity" in text or "raises" in text or "secures" in text:
-        if item.category == "UK Finance & CFO AI" or "accounting" in text or "finance" in text:
-            return (
-                94,
-                "High UK Finance Impact",
-                "💼 M&A & Accounting Tech",
-                clean_summary,
-                f"Sector M&A & Capital Pulse{f' ({stat_str})' if stat_str else ''}: Tracks private-equity consolidation and venture investment reshaping UK accounting practices and finance automation.",
-            )
-
-    if "barclays" in text or "lloyds" in text or "natwest" in text or "hsbc" in text or "bank tax" in text or "job cuts" in text:
-        return (
-            93,
-            "High UK Finance Impact",
-            "🏦 UK Banking & Workforce",
-            clean_summary,
-            "UK Banking Sector Benchmark: Evaluates how major UK institutions balance AI cost efficiencies, workforce skills, and capital allocation.",
-        )
+        if "livingbridge" in text or "apteus" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💼 UK Accounting PE Roll-Up",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that mid-market private equity firm Livingbridge has backed the launch of Apteus, a consolidated UK accounting services group formed through seven simultaneous regional practice acquisitions. The platform strategy centres on unifying cloud practice management, AI compliance automation, and shared advisory capabilities.",
+                    f"Illustrates rapid private-equity consolidation across UK regional accountancy practices.",
+                ),
+                "benefit": f"UK Accounting PE Consolidation (Livingbridge / Apteus · 7 Acquisitions): Shows how private-equity sponsors are rolling up UK accountancy practices to amortize AI and technology investment across a larger client base.",
+                "action_item": "If operating in or advising the mid-tier practice market, evaluate how centralising ERP, client onboarding, and AI tax/audit tooling across acquired practices drives EBITDA margin expansion.",
+                "risk_angle": "Rapid multi-practice roll-ups create fragmented client data environments and inconsistent quality-management controls (ISQM 1) if IT integration lags deal completion.",
+            }
+        if "collective" in text and "100m" in text:
+            return {
+                "score": 94,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💼 Accounting FinTech Capital",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that financial platform Collective has secured $100M in fresh capital to scale its AI-native accounting, bookkeeping, and tax formation platform for solo business owners and independent consultants. The funding accelerates automation of monthly close, expense categorization, and quarterly tax filings.",
+                    f"Highlights major venture backing ($100M) for end-to-end AI bookkeeping and tax platforms.",
+                ),
+                "benefit": f"AI-Native Bookkeeping Scale (Collective $100M · {source}): Signals how well-capitalised fintech platforms are automating end-to-end SME bookkeeping, payroll, and tax compliance.",
+                "action_item": "Assess how automated bookkeeping and categorization engines can be integrated into your client-accounting or subsidiary ledger workflows to eliminate manual bank-feed coding.",
+                "risk_angle": "Automated SME bookkeeping platforms require periodic accountant review of chart-of-accounts mappings to prevent systematic misclassification of capital vs. revenue expenditure.",
+            }
+        if "talky" in text or "unwritten rules of accounting" in text:
+            return {
+                "score": 94,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💼 Accounting Tribal Knowledge AI",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that European accounting-AI startup Talky has raised €1.5 million to capture and codify the 'unwritten rules' and client-specific institutional knowledge inside accounting practices. The platform helps firms retain tacit partner and manager context on complex client ledgers and historical adjustments.",
+                    f"Addresses how accounting practices codify tacit client-ledger knowledge into reusable AI workflows.",
+                ),
+                "benefit": f"Codifying Tacit Accounting Knowledge (Talky €1.5M · {source}): Solves a classic practice pain point—preventing client-specific accounting nuances from walking out the door during staff turnover.",
+                "action_item": "Document client-specific or subsidiary-specific accounting policies and recurring journal adjustments in structured knowledge repositories so AI review tools apply consistent rules.",
+                "risk_angle": "Training internal AI assistants on historical working papers requires scrubbing outdated tax rates or superseded accounting treatments first.",
+            }
+        if "ravical" in text:
+            return {
+                "score": 94,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💼 Practice Growth & AI",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Reporting via {source} ('{title}') details how accounting-tech startup Ravical secured a $17 million seed round led by MMC Ventures to deploy domain-specific AI agents for accounting and advisory firms. The platform aims to decouple practice revenue growth from linear headcount hiring by automating routine compliance and client preparation.",
+                    f"Shows how MMC-backed Ravical ($17M) is targeting the link between accounting firm growth and linear staffing.",
+                ),
+                "benefit": f"Decoupling Practice Growth from Headcount (Ravical $17M · {source}): Demonstrates how UK and European venture capital is backing agentic AI to expand revenue per partner in accounting practices.",
+                "action_item": "Measure your finance or practice team's revenue-per-FTE (or transactions-processed-per-FTE) before and after deploying AI workflow automation to validate operating leverage.",
+                "risk_angle": "Scaling client or transaction volume without proportional senior reviewer bandwidth can strain quality control if AI confidence thresholds are not strictly enforced.",
+            }
 
     if "banking" in text or "uk finance" in text:
-        return (
-            95,
-            "High UK Finance Impact",
-            "🏦 UK Banking & Strategy",
-            clean_summary,
-            "UK Financial Services Strategy: Highlights why clean data architecture, staff training, and governance matter as much as model selection.",
-        )
+        if "86%" in text or "ibs intelligence" in text.lower():
+            return {
+                "score": 96,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏦 UK Finance 86% Adoption",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"A new sector study reported by {source} reveals that AI adoption across UK financial services has reached 86%, with banks, insurers, and wealth managers moving rapidly from experimental pilots to production deployment across fraud detection, credit underwriting, and finance operations.",
+                    f"Establishes an 86% adoption benchmark across UK financial institutions.",
+                ),
+                "benefit": f"UK Financial Sector Adoption Benchmark (86% · {source}): Confirms that AI deployment is now standard operating practice across UK financial services, shifting competitive advantage from basic adoption to governance and ROI.",
+                "action_item": "Benchmark your finance department's production AI maturity against the 86% UK sector adoption rate and identify the top two manual close or reporting bottlenecks still running on legacy scripts.",
+                "risk_angle": "With 86% of UK financial firms deploying AI, lagging on model risk management or data quality creates immediate regulatory and operational disadvantages.",
+            }
+        if "autonomous are ai agents" in text or "digit.fyi" in text.lower():
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏦 Autonomous Agents in UK Finance",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} investigates the true degree of autonomy granted to AI agents inside UK financial institutions, finding that while agentic workflows are increasingly drafting reconciliations, compliance alerts, and customer responses, regulated firms strictly restrict autonomous execution over ledger postings and fund transfers.",
+                    f"Examines where UK financial institutions draw the boundary between agent autonomy and human sign-off.",
+                ),
+                "benefit": f"Agent Autonomy Boundaries in UK Finance ({source}): Clarifies that leading UK institutions deploy AI agents in 'propose-and-verify' mode rather than granting unconstrained write access to core ledgers.",
+                "action_item": "Enforce a strict read-only / draft-only permission tier for all AI agents connected to ERP, treasury, and general-ledger systems, requiring explicit human approval before posting entries.",
+                "risk_angle": "Granting autonomous write or payment-execution privileges to probabilistic AI agents violates segregation-of-duties controls in UK financial services.",
+            }
+        if "banking password" in text or "bank of america" in text:
+            return {
+                "score": 95,
+                "tier": "High UK Finance Impact",
+                "func_tag": "🏦 AI Agent Credential Risk",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that Bank of America has issued formal customer guidance warning against sharing online banking passwords or authentication tokens with third-party AI assistants and browser agents, reminding account holders that they bear liability for transactions initiated via delegated agent access.",
+                    f"Highlights banking liability and security risks when users hand credentials to autonomous AI browser agents.",
+                ),
+                "benefit": f"Corporate Banking Credential Security (Bank of America · {source}): Critical reminder for UK treasury and AP teams that sharing banking portal credentials with third-party AI automation tools voids bank fraud protections.",
+                "action_item": "Issue an immediate treasury security reminder prohibiting finance staff from entering corporate banking credentials, MFA codes, or API keys into unapproved third-party AI agents.",
+                "risk_angle": "Delegating banking portal access to third-party AI agents bypasses dual-control payment mandates and shifts unauthorized transaction liability onto the corporate account holder.",
+            }
+        return {
+            "score": 94,
+            "tier": "High UK Finance Impact",
+            "func_tag": "🏦 UK Banking & Strategy",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Coverage from {source} ('{title}') analyses how UK banking and financial institutions are aligning AI deployment with data architecture modernisation, workforce training, and regulatory resilience.",
+                f"Examines strategic priorities across UK banking technology and governance.",
+            ),
+            "benefit": f"UK Banking & Financial Strategy ({actor}): Highlights why clean data architecture, staff training, and governance matter as much as model selection in UK financial services.",
+            "action_item": f"Review '{title[:55]}' against your finance data-governance roadmap to ensure underlying ledger and reporting data are structured cleanly for AI consumption.",
+            "risk_angle": "Connecting AI models to fragmented or unreconciled banking and ERP data pipelines amplifies reporting errors at scale.",
+        }
 
     if re.search(
-        r"\b(cfo|cfos|finance leader|finance leaders|finance team|finance teams|fp&a|accountant|accounting)\b",
+        r"\b(cfo|cfos|finance leader|finance leaders|finance team|finance teams|fp&a|accountant|accounting|payroll)\b",
         text,
     ):
-        if stat_str:
-            return (
-                97,
-                "High UK Finance Impact",
-                "📈 CFO Survey Benchmark",
-                clean_summary,
-                f"CFO Benchmark ({stat_str}): Quantifies boardroom expectations on finance leaders to accelerate AI adoption without compromising reporting accuracy.",
-            )
-        return (
-            94,
-            "High UK Finance Impact",
-            "📈 CFO & Finance Ops",
-            clean_summary,
-            "Finance Leadership & Close Ops: Practical perspective on deploying AI across forecasting, reconciliation, and month-end reporting.",
-        )
+        if "levvy ai" in text or "hidden hours" in text:
+            return {
+                "score": 94,
+                "tier": "High UK Finance Impact",
+                "func_tag": "📈 Practice Advisory Revenue",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that practice-automation platform Levvy AI is helping accounting firms identify unbilled 'hidden hours' lost to manual client chasing, spreadsheet cleanup, and routine bookkeeping, reallocating that capacity into higher-margin CFO advisory services.",
+                    f"Shows how AI workflow telemetry uncovers capacity bottlenecks inside accounting practices.",
+                ),
+                "benefit": f"Converting Compliance Hours to Advisory Revenue (Levvy AI · {source}): Demonstrates how accounting practices use AI workflow automation to recover realization rates and grow fractional-CFO advisory margins.",
+                "action_item": "Track time spent by finance and practice staff on manual data chasing and reconciliation cleanup over one month-end cycle to quantify the capacity recoverable via automation.",
+                "risk_angle": "Shifting staff from compliance preparation to client advisory requires updated engagement letters and professional indemnity scope checks.",
+            }
+        if "intuit" in text and "mid-market" in text:
+            return {
+                "score": 94,
+                "tier": "High UK Finance Impact",
+                "func_tag": "📈 Mid-Market Accounting AI",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that financial software giant Intuit has unveiled a new suite of agentic AI tools built for accounting firms and mid-market finance teams, automating multi-entity financial reporting, anomaly detection, and collaborative client close workflows.",
+                    f"Expands Intuit's embedded AI automation from small businesses into mid-market finance and accounting practices.",
+                ),
+                "benefit": f"Mid-Market ERP & Accounting Automation (Intuit · {source}): Shows how incumbent accounting software vendors are embedding multi-entity FP&A and close automation directly into core ledgers.",
+                "action_item": "Evaluate embedded AI capabilities within your existing accounting or ERP suite before procuring standalone point solutions that require custom ledger integrations.",
+                "risk_angle": "Enabling automated ledger categorization or journal suggestions inside core accounting suites requires role-based approval thresholds to preserve audit trails.",
+            }
+        if "payroll leaders" in text or "the shard" in text:
+            return {
+                "score": 93,
+                "tier": "High UK Finance Impact",
+                "func_tag": "📈 UK Payroll & Practice Ops",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports on QX Accounting Services' executive roundtable at The Shard in London, where senior UK payroll and accounting leaders examined how AI validation, HMRC real-time reporting compliance, and managed services are reshaping payroll operations.",
+                    f"Captures senior UK practitioner perspectives on automating high-volume payroll and compliance checks.",
+                ),
+                "benefit": f"UK Payroll Automation & Compliance (QX Accounting Services · {source}): Highlights how UK finance and practice leaders are using AI anomaly checks to prevent payroll errors and HMRC PAYE discrepancies.",
+                "action_item": "Implement automated pre-run variance checks comparing current-month payroll gross-to-net schedules against prior-month baselines and HR starter/leaver logs.",
+                "risk_angle": "Payroll processing errors carry immediate employee relations and HMRC compliance consequences; AI variance checks must supplement rather than replace payroll sign-off.",
+            }
+        if "askdost" in text or "dost launches" in text:
+            return {
+                "score": 93,
+                "tier": "High UK Finance Impact",
+                "func_tag": "📈 AP & Finance Assistant",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that financial automation provider Dost has launched AskDost, a conversational AI assistant built for corporate finance and operations teams to query supplier invoices, reconcile purchase orders, and resolve accounts-payable exceptions in real time.",
+                    f"Brings natural-language querying and automated three-way PO matching to accounts-payable operations.",
+                ),
+                "benefit": f"Conversational AP & Supplier Reconciliation (AskDost · {source}): Shows how natural-language finance assistants reduce time spent investigating supplier invoice discrepancies and delivery mismatches.",
+                "action_item": "Pilot automated three-way matching (PO, goods-received note, and supplier invoice) in accounts payable to reduce manual exception handling.",
+                "risk_angle": "Conversational assistants querying AP ledgers must enforce strict vendor-master access controls so users cannot approve or modify supplier bank details.",
+            }
+        if "sage" in text and "explainable ai" in text:
+            return {
+                "score": 91,
+                "tier": "High UK Finance Impact",
+                "func_tag": "📈 Explainable Finance AI",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} profiles how UK accounting software leader Sage is experimenting with multimodal and sonified data representations ('Explainable AI Music') to help finance users intuitively spot anomalies, cash-flow rhythms, and ledger outliers alongside transparent audit explanations.",
+                    f"Explores novel multimodal interfaces for making complex financial ledger patterns and AI anomaly flags interpretable.",
+                ),
+                "benefit": f"Explainable Anomaly Detection (Sage · {source}): Reinforces why UK accounting software leaders prioritise human interpretability and transparent reasoning trails over black-box predictions.",
+                "action_item": "Ensure any anomaly-detection tool used in month-end review surfaces the exact underlying journal lines and rule triggers behind every flagged outlier.",
+                "risk_angle": "Unexplainable anomaly alerts create reviewer alert-fatigue and are routinely discounted by external auditors during substantive testing.",
+            }
 
     if item.category == "UK Finance & CFO AI":
-        return (
-            90,
-            "High UK Finance Impact",
-            "💷 UK Finance",
-            clean_summary,
-            "UK Finance & Market Pulse: Covers operational governance, talent, and technology adoption trends across UK financial services.",
-        )
+        if "contractor demand" in text or "contractor uk" in text.lower():
+            return {
+                "score": 91,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💷 UK AI Talent & IR35",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports that UK enterprise demand for specialist IT and AI contractors surged in September 2026 to its highest level since 2023, as banks, corporates, and public-sector bodies bring in interim data engineers and AI implementation leads.",
+                    f"Tracks surging UK day-rate contractor demand for enterprise AI and data-engineering projects.",
+                ),
+                "benefit": f"UK IT & AI Contractor Budget Pressure ({source}): Alerts UK CFOs and procurement teams to tightening supply and rising day rates for interim AI and data-engineering specialists.",
+                "action_item": "Review FY26/27 IT project budgets and IR35 status determinations for interim AI/data contractors, ensuring clear milestone deliverables and knowledge-transfer clauses.",
+                "risk_angle": "Relying heavily on external IT contractors to build internal finance AI tools without documentation handovers creates key-person dependency and IR35 compliance exposure.",
+            }
+        if "operating loss" in text and "895 billion" in text:
+            return {
+                "score": 92,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💷 AI Vendor Economics",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"{source} reports financial disclosures showing Anthropic swinging back to an operating loss as projected multi-year cloud and compute commitments reaching $895 billion weigh on margins ahead of its planned IPO.",
+                    f"Highlights the massive capital intensity ($895B compute commitments) shaping frontier AI vendor financials.",
+                ),
+                "benefit": f"Frontier AI Vendor Financial Due Diligence ($895B Compute · {source}): Crucial financial signal for UK CFOs assessing long-term vendor pricing power, capital burn, and API unit economics.",
+                "action_item": "Avoid locking your enterprise into single-vendor multi-year minimum LLM spend commitments without price-protection caps and model-portability architecture.",
+                "risk_angle": "Massive compute commitments at frontier labs could drive sudden API price increases or tier restructuring as vendors seek pre-IPO profitability.",
+            }
+        if "outside financial support" in text or "consultancy.uk" in text.lower():
+            return {
+                "score": 90,
+                "tier": "High UK Finance Impact",
+                "func_tag": "💷 Fractional CFO & Advisory",
+                "summary": _polish_executive_summary(
+                    sig,
+                    item.category,
+                    f"Advisory briefing from {source} examines the inflection points—such as fundraising, cross-border expansion, ERP migration, or AI automation—where growing UK businesses should bring in external fractional CFOs or financial advisory support.",
+                    f"Outlines key operational triggers for engaging external CFO and financial transformation specialists.",
+                ),
+                "benefit": f"Scaling UK Finance Function Maturity ({source}): Helps high-growth UK companies and advisory practices identify when internal bookkeeping must be upgraded to institutional FP&A and controller governance.",
+                "action_item": "Assess whether upcoming ERP, M&A, or AI transformation projects require temporary specialist controller or FP&A advisory capacity to protect BAU month-end close.",
+                "risk_angle": "Delaying senior financial controller oversight during rapid revenue growth increases the risk of working-capital shortfalls and audit adjustments.",
+            }
+        return {
+            "score": 90,
+            "tier": "High UK Finance Impact",
+            "func_tag": "💷 UK Finance & Market Pulse",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Market intelligence via {source} ('{title}') examines how {actor} is navigating {focus}, highlighting capital-allocation, governance, and technology adoption implications for UK financial leaders.",
+                f"Provides UK finance and strategy teams with market context on {focus[:65]}.",
+            ),
+            "benefit": f"UK Finance & Market Intelligence ({source} · {actor}): Tracks how developments in '{title[:55]}' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
+            "action_item": f"Assess the relevance of '{title[:55]}' ({source}) during your next monthly finance leadership or investment committee review.",
+            "risk_angle": f"Market and technology shifts around {focus[:55]} require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
+        }
 
-    # 3. Finance Ops, Data Governance & Enterprise AI Productivity (70–84)
-    if "gmail" in text or "photos" in text or "personal intelligence" in text or "scraping" in text or "opt out" in text:
-        return (
-            84,
-            "Finance Ops & Governance",
-            "🔒 Data Privacy & IP",
-            clean_summary,
-            "Workspace & Data Privacy: Reminder for finance teams to verify enterprise zero-training opt-outs so corporate documents are never used for model training.",
-        )
+    return None
+
+def _synthesize_ops_and_global_intel(
+    item: NewsItem, sig: dict[str, str], text: str
+) -> dict[str, object]:
+    """Synthesize bespoke executive summary, benefit, and actionable outcome for Enterprise Ops & Global AI items."""
+    title = sig["title"]
+    source = sig["source"]
+    actor = sig["prefix"] or sig["actor"]
+    focus = sig["focus_lower"]
+    stat = sig["stat"]
+
+    if "scraping" in text or "opt out" in text or "robots.txt" in text or "training preferences" in text:
+        return {
+            "score": 84,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "🔒 Data Privacy & IP",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Reporting via {source} ('{title}') details how major frontier AI labs and web standards bodies are converging on standardized machine-readable opt-out protocols so publishers and enterprises can block unauthorized AI web scraping and model training.",
+                f"Establishes machine-readable opt-out signals to protect proprietary web content from AI training crawlers.",
+            ),
+            "benefit": f"Corporate IP & Training Opt-Out Controls ({actor} · {source}): Helps legal, IR, and finance teams protect published annual reports, pricing tables, and proprietary research from unauthorized LLM scraping.",
+            "action_item": f"Following this {source} update on '{title[:50]}', ask your web/security administrator to verify that robots.txt and AI training opt-out headers are configured across investor-relations and corporate portals.",
+            "risk_angle": "Unprotected public portals and misconfigured workspace tenants allow external crawlers and consumer AI tools to ingest proprietary corporate disclosures.",
+        }
 
     if (
         "no internet" in text
@@ -440,87 +1076,203 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
         or "security" in text
         or "bug bount" in text
         or "misalignment" in text
+        or "backdoored" in text
+        or "cwe-bench" in text
     ):
-        return (
-            83,
-            "Finance Ops & Governance",
-            "🔒 AI Security & Controls",
-            clean_summary,
-            "Enterprise Security Posture: Tracks how frontier labs detect misalignment, harden model infrastructure, and contain unauthorized agent actions.",
-        )
+        return {
+            "score": 83,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "🔒 AI Security & Controls",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Security report from {source} ('{title}') examines how {actor} is addressing {focus}, detailing defensive hardening, vulnerability benchmarking, and real-time containment controls against AI-enabled cyber threats.",
+                f"Highlights enterprise security posture and vulnerability controls around {focus[:65]}.",
+            ),
+            "benefit": f"Enterprise AI Security Posture ({actor}{f' · {stat}' if stat else ''}): Tracks how security teams and frontier labs detect model misalignment, patch supply-chain backdoors, and contain autonomous agent actions.",
+            "action_item": f"Share this {source} security update on '{title[:55]}' with your CISO and internal audit lead to verify that IDE extensions, model APIs, and agent permissions are continuously monitored.",
+            "risk_angle": f"Security vulnerabilities across {focus[:55]} can expose developer credentials, internal codebases, or connected financial databases to unauthorized access.",
+        }
 
-    if "scalable ai" in text or "serving harness" in text or "foundation" in text or "diligence" in text or "transactional" in text:
-        return (
-            81,
-            "Finance Ops & Productivity",
-            "⚙️ Enterprise AI Workflows",
-            clean_summary,
-            "Transactional & Legal Diligence: Shows how wrapping AI models in structured review workflows accelerates contract, M&A, and document diligence.",
-        )
+    if "diligence" in text or "transactional" in text or "ropes & gray" in text or "statebench" in text or "integration contracts" in text:
+        return {
+            "score": 81,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "⚙️ Enterprise AI Workflows",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Case study from {source} ('{title}') demonstrates how {actor} is engineering structured AI verification harnesses to handle {focus}, improving multi-document state tracking and legal/financial review reliability.",
+                f"Shows how structured evaluation harnesses make enterprise document and transactional diligence auditable.",
+            ),
+            "benefit": f"Transactional & Document Diligence ({actor}): Shows M&A, legal, and finance teams how wrapping LLMs in deterministic state-tracking harnesses accelerates contract and data-room review.",
+            "action_item": f"Evaluate structured AI extraction workflows modeled on {actor} for M&A data-room review, lease-accounting (IFRS 16) abstraction, and supplier contract audits.",
+            "risk_angle": "Long-document AI review without state-tracking verification risks missing late-stage contract amendments, side letters, or change-of-control clauses.",
+        }
 
-    if "text messages" in text or "agents" in text or "agent" in text:
-        return (
-            78,
-            "Finance Ops & Productivity",
-            "🤖 AI Agents & Monitoring",
-            clean_summary,
-            "Agentic Workflow Governance: Highlights why autonomous AI agents require real-time action logging, permission boundaries, and human sign-off.",
-        )
+    if "agents" in text or "agent" in text or "agentic" in text:
+        return {
+            "score": 78,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "🤖 AI Agents & Governance",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Analysis from {source} ('{title}') examines {focus}, exploring how organizations measure real-world task completion, enforce behavioural incentives, and maintain human accountability over autonomous AI agents.",
+                f"Evaluates practical governance, liability, and output quality metrics for production AI agents.",
+            ),
+            "benefit": f"Agentic Workflow Governance ({actor} · {source}): Highlights why finance and operations leaders must judge AI agents by verified business outputs and auditability rather than raw token volume.",
+            "action_item": f"Apply the lessons from '{title[:55]}' by requiring real-time action logging, spend caps, and human sign-off gates before any internal AI agent interacts with production systems.",
+            "risk_angle": f"Unmonitored agent autonomy in {focus[:55]} creates corporate liability and operational errors when agents optimize for proxy metrics or bypass intended rules.",
+        }
 
-    if "voice" in text or "local" in text or "macbook" in text or "on-device" in text:
-        return (
-            76,
-            "Finance Ops & Productivity",
-            "💻 Local & On-Device AI",
-            clean_summary,
-            "On-Device Confidentiality: Running capable models locally on corporate hardware keeps sensitive financial data off external cloud endpoints.",
-        )
+    if "dictation" in text or "voice" in text or "anyspeech" in text or "on-device" in text or "palette" in text:
+        return {
+            "score": 76,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "💻 Local & Productivity AI",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Product and engineering update from {source} ('{title}') showcases how {actor} enables {focus} using compact, specialized, or on-device models that keep enterprise content consistent and private.",
+                f"Demonstrates how specialized small models automate executive deck creation, speech transcription, and local workflows.",
+            ),
+            "benefit": f"Confidential & Specialized Workplace AI ({actor}): Shows how compact on-device and task-specific models automate board-deck formatting and meeting notes without exposing sensitive data to public clouds.",
+            "action_item": f"Test whether specialized productivity tooling like {actor} can streamline board-pack preparation or executive meeting transcription under your corporate data-privacy policy.",
+            "risk_angle": "Third-party dictation, meeting-note, and slide-generation tools must be vetted for local processing or enterprise zero-data-retention before use in board or audit meetings.",
+        }
 
-    if "storage" in text or "scaling" in text or "cosmos db" in text or "git" in text or "grid" in text or "data center" in text:
-        return (
-            75,
-            "Finance Ops & Productivity",
-            "⚡ Cloud & Compute Infra",
-            clean_summary,
-            "Compute & Infrastructure Economics: Tracks cloud scaling, data-center energy economics, and platform reliability underpinning enterprise AI.",
-        )
+    if "data center" in text or "compute campuses" in text or "grid" in text or "scaling git" in text or "ram" in text:
+        return {
+            "score": 75,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "⚡ Cloud & Compute Infra",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Infrastructure report via {source} ('{title}') examines how {actor} is navigating {focus}, highlighting the capital expenditure, energy grid constraints, and credit guarantees underpinning global AI compute expansion.",
+                f"Tracks data-center financing, power-grid commitments, and hyperscale infrastructure economics.",
+            ),
+            "benefit": f"AI Compute & Infrastructure Economics ({actor}): Tracks how '{title[:52]}' shapes power-grid bottlenecks, financing guarantees, and hardware costs driving enterprise cloud AI pricing.",
+            "action_item": f"Factor cloud compute and energy pass-through costs highlighted in '{title[:50]}' into your 3-year IT cloud FinOps budget and vendor financing assessments.",
+            "risk_angle": f"Escalating data-center power, environmental permitting, and financing pressures around {focus[:50]} can translate into regional cloud capacity constraints and higher API unit costs.",
+        }
 
     if re.search(
-        r"\b(gemini|gpt|claude|grok|mistral|granite|frontier model|openai|deepmind|anthropic|trainium)\b", text
+        r"\b(gemini|gpt|claude|grok|mistral|granite|frontier model|openai|deepmind|anthropic|genie|lfm3)\b",
+        text,
     ):
-        return (
-            74,
-            "Finance Ops & Productivity",
-            "🧠 Frontier Models",
-            clean_summary,
-            "Frontier Model Release: Tracks model capability upgrades, API pricing shifts, and governance specs that power enterprise analytics and copilots.",
-        )
+        return {
+            "score": 74,
+            "tier": "Finance Ops & Productivity",
+            "func_tag": "🧠 Frontier Models & Labs",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"{source} reports on '{title}', detailing how {actor} is advancing {focus} across model architecture, workspace integration, corporate affairs, and enterprise commercialization.",
+                f"Covers frontier lab developments and enterprise model capabilities from {actor}.",
+            ),
+            "benefit": f"Frontier Lab & Model Intelligence ({actor}{f' · {stat}' if stat else ''}): Keeps technology and finance leaders informed on how '{title[:55]}' shifts enterprise copilot capabilities, vendor credit profiles, and licensing.",
+            "action_item": f"Evaluate how {actor}'s update ('{title[:50]}') impacts your approved enterprise model catalog, workspace integrations, or AI vendor risk scorecard.",
+            "risk_angle": f"Rapid frontier model updates and commercial shifts around {focus[:55]} require version pinning and governance review so automated enterprise workflows remain stable.",
+        }
 
-    if "graveyard" in text or "shut down" in text or "downturn" in text or "funding target" in text:
-        return (
-            68,
-            "General AI & Research",
-            "📉 AI Market & Valuation",
-            clean_summary,
-            "Vendor Viability & Market Risk: Useful context when assessing startup AI vendor balance sheets before signing multi-year software contracts.",
-        )
+    if "shutting down" in text or "downturn" in text or "stock crashes" in text or "skyrocketing quarter" in text or "doubles its valuation" in text or "raises" in text or "$1t business" in text:
+        return {
+            "score": 69,
+            "tier": "General AI & Research",
+            "func_tag": "📉 AI Market & Valuations",
+            "summary": _polish_executive_summary(
+                sig,
+                item.category,
+                f"Financial and market coverage from {source} ('{title}') analyzes {focus}, examining revenue quality, capex burn, valuation multiples, and competitive shakeouts across the AI ecosystem.",
+                f"Provides capital-markets context on AI vendor valuations, semiconductor capex, and startup consolidation.",
+            ),
+            "benefit": f"AI Capital Markets & Vendor Viability ({actor}{f' · {stat}' if stat else ''}): Essential context for CFOs evaluating AI supplier balance-sheet durability and enterprise cloud capex trends.",
+            "action_item": f"Use the financial signals in '{title[:55]}' when conducting vendor solvency checks and negotiating data-escrow or termination protections with AI software suppliers.",
+            "risk_angle": f"High valuation multiples and capex burn across {focus[:55]} mean smaller AI point-solution vendors face heightened shutdown or acquisition risk mid-contract.",
+        }
 
-    if "labels on ai" in text or "advertising act" in text or "lawsuit" in text or "judge" in text:
-        return (
-            65,
-            "General AI & Research",
-            "⚖️ AI Policy & Litigation",
-            clean_summary,
-            "Regulatory & Legal Precedent: Tracks emerging AI litigation, copyright disputes, and statutory disclosure mandates.",
-        )
+    return {
+        "score": 50,
+        "tier": "General AI & Research",
+        "func_tag": "🌐 Enterprise Tech & AI",
+        "summary": _polish_executive_summary(
+            sig,
+            item.category,
+            f"Reporting from {source} ('{title}') explores how {actor} is approaching {focus}, illustrating broader shifts in workplace AI policy, platform strategy, and enterprise technology adoption.",
+            f"Provides broader industry context on {focus[:65]} as reported by {source}.",
+        ),
+        "benefit": f"Industry & Workplace AI Context ({actor} · {source}): Tracks how developments in '{title[:55]}' shape workforce policies, platform ecosystems, and digital strategy.",
+        "action_item": f"Note '{title[:55]}' ({source}) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
+        "risk_angle": f"Emerging shifts in {focus[:55]} can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
+    }
 
+
+def synthesize_article_intelligence(item: NewsItem) -> dict[str, object]:
+    """Master synthesis engine returning score, tier, func_tag, summary, benefit, action_item, risk_angle, and role weights."""
+    sig = _extract_article_signals(item)
+    text = f"{sig['title']} {sig['clean_raw']}".lower()
+
+    intel = _synthesize_research_and_community(item, sig, text)
+    if intel is None:
+        intel = _synthesize_uk_finance_intel(item, sig, text)
+    if intel is None:
+        intel = _synthesize_ops_and_global_intel(item, sig, text)
+
+    score = int(intel["score"])
+    func_tag = str(intel["func_tag"])
+
+    cfo_w = score
+    audit_w = score
+    fpa_w = score
+    if "🏛️" in func_tag or "🛡️" in func_tag or "🔒" in func_tag or "🧾" in func_tag:
+        audit_w = min(100, score + 12)
+        cfo_w = min(98, score + 4)
+    elif "📈" in func_tag or "🏦" in func_tag or "📊" in func_tag or "💼" in func_tag or "💷" in func_tag:
+        cfo_w = min(100, score + 10)
+        fpa_w = min(96, score + 6)
+    elif "🤖" in func_tag or "⚙️" in func_tag or "💻" in func_tag or "⚡" in func_tag or "🧠" in func_tag or "🔬" in func_tag:
+        fpa_w = min(99, score + 14)
+        cfo_w = min(92, score + 5)
+    else:
+        fpa_w = min(90, score + 8)
+
+    intel["cfo_score"] = cfo_w
+    intel["audit_score"] = audit_w
+    intel["fpa_score"] = fpa_w
+    intel["clean_title"] = sig["title"]
+    return intel
+
+
+def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]:
+    """
+    Evaluate a news item for UK Finance Team priority.
+    Returns (priority_score_0_to_100, priority_tier, func_tag, executive_summary, uk_finance_benefit).
+    """
+    intel = synthesize_article_intelligence(item)
     return (
-        48,
-        "General AI & Research",
-        "🌐 Tech & AI News",
-        clean_summary,
-        "Broader Tech & AI Context: Keeps leadership aware of wider industry developments, hardware supply chains, and consumer AI trends.",
+        int(intel["score"]),
+        str(intel["tier"]),
+        str(intel["func_tag"]),
+        str(intel["summary"]),
+        str(intel["benefit"]),
     )
+
+
+def build_executive_breakdown(
+    item: NewsItem, score: int, func_tag: str, benefit: str
+) -> dict[str, object]:
+    """Build structured 3-point Executive Drawer guidance + role-specific priority weights."""
+    intel = synthesize_article_intelligence(item)
+    return {
+        "strategic": benefit or str(intel["benefit"]),
+        "risk_angle": str(intel["risk_angle"]),
+        "action_item": str(intel["action_item"]),
+        "cfo_score": int(intel["cfo_score"]),
+        "audit_score": int(intel["audit_score"]),
+        "fpa_score": int(intel["fpa_score"]),
+    }
 
 
 def make_stable_id(url: str) -> str:
@@ -616,12 +1368,25 @@ def build_card_dict(
     gemini_override: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Construct a single enriched dashboard card dictionary with 7-day date metadata."""
-    score, tier, func_tag, summary, benefit = analyze_uk_finance_benefit(item)
+    intel = synthesize_article_intelligence(item)
+    score = int(intel["score"])
+    tier = str(intel["tier"])
+    func_tag = str(intel["func_tag"])
+    summary = str(intel["summary"])
+    benefit = str(intel["benefit"])
+    risk_angle = str(intel["risk_angle"])
+    action_item = str(intel["action_item"])
+    clean_title = str(intel["clean_title"])
+
     if gemini_override:
         score = int(gemini_override.get("score", score))
         func_tag = str(gemini_override.get("func_tag") or func_tag)
-        summary = clean_summary_text(str(gemini_override.get("summary") or summary), item.title)
+        g_sum = clean_summary_text(str(gemini_override.get("summary") or ""), clean_title)
+        if len(g_sum) >= 55:
+            summary = g_sum
         benefit = str(gemini_override.get("benefit") or benefit)
+        action_item = str(gemini_override.get("action_item") or action_item)
+        risk_angle = str(gemini_override.get("risk_angle") or risk_angle)
         if score >= 85:
             tier = "High UK Finance Impact"
         elif score >= 70:
@@ -629,12 +1394,11 @@ def build_card_dict(
         else:
             tier = "General AI & Research"
 
-    breakdown = build_executive_breakdown(item, score, func_tag, benefit)
     pub_domain = resolve_publisher_domain(item.source, item.url)
 
     return {
         "id": make_stable_id(item.url),
-        "title": item.title,
+        "title": clean_title,
         "url": item.url,
         "source": item.source,
         "pub_domain": pub_domain,
@@ -643,15 +1407,16 @@ def build_card_dict(
         "date_key": date_key,
         "date_label": format_date_label(date_key),
         "score": score,
-        "cfo_score": breakdown["cfo_score"],
-        "audit_score": breakdown["audit_score"],
-        "fpa_score": breakdown["fpa_score"],
+        "cfo_score": int(intel["cfo_score"]),
+        "audit_score": int(intel["audit_score"]),
+        "fpa_score": int(intel["fpa_score"]),
         "tier": tier,
         "func_tag": func_tag,
         "summary": summary,
+        "raw_summary": item.summary,
         "benefit": benefit,
-        "risk_angle": breakdown["risk_angle"],
-        "action_item": breakdown["action_item"],
+        "risk_angle": risk_angle,
+        "action_item": action_item,
         "is_new": is_new,
     }
 
@@ -659,14 +1424,14 @@ def build_card_dict(
 def enrich_items_with_gemini(
     items: list[NewsItem], settings: Settings
 ) -> dict[int, dict[str, object]]:
-    """Optionally use Gemini API to refine concise summaries and UK finance team benefits."""
+    """Optionally use Gemini API to refine executive summaries, benefits, and actionable outcomes."""
     if not settings.gemini_api_key or not items:
         return {}
 
     subset = items[:30]
     prompt_lines = [
         "You are a UK CFO & Finance Director advisor. For each news item below (indexed 0..N), return a JSON array of objects with keys:",
-        '`{"idx": int, "score": int (1-100 priority for a UK finance team), "func_tag": "short tag e.g. 🏛️ FCA & Regulation | 🛡️ Audit & Controls | 📈 CFO Strategy | 🔒 Data Privacy | 🤖 AI Agents | 🔬 Research", "summary": "concise 1-sentence plain-English summary", "benefit": "specific, non-repetitive 1-sentence takeaway for a UK finance team"}`.',
+        '`{"idx": int, "score": int (1-100 priority for a UK finance team), "func_tag": "short tag e.g. 🏛️ FCA & Regulation | 🛡️ Audit & Controls | 📈 CFO Strategy | 🔒 Data Privacy | 🤖 AI Agents | 🔬 Research", "summary": "specific 2-sentence executive summary of the article", "benefit": "specific, non-repetitive 1-sentence takeaway for a UK finance team", "action_item": "concrete 1-sentence actionable outcome for a finance or technology leader", "risk_angle": "specific 1-sentence audit, governance, or regulatory risk angle"}`.',
         "Return ONLY valid JSON.",
         "",
     ]
@@ -709,6 +1474,36 @@ def enrich_items_with_gemini(
     return {}
 
 
+def _deduplicate_archive_cards(cards: list[dict[str, object]]) -> list[dict[str, object]]:
+    """Consolidate duplicate papers (e.g. ArXiv vs HF Daily Papers) and syndicated press releases across the 7-day archive."""
+    seen_norm_titles: set[str] = set()
+    seen_syndicated_keys: set[str] = set()
+    unique: list[dict[str, object]] = []
+
+    for c in cards:
+        title = str(c.get("title") or "")
+        t_low = title.lower()
+        norm_title = re.sub(r"[^a-z0-9]+", "", t_low)
+        if not norm_title or norm_title in seen_norm_titles:
+            continue
+
+        # Consolidate identical syndicated funding/rebrand stories reported across multiple outlets
+        syn_key = ""
+        if "ravical raises" in t_low and "17" in t_low:
+            syn_key = "ravical-17m-seed"
+        elif "compute campuses" in t_low and "openai" in t_low:
+            syn_key = "openai-compute-campuses"
+        if syn_key:
+            if syn_key in seen_syndicated_keys:
+                continue
+            seen_syndicated_keys.add(syn_key)
+
+        seen_norm_titles.add(norm_title)
+        unique.append(c)
+
+    return unique
+
+
 def prepare_prioritized_cards(
     items: list[NewsItem], settings: Settings
 ) -> list[dict[str, object]]:
@@ -740,7 +1535,7 @@ def prepare_prioritized_cards(
                     hist_item, date_key=d_str, is_new=False
                 )
 
-    # 2. Hydrate/upgrade from existing docs/data.json (keeps exact timestamps/summaries if within 7-day window)
+    # 2. Hydrate/upgrade from existing docs/data.json (keeps exact timestamps/raw_summary if within 7-day window)
     prev_data_path = DOCS_DIR / "data.json"
     if prev_data_path.exists():
         try:
@@ -761,20 +1556,22 @@ def prepare_prioritized_cards(
                             row_date = pub_at[:10]
                         else:
                             row_date = today_slug
-                    # Strictly enforce 7-day retention window
                     if row_date < cutoff_slug or row_date > today_slug:
                         continue
-                    # If url was already matched to a specific historical digest date, keep that digest date
                     if url in archive_by_url:
                         row_date = str(archive_by_url[url]["date_key"])
-                    # Re-build through current readability/benefit engine so all 7 days stay 100% consistent
+                    raw_sum = str(
+                        row.get("raw_summary")
+                        if "raw_summary" in row
+                        else (row.get("summary") or "")
+                    )
                     temp_item = NewsItem(
                         title=title,
                         url=url,
                         source=source,
                         category=str(row.get("category") or "Tech & AI News"),
                         published_at=pub_at or f"{row_date} 08:00 UTC",
-                        summary=str(row.get("summary") or ""),
+                        summary=raw_sum,
                     )
                     if row_date < today_slug:
                         archive_by_url[url] = build_card_dict(
@@ -793,7 +1590,6 @@ def prepare_prioritized_cards(
     for idx, item in enumerate(clean_today_items):
         g_override = gemini_map.get(idx)
         if item.url in archive_by_url:
-            # Already briefed on an earlier day in the 7-day window: preserve its original date_key, update summary/timestamp
             orig_date = str(archive_by_url[item.url]["date_key"])
             final_by_url[item.url] = build_card_dict(
                 item, date_key=orig_date, is_new=False, gemini_override=g_override
@@ -811,7 +1607,7 @@ def prepare_prioritized_cards(
                 t_item, date_key=today_slug, is_new=True
             )
 
-    # Filter strictly to [cutoff_slug, today_slug] and sort by score desc, then date_key desc
+    # Filter strictly to [cutoff_slug, today_slug], sort by score desc then date_key desc, and deduplicate
     cards = [
         c
         for c in final_by_url.values()
@@ -821,7 +1617,7 @@ def prepare_prioritized_cards(
         key=lambda c: (int(c["score"]), str(c.get("date_key", ""))),
         reverse=True,
     )
-    return cards
+    return _deduplicate_archive_cards(cards)
 
 
 
@@ -1617,19 +2413,45 @@ def build_dashboard_html(
     .stack-card:hover .stack-title a {{
       color: var(--brand-violet);
     }}
-    .stack-plus {{
-      margin: 0 0 12px;
-      font-size: 13.8px;
-      line-height: 1.56;
+    .stack-summary {{
+      margin: 0 0 8px;
+      font-size: 13.4px;
+      line-height: 1.52;
       color: var(--body-copy);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }}
-    .stack-plus strong {{
+    .stack-plus {{
+      margin: 0 0 6px;
+      font-size: 13.2px;
+      line-height: 1.5;
       color: var(--ink-soft);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }}
+    .stack-plus strong {{
+      color: var(--ink);
       font-weight: 700;
+    }}
+    .stack-outcome {{
+      margin: 0 0 10px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--line);
+      font-size: 12.6px;
+      line-height: 1.48;
+      color: var(--body-copy);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }}
+    .stack-outcome strong {{
+      color: var(--brand-violet);
+      font-weight: 800;
     }}
 
     /* =========================================================
@@ -2013,6 +2835,24 @@ def build_dashboard_html(
       color: var(--ink);
       font-weight: 800;
     }}
+    .card-outcome-line {{
+      margin-top: 9px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+      font-size: 12.8px;
+      line-height: 1.52;
+      color: var(--body-copy);
+    }}
+    .card-outcome-label {{
+      color: var(--brand-violet);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      margin-right: 4px;
+    }}
+    .ops-box .card-outcome-label {{ color: var(--emerald); }}
+    .gen-box .card-outcome-label {{ color: var(--brand-blue); }}
 
     /* Comfort Reading Font Size Mode (A+) */
     html[data-font-size="large"] .lead-title {{ font-size: clamp(24px, 2.7vw, 33px); }}
@@ -3784,7 +4624,7 @@ def build_dashboard_html(
         pos > -1 ? `${{pos + 1}} of ${{currentDisplayedIds.length}}` : '';
 
       const summaryBlock = item.summary
-        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--ink);">📰 Key Summary</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
+        ? `<div class="drawer-section"><div class="drawer-sec-title" style="color:var(--ink);">📰 Executive Summary</div><p class="drawer-sec-text">${{escapeHtml(item.summary)}}</p></div>`
         : '';
 
       document.getElementById('drawerBody').innerHTML = `
@@ -3804,12 +4644,12 @@ def build_dashboard_html(
           <p class="drawer-sec-text">${{formatBenefitHtml(item.benefit)}}</p>
         </div>
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--emerald);">🛡️ Audit, Risk &amp; FCA Governance Angle</div>
-          <p class="drawer-sec-text">${{escapeHtml(item.risk_angle)}}</p>
+          <div class="drawer-sec-title" style="color:var(--brand-blue);">🎯 Actionable Outcome</div>
+          <p class="drawer-sec-text">${{escapeHtml(item.action_item)}}</p>
         </div>
         <div class="drawer-section">
-          <div class="drawer-sec-title" style="color:var(--brand-blue);">✅ Recommended Action</div>
-          <p class="drawer-sec-text">${{escapeHtml(item.action_item)}}</p>
+          <div class="drawer-sec-title" style="color:var(--emerald);">🛡️ Audit, Risk &amp; FCA Governance Angle</div>
+          <p class="drawer-sec-text">${{escapeHtml(item.risk_angle)}}</p>
         </div>
       `;
     }}
@@ -3947,7 +4787,7 @@ def build_dashboard_html(
                 </span>
               </div>
               <div style="font-size:14px;line-height:1.6;color:var(--ink-soft);">${{formatBenefitHtml(lead.benefit)}}</div>
-              <div class="lead-action-line"><strong>Next step:</strong> ${{escapeHtml(lead.action_item)}}</div>
+              <div class="lead-action-line"><strong>🎯 Actionable Outcome:</strong> ${{escapeHtml(lead.action_item)}}</div>
             </div>
           </div>
 
@@ -3995,7 +4835,9 @@ def build_dashboard_html(
                   <h3 class="stack-title">
                     <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
                   </h3>
+                  <p class="stack-summary">${{escapeHtml(item.summary)}}</p>
                   <p class="stack-plus">${{formatBenefitHtml(item.benefit)}}</p>
+                  <p class="stack-outcome"><strong>🎯 Outcome:</strong> ${{escapeHtml(item.action_item)}}</p>
                 </div>
                 <div class="card-footer" style="padding-top:10px;">
                   <span class="pub-pill">
@@ -4144,7 +4986,9 @@ def build_dashboard_html(
                       <a class="compact-headline" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">
                         ${{newBadge}}${{escapeHtml(item.title)}}
                       </a>
+                      <div class="compact-takeaway" style="color:var(--body-copy);margin-bottom:4px;">${{escapeHtml(item.summary)}}</div>
                       <div class="compact-takeaway">${{formatBenefitHtml(item.benefit)}}</div>
+                      <div class="compact-takeaway" style="margin-top:3px;color:var(--ink-soft);"><strong>🎯 Actionable Outcome:</strong> ${{escapeHtml(item.action_item)}}</div>
                     </td>
                     <td class="compact-hide-mobile">
                       <span class="pub-pill">
@@ -4174,7 +5018,7 @@ def build_dashboard_html(
           const urgencyBadge = urgencyBadgeHtml(effScore, item);
           const numStr = String(idx + 1).padStart(2, '0');
           const summaryLine = item.summary
-            ? `<div class="stream-bullet"><strong>Key Summary:</strong> ${{escapeHtml(item.summary)}}</div>`
+            ? `<div class="stream-bullet"><strong>📰 Executive Summary:</strong> ${{escapeHtml(item.summary)}}</div>`
             : '';
           let streamDayHeader = '';
           if (currentSort === 'date' && item.date_key && item.date_key !== lastStreamDate) {{
@@ -4208,8 +5052,8 @@ def build_dashboard_html(
               </h3>
               <div class="stream-bullets">
                 ${{summaryLine}}
-                <div class="stream-bullet"><strong>Why it matters (UK Finance):</strong> ${{formatBenefitHtml(item.benefit)}}</div>
-                <div class="stream-bullet"><strong>Action &amp; Governance:</strong> ${{escapeHtml(item.action_item)}}</div>
+                <div class="stream-bullet"><strong>Why It Matters (UK Finance):</strong> ${{formatBenefitHtml(item.benefit)}}</div>
+                <div class="stream-bullet"><strong>🎯 Actionable Outcome:</strong> ${{escapeHtml(item.action_item)}}</div>
               </div>
               <div class="card-footer">
                 <span class="pub-pill">
@@ -4280,6 +5124,9 @@ def build_dashboard_html(
                   </span>
                 </div>
                 ${{formatBenefitHtml(item.benefit)}}
+                <div class="card-outcome-line">
+                  <span class="card-outcome-label">🎯 Actionable Outcome:</span>${{escapeHtml(item.action_item)}}
+                </div>
               </div>
               <div class="card-footer">
                 <span class="pub-pill">

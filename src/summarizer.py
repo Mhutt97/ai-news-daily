@@ -10,7 +10,7 @@ import re
 import urllib.request
 
 from src.config import DIGESTS_DIR, Settings
-from src.dashboard import analyze_uk_finance_benefit
+from src.dashboard import is_noisy_outlier, synthesize_article_intelligence
 from src.sources import NewsItem
 
 GB_FLAG = "\U0001F1EC\U0001F1E7"
@@ -20,22 +20,24 @@ Given a list of today's raw AI articles, blog posts, research papers, and commun
 
 1. ## 🇬🇧💷 UK Finance & CFO Teams AI Spotlight
    - Highlight the most relevant AI developments, tools, case studies, and regulatory updates (FCA, ICAEW, ACCA, UK banking/fintech, accounting, FP&A, audit, CFO workflows) for finance teams in the UK.
-   - For each item: **[Title](URL)** (*Source*) — Concise 1-sentence summary + **UK Finance Benefit:** 1-sentence practical takeaway for a UK finance team.
+   - For each item, write:
+     - **[Title](URL)** (*Source*) — Unique 2-sentence executive summary explaining what happened, the mechanism, and key facts.
+       *🇬🇧 UK Finance Benefit:* 1-sentence specific strategic takeaway for a UK finance team.
+       *🎯 Actionable Outcome:* 1-sentence concrete next step for a CFO, Controller, FP&A lead, or Audit/Risk team.
 
 2. ## 🔥 Top 5 Global AI Must-Read Stories
-   - Pick the 5 highest-impact announcements or breakthroughs across all sources.
-   - For each: **[Title](URL)** (*Source*) — 1–2 sentence explanation of what happened and how it benefits or impacts finance/enterprise teams.
+   - Pick the 5 highest-impact announcements or breakthroughs across all sources, using the same bullet + indented *🇬🇧 UK Finance Benefit:* and *🎯 Actionable Outcome:* format.
 
 3. ## 🏢 AI Labs & Industry News
-   - Summarize notable updates from OpenAI, Google DeepMind, Hugging Face, TechCrunch, The Verge, Ars Technica, and MIT Tech Review.
+   - Summarize notable updates from OpenAI, Google DeepMind, Hugging Face, TechCrunch, The Verge, Ars Technica, and MIT Tech Review using the same format.
 
 4. ## 📄 Trending Research Papers
-   - Highlight the top papers from Hugging Face Daily Papers and ArXiv (cs.AI / cs.LG) with plain-English takeaways.
+   - Highlight the top papers from Hugging Face Daily Papers and ArXiv (cs.AI / cs.LG) with plain-English executive summaries and actionable finance/ML takeaways.
 
 5. ## 💬 Community Pulse (Hacker News & Reddit)
-   - Summarize the top discussions from Hacker News, r/MachineLearning, and r/LocalLLaMA.
+   - Summarize the top discussions from Hacker News, r/MachineLearning, and r/LocalLLaMA with unique summaries and actionable outcomes.
 
-Keep every link intact using `[Title](URL)` markdown syntax. Be concise, factual, and avoid hype."""
+Never repeat boilerplate text across items. Keep every link intact using `[Title](URL)` markdown syntax. Be concise, factual, and avoid hype."""
 
 
 def summarize_with_gemini(items: list[NewsItem], settings: Settings) -> str | None:
@@ -106,21 +108,32 @@ def build_fallback_markdown(items: list[NewsItem], settings: Settings | None = N
     ]
 
     for heading, cat_key in categories:
-        cat_items = [i for i in items if i.category == cat_key]
+        cat_items = [
+            i
+            for i in items
+            if i.category == cat_key and not is_noisy_outlier(i.title, i.source)
+        ]
         if not cat_items:
             continue
         scored_items = [
-            (analyze_uk_finance_benefit(it), it) for it in cat_items
+            (synthesize_article_intelligence(it), it) for it in cat_items
         ]
-        scored_items.sort(key=lambda pair: pair[0][0], reverse=True)
+        scored_items.sort(key=lambda pair: int(pair[0]["score"]), reverse=True)
 
         lines.append(f"## {heading}")
         lines.append("")
-        for (score, _tier, func_tag, clean_summary, benefit), item in scored_items[:8]:
+        for intel, item in scored_items[:6]:
+            score = int(intel["score"])
+            func_tag = str(intel["func_tag"])
+            clean_title = str(intel["clean_title"])
+            clean_summary = str(intel["summary"])
+            benefit = str(intel["benefit"])
+            action_item = str(intel["action_item"])
             summary_snippet = f" — {clean_summary}" if clean_summary else ""
             lines.append(
-                f"- **[{item.title}]({item.url})** (*{item.source}* · {func_tag} · Priority `{score}/100`){summary_snippet}  \n"
-                f"  *🇬🇧 UK Finance Benefit:* {benefit}"
+                f"- **[{clean_title}]({item.url})** (*{item.source}* · {func_tag} · Priority `{score}/100`){summary_snippet}  \n"
+                f"  *🇬🇧 UK Finance Benefit:* {benefit}  \n"
+                f"  *🎯 Actionable Outcome:* {action_item}"
             )
         lines.append("")
 
@@ -190,7 +203,9 @@ def _tier_colors(score: int | None, default_accent: str) -> tuple[str, str, str,
 
 
 def _parse_story_bullet(
-    bullet_line: str, benefit_line: str | None
+    bullet_line: str,
+    benefit_line: str | None,
+    action_line: str | None = None,
 ) -> dict[str, object]:
     """Parse a Markdown story bullet (from fallback or Gemini output) into structured card fields."""
     rest = bullet_line.strip()
@@ -243,6 +258,17 @@ def _parse_story_bullet(
         ).strip()
         extracted_benefit = b_clean
 
+    extracted_action = ""
+    if action_line:
+        a_clean = _strip_gb_flag(action_line)
+        a_clean = re.sub(
+            r"^\*{0,2}\s*(?:🎯\s*)?Actionable Outcome:\s*\*{0,2}\s*",
+            "",
+            a_clean,
+            flags=re.I,
+        ).strip()
+        extracted_action = a_clean
+
     inline_ben = re.split(
         r"\s*(?:\+\s*)?\*\*UK Finance Benefit:\*\*\s*|\s*\*UK Finance Benefit:\*\s*",
         tail,
@@ -265,6 +291,7 @@ def _parse_story_bullet(
         "score": score,
         "summary": tail,
         "benefit": extracted_benefit,
+        "action_item": extracted_action,
     }
 
 
@@ -283,6 +310,7 @@ def _render_story_card_html(
     score_int = int(score) if isinstance(score, int) else None
     summary = str(story.get("summary") or "")
     benefit = str(story.get("benefit") or "")
+    action_item = str(story.get("action_item") or "")
 
     accent, badge_bg, badge_fg, badge_border = _tier_colors(score_int, section_accent)
     eyebrow_text = html.escape(func_tag) if func_tag else html.escape(section_eyebrow)
@@ -334,10 +362,17 @@ def _render_story_card_html(
     if benefit:
         formatted_benefit = _format_email_inline(benefit)
         colon_idx = formatted_benefit.find(":")
-        if 2 < colon_idx <= 44 and "<" not in formatted_benefit[:colon_idx]:
+        if 2 < colon_idx <= 48 and "<" not in formatted_benefit[:colon_idx]:
             formatted_benefit = (
                 f'<strong style="color:#171717;font-weight:800;">{formatted_benefit[:colon_idx + 1]}</strong>'
                 f"{formatted_benefit[colon_idx + 1:]}"
+            )
+        action_html = ""
+        if action_item:
+            action_html = (
+                f'<div style="margin-top:8px;padding-top:7px;border-top:1px dashed #e5e5e5;font-size:13px;line-height:1.52;color:#383838;">'
+                f'<strong style="color:{accent};font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:0.06em;">&#127919; Actionable Outcome:</strong> '
+                f"{_format_email_inline(action_item)}</div>"
             )
         benefit_html = (
             f'<div style="background:#fafafa;border:1px solid #efefef;border-left:3px solid {accent};border-radius:12px;margin-top:12px;padding:10px 14px;">'
@@ -345,6 +380,7 @@ def _render_story_card_html(
             f'<span style="display:inline-block;background:#171717;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;margin-right:6px;letter-spacing:0.06em;">UK</span>'
             f"Why It Matters &middot; Finance</div>"
             f'<div style="font-size:13.4px;line-height:1.58;color:#1f1f1f;">{formatted_benefit}</div>'
+            f"{action_html}"
             f"</div>"
         )
 
@@ -449,13 +485,19 @@ def markdown_to_html(
         # Bullet item (- ... or * ...)
         if line.startswith(("- ", "* ")):
             benefit_line: str | None = None
-            if i + 1 < n:
+            action_line: str | None = None
+            while i + 1 < n:
                 next_stripped = raw_lines[i + 1].strip()
                 if "UK Finance Benefit:" in next_stripped and not next_stripped.startswith(("- ", "* [", "**[")):
                     benefit_line = next_stripped
                     i += 1
+                elif "Actionable Outcome:" in next_stripped and not next_stripped.startswith(("- ", "* [", "**[")):
+                    action_line = next_stripped
+                    i += 1
+                else:
+                    break
 
-            story = _parse_story_bullet(line, benefit_line)
+            story = _parse_story_bullet(line, benefit_line, action_line)
             total_stories += 1
             score_val = story.get("score")
             if in_uk_section:
