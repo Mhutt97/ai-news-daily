@@ -1,8 +1,9 @@
-"""Interactive UK Finance & AI News Dashboard generator and Finance Benefit prioritization engine."""
+"""Interactive UK Finance & AI News Dashboard generator, 7-day rolling archive, and Finance Benefit prioritization engine."""
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+import hashlib
 import html
 import json
 from pathlib import Path
@@ -10,18 +11,65 @@ import re
 import urllib.parse
 import urllib.request
 
-from src.config import PROJECT_ROOT, Settings
+from src.config import DIGESTS_DIR, PROJECT_ROOT, Settings
 from src.sources import NewsItem
 
 DOCS_DIR = PROJECT_ROOT / "docs"
 DEFAULT_DASHBOARD_URL = "https://mhutt97.github.io/ai-news-daily/"
+RETENTION_DAYS = 7
 
 PUBLISHER_DOMAINS: dict[str, str] = {
     "deloitte": "deloitte.com",
     "ey": "ey.com",
     "pwc": "pwc.co.uk",
     "kpmg": "kpmg.com",
+    "bdo": "bdo.co.uk",
+    "grant thornton": "grantthornton.co.uk",
+    "rsm": "rsmuk.com",
+    "mazars": "forvismazars.com",
+    "icaew": "icaew.com",
+    "acca": "accaglobal.com",
+    "fca": "fca.org.uk",
+    "bank of england": "bankofengland.co.uk",
     "uk finance": "ukfinance.org.uk",
+    "accountancy today": "accountancytoday.co.uk",
+    "accountancy age": "accountancyage.com",
+    "accountingweb": "accountingweb.co.uk",
+    "international accounting bulletin": "internationalaccountingbulletin.com",
+    "scottish financial news": "scottishfinancialnews.com",
+    "citywire": "citywire.com",
+    "ff news": "ffnews.com",
+    "fintech global": "fintech.global",
+    "fintech futures": "fintechfutures.com",
+    "fintech magazine": "fintechmagazine.com",
+    "finextra": "finextra.com",
+    "financial times": "ft.com",
+    "ibs intelligence": "ibsintelligence.com",
+    "credit connect": "credit-connect.co.uk",
+    "pei private equity": "privateequityinternational.com",
+    "private equity international": "privateequityinternational.com",
+    "the banker": "thebanker.com",
+    "insurance business": "insurancebusinessmag.com",
+    "yahoo finance": "uk.finance.yahoo.com",
+    "investing.com": "uk.investing.com",
+    "the globe and mail": "theglobeandmail.com",
+    "wsj": "wsj.com",
+    "reuters": "reuters.com",
+    "bloomberg": "bloomberg.com",
+    "cnbc": "cnbc.com",
+    "bbc": "bbc.co.uk",
+    "the guardian": "theguardian.com",
+    "telegraph": "telegraph.co.uk",
+    "the times": "thetimes.com",
+    "city a.m.": "cityam.com",
+    "city am": "cityam.com",
+    "silicon uk": "silicon.co.uk",
+    "digit.fyi": "digit.fyi",
+    "tech.eu": "tech.eu",
+    "sifted": "sifted.eu",
+    "computer weekly": "computerweekly.com",
+    "computing": "computing.co.uk",
+    "the register": "theregister.com",
     "enterprise times": "enterprisetimes.co.uk",
     "it brief uk": "itbrief.co.uk",
     "seeking alpha": "seekingalpha.com",
@@ -29,6 +77,7 @@ PUBLISHER_DOMAINS: dict[str, str] = {
     "tokenpost": "tokenpost.com",
     "openai": "openai.com",
     "google": "blog.google",
+    "deepmind": "deepmind.google",
     "hugging face": "huggingface.co",
     "hf daily papers": "huggingface.co",
     "techcrunch": "techcrunch.com",
@@ -44,10 +93,12 @@ PUBLISHER_DOMAINS: dict[str, str] = {
 
 def resolve_publisher_domain(source_name: str, article_url: str) -> str:
     """Resolve the best domain for a publisher favicon."""
-    s_lower = source_name.lower()
+    s_clean = (source_name or "").strip().lower()
     for key, dom in PUBLISHER_DOMAINS.items():
-        if key in s_lower:
+        if key in s_clean:
             return dom
+    if re.match(r"^[a-z0-9.-]+\.[a-z]{2,}$", s_clean):
+        return s_clean.lstrip("www.")
     try:
         parsed = urllib.parse.urlparse(article_url)
         if parsed.netloc and "news.google.com" not in parsed.netloc:
@@ -57,29 +108,55 @@ def resolve_publisher_domain(source_name: str, article_url: str) -> str:
     return "ukfinance.org.uk"
 
 
+def clean_summary_text(raw_summary: str, title: str = "") -> str:
+    """Clean and normalize article summaries for comfortable executive reading."""
+    text = (raw_summary or "").strip()
+    if not text:
+        return ""
+    text = html.unescape(text)
+    # Remove leading '[12 upvotes]' prefix from HF Daily Papers
+    text = re.sub(r"^\[\d+\s+upvotes?\]\s*", "", text, flags=re.I)
+    # Remove Reddit 'submitted by /u/...' boilerplate
+    text = re.sub(r"\s*submitted by\s+/u/\S+.*$", "", text, flags=re.I)
+    text = re.sub(r"\s+", " ", text).strip()
+    if title and text.lower().startswith(title.lower()[:32]):
+        return ""
+    return text
+
+
+def is_noisy_outlier(title: str, source: str) -> bool:
+    """Filter out generic stock-index chart pages or non-English scraper noise."""
+    t_low = (title or "").lower()
+    if re.search(r"\(\^[a-z0-9]+\)\s*charts,\s*data\s*and\s*news", t_low):
+        return True
+    # Filter sources that are purely CJK/Hangul scripts from Google Newsuk query drift
+    if source and re.search(r"[\uac00-\ud7af\u4e00-\u9fff]", source):
+        return True
+    return False
+
+
 def build_executive_breakdown(
     item: NewsItem, score: int, func_tag: str, benefit: str
-) -> dict[str, str]:
+) -> dict[str, object]:
     """Build structured 3-point Executive Drawer guidance + role-specific priority weights."""
     text = f"{item.title} {item.summary}".lower()
 
-    # Role weights (cfo, audit, fpa)
     cfo_w = score
     audit_w = score
     fpa_w = score
 
-    if "🏛️" in func_tag or "🛡️" in func_tag or "🔒" in func_tag:
+    if "🏛️" in func_tag or "🛡️" in func_tag or "🔒" in func_tag or "🧾" in func_tag:
         audit_w = min(100, score + 12)
         cfo_w = min(98, score + 4)
         ssl_risk = (
             "Directly impacts regulatory compliance, internal audit scoping, and model risk governance. "
-            "Ensure any AI-assisted outputs have a documented human-in-the-loop review trail."
+            "Ensure any AI-assisted outputs maintain a documented human-in-the-loop review trail."
         )
         action = (
-            "Log this update in your AI Risk & Governance register and review current workspace/vendor "
+            "Log this update in your AI Risk & Governance register and verify current workspace and vendor "
             "controls against FCA and internal audit standards."
         )
-    elif "📈" in func_tag or "🏦" in func_tag or "📊" in func_tag:
+    elif "📈" in func_tag or "🏦" in func_tag or "📊" in func_tag or "💼" in func_tag or "💷" in func_tag:
         cfo_w = min(100, score + 10)
         fpa_w = min(96, score + 6)
         ssl_risk = (
@@ -99,7 +176,7 @@ def build_executive_breakdown(
         )
         action = (
             "Evaluate whether this capability can automate repetitive month-end close, variance commentary, "
-            "or data extraction workflows in a sandboxed pilot."
+            "or document extraction workflows in a sandboxed pilot."
         )
     else:
         fpa_w = min(90, score + 8)
@@ -111,12 +188,12 @@ def build_executive_breakdown(
             "Monitor during quarterly finance technology reviews; no immediate policy or control changes required."
         )
 
-    if "fca" in text:
+    if "fca" in text or "bank of england" in text or "pra" in text:
         ssl_risk = (
             "High UK Regulatory Relevance: FCA oversight expects senior management accountability (SM&CR), "
             "outcome testing, and clear operational resilience when AI is used in financial services."
         )
-    elif "gmail" in text or "privacy" in text or "no internet" in text:
+    elif "gmail" in text or "privacy" in text or "no internet" in text or "leak" in text:
         ssl_risk = (
             "Data Leakage & Confidentiality: Unconfigured cloud consumer AI settings can expose confidential "
             "management accounts, M&A drafts, or customer PII."
@@ -137,144 +214,174 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
     Evaluate a news item for UK Finance Team priority.
     Returns (priority_score_0_to_100, priority_tier, func_tag, concise_summary, uk_finance_benefit).
     """
-    title_l = item.title.lower()
     text = f"{item.title} {item.summary}".lower()
-
-    clean_summary = (item.summary or "").strip()
-    if clean_summary and clean_summary.lower().startswith(title_l[:32]):
-        clean_summary = ""
+    clean_summary = clean_summary_text(item.summary, item.title)
 
     stat_match = re.search(
-        r"(\d+%|\£\d+[a-z]*|\$\d+\s*(?:billion|million|bn|m)|\d+×)",
+        r"(\d+%|\£\d+[a-z.]*|\$\d+[a-z.]*\s*(?:billion|million|bn|m)?|\d+×)",
         item.title,
         re.IGNORECASE,
     )
     stat_str = stat_match.group(1) if stat_match else ""
 
-    # 1. Research Papers & Community Discussions stay in the General AI & Research (<70) tier
+    # 1. Research Papers & Community Discussions (<70 tier)
     if item.category == "Research Papers":
-        if "audit" in text or "privacy" in text or "trust" in text:
+        if "audit" in text or "privacy" in text or "trust" in text or "safety" in text:
             return (
                 66,
                 "General AI & Research",
                 "🔬 AI Governance Research",
                 clean_summary,
-                f"Academic Research ({item.source}): Proposes mathematical methods for auditing AI outputs, confidence scoring, and dataset verification.",
+                "Audit & Verification Methods: Proposes technical methods for auditing AI outputs, confidence calibration, and dataset provenance.",
             )
-        if "quantization" in text or "diffusion" in text or "speed" in text:
+        if "quantization" in text or "diffusion" in text or "speed" in text or "token" in text or "efficient" in text:
             return (
                 60,
                 "General AI & Research",
                 "🔬 Model Efficiency Paper",
                 clean_summary,
-                f"Inference Efficiency ({item.source}): Explores quantization and token-generation speed to reduce enterprise LLM compute costs.",
+                "Inference Cost & Speed: Explores model compression and token-generation efficiency to lower enterprise LLM compute costs.",
             )
-        if "reasoning" in text or "pass@" in text or "self-improvement" in text:
+        if "reasoning" in text or "pass@" in text or "self-improvement" in text or "distillation" in text or "benchmark" in text:
             return (
                 62,
                 "General AI & Research",
                 "🔬 Reasoning & Eval Paper",
                 clean_summary,
-                f"Reasoning Benchmark ({item.source}): Investigates test-time reasoning quality and automated benchmark evaluation for complex tasks.",
+                "Reasoning Reliability: Evaluates test-time reasoning accuracy and benchmark rigor for complex analytical tasks.",
             )
         return (
             56,
             "General AI & Research",
             "🔬 Research Paper",
             clean_summary,
-            f"Technical Research ({item.source}): Early-stage academic research into foundation model architecture and alignment.",
+            "Foundation Model R&D: Early-stage academic research into model architecture, multimodal training, and alignment.",
         )
 
     if item.category == "Hacker News & Reddit":
-        if "memory" in text or "forget" in text:
+        if "memory" in text or "forget" in text or "context" in text or "rag" in text:
             return (
                 54,
                 "General AI & Research",
                 "💬 Practitioner Debate",
                 clean_summary,
-                f"Architecture Discussion ({item.source}): Examines how enterprise LLMs manage long-term context retention versus selective forgetting.",
+                "Enterprise Context & RAG: Examines how production LLMs handle long-horizon document memory and retrieval accuracy.",
             )
         return (
             50,
             "General AI & Research",
             "💬 Community Pulse",
             clean_summary,
-            f"Practitioner Discussion ({item.source}): Highlights community engineering insights and practical experimentation.",
+            "Engineering Practitioner Pulse: Surfaces hands-on developer benchmarks, local deployment tips, and open-source tooling.",
         )
 
     # 2. High-Priority UK Finance, Regulatory, Audit & CFO Rules (85–99)
     if re.search(r"\b(fca|financial conduct authority|bank of england|pra)\b", text):
-        if "crypto" in text or "tracing" in text:
+        if "crypto" in text or "tracing" in text or "aml" in text or "crime" in text:
             return (
-                96,
+                98,
                 "High UK Finance Impact",
-                "🏛️ FCA & Compliance",
+                "🏛️ FCA & Financial Crime",
                 clean_summary,
-                f"FCA Digital Asset Rules ({item.source}): Flags where automated transaction tracing must be paired with proportionate risk-based compliance controls.",
+                "FCA & AML Supervision: Key regulatory signal for UK compliance and risk leaders aligning AI monitoring controls with FCA and Bank of England expectations.",
             )
         return (
             99,
             "High UK Finance Impact",
             "🏛️ FCA & Regulation",
             clean_summary,
-            f"FCA AI Governance ({item.source}): Key briefing for UK finance and risk leaders aligning AI model oversight and senior accountability with FCA expectations.",
+            "FCA AI Governance: Essential briefing for UK finance and risk leaders aligning AI model oversight and senior accountability (SM&CR) with FCA expectations.",
         )
 
-    if re.search(r"\b(cci|disclosure|consumer duty|frc|icaew|acca|hmrc)\b", text):
+    if re.search(r"\b(cci|disclosure|consumer duty|frc|icaew|acca|hmrc|vat|reverse charge|tax)\b", text):
+        if "tax" in text or "vat" in text or "hmrc" in text or "reverse charge" in text:
+            return (
+                95,
+                "High UK Finance Impact",
+                "🧾 Tax & HMRC Compliance",
+                clean_summary,
+                "UK Tax & VAT Operations: Directly affects tax compliance workflows, cross-border VAT accounting, and automated filing controls for UK practices and finance teams.",
+            )
         return (
             97,
             "High UK Finance Impact",
             "📊 UK Disclosure & Reporting",
             clean_summary,
-            f"UK Regulatory Reporting ({item.source}): Shows how UK finance teams can turn mandatory Consumer Composite Investments (CCI) and disclosure rules into clearer investor communication.",
+            "UK Statutory & Regulatory Reporting: Shows how finance teams can align mandatory disclosure and reporting workflows with UK regulatory standards.",
         )
 
-    if re.search(r"\b(soc|attestation|certification|assurance)\b", text):
+    if re.search(r"\b(soc|attestation|certification|assurance|financial crime|fraud|cryptography)\b", text):
+        if "crime" in text or "fraud" in text or "cryptography" in text:
+            return (
+                95,
+                "High UK Finance Impact",
+                "🛡️ FinCrime & Cyber Risk",
+                clean_summary,
+                "Financial Crime & Security Controls: Highlights emerging AI fraud vectors and cryptographic resilience priorities for UK financial institutions.",
+            )
         return (
             97,
             "High UK Finance Impact",
             "🛡️ Audit & Assurance",
             clean_summary,
-            f"AI Assurance & SOC Controls ({item.source}): Outlines how independent SOC reporting, attestation, and certification build board and auditor confidence in AI systems.",
+            "AI Assurance & SOC Controls: Outlines how independent attestation, audit trails, and control testing build board and external auditor confidence in AI.",
         )
 
-    if "ethics" in text or "compliance officer" in text:
+    if "ethics" in text or "compliance officer" in text or "govern the ai" in text or "governance" in text:
         return (
             95,
             "High UK Finance Impact",
-            "🛡️ Governance & Ethics",
+            "🛡️ Governance & Controls",
             clean_summary,
-            f"2026 Compliance Benchmark ({item.source}): Benchmarks how chief compliance and audit leaders are updating governance controls for generative AI.",
+            "Enterprise AI Governance: Benchmarks how compliance and audit leaders enforce vendor oversight, procurement guardrails, and explainability.",
         )
 
     if re.search(
-        r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo)\b",
+        r"\b(internal auditor|internal auditors|external audit|kpmg|deloitte|pwc|ey|bdo|grant thornton|rsm)\b",
         text,
     ):
         return (
             94,
             "High UK Finance Impact",
-            "🛡️ Internal Audit & Big Four",
+            "🛡️ Audit & Big Four",
             clean_summary,
-            f"Internal Audit Trend ({item.source}): Tracks how internal audit teams are moving from AI scepticism to active deployment for continuous control testing.",
+            "UK Practice & Audit Benchmark: Tracks how major accounting networks and internal audit functions are scaling AI control testing, staffing, and advisory services.",
         )
 
-    if "prove value" in text or "roi" in text or "struggle" in text:
+    if "prove value" in text or "roi" in text or "struggle" in text or "productivity" in text or "liquidity" in text or "cash" in text:
+        if "liquidity" in text or "cash" in text or "treasury" in text or "budget" in text:
+            return (
+                95,
+                "High UK Finance Impact",
+                "💷 Treasury & Liquidity",
+                clean_summary,
+                "Treasury & Cash Forecasting: Evaluates AI-driven cash visibility, working-capital discipline, and macroeconomic liquidity risks for UK CFOs.",
+            )
         return (
             96,
             "High UK Finance Impact",
             "📈 CFO ROI & Value",
             clean_summary,
-            f"UK CFO Value Benchmark ({item.source}): Addresses the #1 hurdle for UK finance directors—moving AI projects from pilot enthusiasm to measurable P&L and time-saving ROI.",
+            "UK CFO Value Realisation: Addresses the core challenge for finance directors—converting AI pilots into auditable P&L savings and close-cycle speed.",
         )
 
-    if "barclays" in text or "bank tax" in text or "job cuts" in text:
+    if "acquisition" in text or "acquisitions" in text or "private equity" in text or "raises" in text or "secures" in text:
+        if item.category == "UK Finance & CFO AI" or "accounting" in text or "finance" in text:
+            return (
+                94,
+                "High UK Finance Impact",
+                "💼 M&A & Accounting Tech",
+                clean_summary,
+                f"Sector M&A & Capital Pulse{f' ({stat_str})' if stat_str else ''}: Tracks private-equity consolidation and venture investment reshaping UK accounting practices and finance automation.",
+            )
+
+    if "barclays" in text or "lloyds" in text or "natwest" in text or "hsbc" in text or "bank tax" in text or "job cuts" in text:
         return (
             93,
             "High UK Finance Impact",
             "🏦 UK Banking & Workforce",
             clean_summary,
-            f"UK Banking Sector Analysis ({item.source}): Evaluates how major UK banks are balancing AI-driven cost efficiencies, headcount restructuring, and UK tax policy.",
+            "UK Banking Sector Benchmark: Evaluates how major UK institutions balance AI cost efficiencies, workforce skills, and capital allocation.",
         )
 
     if "banking" in text or "uk finance" in text:
@@ -283,7 +390,7 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
             "High UK Finance Impact",
             "🏦 UK Banking & Strategy",
             clean_summary,
-            f"Sector Leadership View ({item.source}): Highlights why data quality, staff capability, and change management matter as much as model selection in UK financial services.",
+            "UK Financial Services Strategy: Highlights why clean data architecture, staff training, and governance matter as much as model selection.",
         )
 
     if re.search(
@@ -296,14 +403,14 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
                 "High UK Finance Impact",
                 "📈 CFO Survey Benchmark",
                 clean_summary,
-                f"UK & Ireland CFO Pulse ({stat_str} stat via {item.source}): Quantifies boardroom pressure on finance leaders to accelerate AI adoption without compromising financial accuracy.",
+                f"CFO Benchmark ({stat_str}): Quantifies boardroom expectations on finance leaders to accelerate AI adoption without compromising reporting accuracy.",
             )
         return (
             94,
             "High UK Finance Impact",
             "📈 CFO & Finance Ops",
             clean_summary,
-            f"Finance Leadership ({item.source}): Practical perspective on deploying AI across UK forecasting, reconciliation, and month-end reporting.",
+            "Finance Leadership & Close Ops: Practical perspective on deploying AI across forecasting, reconciliation, and month-end reporting.",
         )
 
     if item.category == "UK Finance & CFO AI":
@@ -312,17 +419,17 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
             "High UK Finance Impact",
             "💷 UK Finance",
             clean_summary,
-            f"UK Finance Update ({item.source}): Covers AI governance, productivity, and operational trends across UK financial services.",
+            "UK Finance & Market Pulse: Covers operational governance, talent, and technology adoption trends across UK financial services.",
         )
 
     # 3. Finance Ops, Data Governance & Enterprise AI Productivity (70–84)
-    if "gmail" in text or "photos" in text or "personal intelligence" in text:
+    if "gmail" in text or "photos" in text or "personal intelligence" in text or "scraping" in text or "opt out" in text:
         return (
             84,
             "Finance Ops & Governance",
-            "🔒 Workspace Data Privacy",
+            "🔒 Data Privacy & IP",
             clean_summary,
-            f"Cloud Privacy Alert ({item.source}): Reminder for finance teams to verify enterprise workspace opt-outs so corporate email and documents are never used for ad targeting or model training.",
+            "Workspace & Data Privacy: Reminder for finance teams to verify enterprise zero-training opt-outs so corporate documents are never used for model training.",
         )
 
     if (
@@ -330,86 +437,81 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
         or "live internet" in text
         or "containment" in text
         or "securing" in text
+        or "security" in text
+        or "bug bount" in text
+        or "misalignment" in text
     ):
         return (
             83,
             "Finance Ops & Governance",
-            "🔒 AI Security & Containment",
+            "🔒 AI Security & Controls",
             clean_summary,
-            f"Model Security Posture ({item.source}): Shows how frontier labs are air-gapping training environments and red-teaming models to reduce enterprise security risks.",
+            "Enterprise Security Posture: Tracks how frontier labs detect misalignment, harden model infrastructure, and contain unauthorized agent actions.",
         )
 
-    if "scalable ai" in text or "serving harness" in text or "foundation" in text:
+    if "scalable ai" in text or "serving harness" in text or "foundation" in text or "diligence" in text or "transactional" in text:
         return (
             81,
             "Finance Ops & Productivity",
-            "⚙️ Enterprise AI Architecture",
+            "⚙️ Enterprise AI Workflows",
             clean_summary,
-            f"Enterprise Deployment ({item.source}): Explains why wrapping AI models in reliable data governance, audit logging, and workflow harnesses matters more than raw model size.",
+            "Transactional & Legal Diligence: Shows how wrapping AI models in structured review workflows accelerates contract, M&A, and document diligence.",
         )
 
-    if "text messages" in text or "agents" in text:
+    if "text messages" in text or "agents" in text or "agent" in text:
         return (
             78,
             "Finance Ops & Productivity",
-            "🤖 AI Agents & Workflows",
+            "🤖 AI Agents & Monitoring",
             clean_summary,
-            f"Agentic Workflows ({item.source}): Illustrates how lightweight AI agents are moving into everyday communication channels for rapid task execution.",
+            "Agentic Workflow Governance: Highlights why autonomous AI agents require real-time action logging, permission boundaries, and human sign-off.",
         )
 
-    if "voice" in text or "local" in text or "macbook" in text:
+    if "voice" in text or "local" in text or "macbook" in text or "on-device" in text:
         return (
             76,
             "Finance Ops & Productivity",
             "💻 Local & On-Device AI",
             clean_summary,
-            f"On-Device Privacy ({item.source}): Running capable AI models locally on corporate hardware keeps sensitive financial discussions entirely off third-party clouds.",
+            "On-Device Confidentiality: Running capable models locally on corporate hardware keeps sensitive financial data off external cloud endpoints.",
         )
 
-    if "storage" in text or "scaling" in text or "cosmos db" in text:
+    if "storage" in text or "scaling" in text or "cosmos db" in text or "git" in text or "grid" in text or "data center" in text:
         return (
             75,
             "Finance Ops & Productivity",
-            "⚡ Cloud Infrastructure",
+            "⚡ Cloud & Compute Infra",
             clean_summary,
-            f"Infrastructure Reliability ({item.source}): Engineering look at how high-throughput enterprise AI platforms maintain low latency and multi-tenant data isolation at scale.",
+            "Compute & Infrastructure Economics: Tracks cloud scaling, data-center energy economics, and platform reliability underpinning enterprise AI.",
         )
 
     if re.search(
-        r"\b(gemini|gpt|claude|grok|frontier model|openai|deepmind|trainium)\b", text
+        r"\b(gemini|gpt|claude|grok|mistral|granite|frontier model|openai|deepmind|anthropic|trainium)\b", text
     ):
-        if "economy" in text or "$368 billion" in text:
-            return (
-                72,
-                "Finance Ops & Productivity",
-                "🌍 Macro AI Economics",
-                clean_summary,
-                f"Macroeconomic Forecast ({item.source}): Quantifies regional digital-economy growth driven by enterprise AI investment.",
-            )
         return (
             74,
             "Finance Ops & Productivity",
             "🧠 Frontier Models",
             clean_summary,
-            f"Model Capability & Compute ({item.source}): Tracks new frontier model releases and cloud hardware support that power enterprise analytics and copilot tools.",
+            "Frontier Model Release: Tracks model capability upgrades, API pricing shifts, and governance specs that power enterprise analytics and copilots.",
         )
 
-    if "graveyard" in text or "shut down" in text:
+    if "graveyard" in text or "shut down" in text or "downturn" in text or "funding target" in text:
         return (
             68,
             "General AI & Research",
-            "📉 AI Market Consolidation",
+            "📉 AI Market & Valuation",
             clean_summary,
-            f"Vendor Risk Lesson ({item.source}): Useful cautionary tracker when conducting due diligence on startup AI vendors before signing multi-year finance software contracts.",
+            "Vendor Viability & Market Risk: Useful context when assessing startup AI vendor balance sheets before signing multi-year software contracts.",
         )
 
-    if "labels on ai" in text or "advertising act" in text:
+    if "labels on ai" in text or "advertising act" in text or "lawsuit" in text or "judge" in text:
         return (
             65,
             "General AI & Research",
-            "⚖️ AI Transparency Law",
+            "⚖️ AI Policy & Litigation",
             clean_summary,
-            f"Global AI Regulation ({item.source}): Tracks mandatory disclosure and watermarking laws for AI-generated commercial communications.",
+            "Regulatory & Legal Precedent: Tracks emerging AI litigation, copyright disputes, and statutory disclosure mandates.",
         )
 
     return (
@@ -417,8 +519,141 @@ def analyze_uk_finance_benefit(item: NewsItem) -> tuple[int, str, str, str, str]
         "General AI & Research",
         "🌐 Tech & AI News",
         clean_summary,
-        f"General Industry Coverage ({item.source}): Keeps teams aware of broader consumer and technology developments.",
+        "Broader Tech & AI Context: Keeps leadership aware of wider industry developments, hardware supply chains, and consumer AI trends.",
     )
+
+
+def make_stable_id(url: str) -> str:
+    """Create a deterministic card ID from its URL so deep-links persist across the 7-day archive."""
+    digest = hashlib.sha1((url or "").encode("utf-8")).hexdigest()[:8]
+    return f"item-{digest}"
+
+
+def format_date_label(date_key: str) -> str:
+    """Format YYYY-MM-DD into a crisp UK readable date like '3 Nov 2026'."""
+    try:
+        dt = datetime.strptime(date_key, "%Y-%m-%d")
+        return f"{dt.day} {dt.strftime('%b %Y')}"
+    except Exception:
+        return date_key
+
+
+def parse_digest_markdown_file(md_path: Path, date_key: str) -> list[NewsItem]:
+    """Parse historical NewsItem entries from a saved digests/YYYY-MM-DD.md file."""
+    if not md_path.exists():
+        return []
+    try:
+        lines = md_path.read_text(encoding="utf-8").splitlines()
+    except Exception:
+        return []
+
+    section_to_category = {
+        "uk finance": "UK Finance & CFO AI",
+        "ai labs": "AI Labs & Blogs",
+        "tech & ai": "Tech & AI News",
+        "research papers": "Research Papers",
+        "community pulse": "Hacker News & Reddit",
+    }
+    current_cat = "Tech & AI News"
+    parsed_items: list[NewsItem] = []
+
+    for raw in lines:
+        line = raw.strip()
+        if line.startswith("## "):
+            h_low = line[3:].lower()
+            for key, mapped_cat in section_to_category.items():
+                if key in h_low:
+                    current_cat = mapped_cat
+                    break
+            continue
+
+        if not line.startswith(("- ", "* ")):
+            continue
+
+        rest = line[2:].strip()
+        m = re.match(r"^\*\*\[([^\]]+)\]\((https?://[^\)]+)\)\*\*(.*)$", rest)
+        if not m:
+            continue
+        title = m.group(1).strip()
+        url = m.group(2).strip()
+        tail = m.group(3).strip()
+
+        source = "Curated Source"
+        meta = re.match(
+            r"^\(\*([^*]+)\*\s*·\s*[^·]+?\s*·\s*Priority\s*`\d+/100`\)(.*)$",
+            tail,
+        )
+        if meta:
+            source = meta.group(1).strip()
+            tail = meta.group(2).strip()
+        else:
+            meta2 = re.match(r"^\(\*([^*]+)\*\)(.*)$", tail)
+            if meta2:
+                source = meta2.group(1).strip()
+                tail = meta2.group(2).strip()
+
+        summary = re.sub(r"^(?:—|–|-|:)\s*", "", tail).strip()
+        if is_noisy_outlier(title, source):
+            continue
+
+        parsed_items.append(
+            NewsItem(
+                title=title,
+                url=url,
+                source=source,
+                category=current_cat,
+                published_at=f"{date_key} 08:00 UTC",
+                summary=summary,
+            )
+        )
+    return parsed_items
+
+
+def build_card_dict(
+    item: NewsItem,
+    date_key: str,
+    is_new: bool,
+    gemini_override: dict[str, object] | None = None,
+) -> dict[str, object]:
+    """Construct a single enriched dashboard card dictionary with 7-day date metadata."""
+    score, tier, func_tag, summary, benefit = analyze_uk_finance_benefit(item)
+    if gemini_override:
+        score = int(gemini_override.get("score", score))
+        func_tag = str(gemini_override.get("func_tag") or func_tag)
+        summary = clean_summary_text(str(gemini_override.get("summary") or summary), item.title)
+        benefit = str(gemini_override.get("benefit") or benefit)
+        if score >= 85:
+            tier = "High UK Finance Impact"
+        elif score >= 70:
+            tier = "Finance Ops & Productivity"
+        else:
+            tier = "General AI & Research"
+
+    breakdown = build_executive_breakdown(item, score, func_tag, benefit)
+    pub_domain = resolve_publisher_domain(item.source, item.url)
+
+    return {
+        "id": make_stable_id(item.url),
+        "title": item.title,
+        "url": item.url,
+        "source": item.source,
+        "pub_domain": pub_domain,
+        "category": item.category,
+        "published_at": item.published_at,
+        "date_key": date_key,
+        "date_label": format_date_label(date_key),
+        "score": score,
+        "cfo_score": breakdown["cfo_score"],
+        "audit_score": breakdown["audit_score"],
+        "fpa_score": breakdown["fpa_score"],
+        "tier": tier,
+        "func_tag": func_tag,
+        "summary": summary,
+        "benefit": benefit,
+        "risk_angle": breakdown["risk_angle"],
+        "action_item": breakdown["action_item"],
+        "is_new": is_new,
+    }
 
 
 def enrich_items_with_gemini(
@@ -477,66 +712,117 @@ def enrich_items_with_gemini(
 def prepare_prioritized_cards(
     items: list[NewsItem], settings: Settings
 ) -> list[dict[str, object]]:
-    """Enrich and sort all news items by UK Finance Team priority score descending."""
-    gemini_map = enrich_items_with_gemini(items, settings)
-    cards: list[dict[str, object]] = []
+    """
+    Enrich today's news items and merge them with a rolling 7-day archive
+    (sourced from docs/data.json and digests/YYYY-MM-DD.md), pruning any stories older than 7 days.
+    """
+    now_utc = datetime.now(timezone.utc)
+    today_date: date = now_utc.date()
+    today_slug = today_date.strftime("%Y-%m-%d")
+    cutoff_date: date = today_date - timedelta(days=RETENTION_DAYS - 1)
+    cutoff_slug = cutoff_date.strftime("%Y-%m-%d")
 
-    previous_urls: set[str] = set()
+    valid_dates = [
+        (cutoff_date + timedelta(days=offset)).strftime("%Y-%m-%d")
+        for offset in range(RETENTION_DAYS)
+    ]
+    historical_dates = [d for d in valid_dates if d < today_slug]
+
+    # Map of url -> card dict for stories from previous 6 days
+    archive_by_url: dict[str, dict[str, object]] = {}
+
+    # 1. Hydrate from historical digests/YYYY-MM-DD.md (oldest -> yesterday) so earliest briefing date wins
+    for d_str in historical_dates:
+        md_file = DIGESTS_DIR / f"{d_str}.md"
+        for hist_item in parse_digest_markdown_file(md_file, d_str):
+            if hist_item.url not in archive_by_url:
+                archive_by_url[hist_item.url] = build_card_dict(
+                    hist_item, date_key=d_str, is_new=False
+                )
+
+    # 2. Hydrate/upgrade from existing docs/data.json (keeps exact timestamps/summaries if within 7-day window)
     prev_data_path = DOCS_DIR / "data.json"
     if prev_data_path.exists():
         try:
             prev_data = json.loads(prev_data_path.read_text(encoding="utf-8"))
             if isinstance(prev_data, list):
-                previous_urls = {
-                    str(r.get("url")) for r in prev_data if isinstance(r, dict) and r.get("url")
-                }
+                for row in prev_data:
+                    if not isinstance(row, dict) or not row.get("url"):
+                        continue
+                    url = str(row["url"])
+                    title = str(row.get("title") or "")
+                    source = str(row.get("source") or "Curated Source")
+                    if is_noisy_outlier(title, source):
+                        continue
+                    pub_at = str(row.get("published_at") or "")
+                    row_date = str(row.get("date_key") or "")
+                    if not re.match(r"^\d{4}-\d{2}-\d{2}$", row_date):
+                        if re.match(r"^\d{4}-\d{2}-\d{2}", pub_at):
+                            row_date = pub_at[:10]
+                        else:
+                            row_date = today_slug
+                    # Strictly enforce 7-day retention window
+                    if row_date < cutoff_slug or row_date > today_slug:
+                        continue
+                    # If url was already matched to a specific historical digest date, keep that digest date
+                    if url in archive_by_url:
+                        row_date = str(archive_by_url[url]["date_key"])
+                    # Re-build through current readability/benefit engine so all 7 days stay 100% consistent
+                    temp_item = NewsItem(
+                        title=title,
+                        url=url,
+                        source=source,
+                        category=str(row.get("category") or "Tech & AI News"),
+                        published_at=pub_at or f"{row_date} 08:00 UTC",
+                        summary=str(row.get("summary") or ""),
+                    )
+                    if row_date < today_slug:
+                        archive_by_url[url] = build_card_dict(
+                            temp_item, date_key=row_date, is_new=False
+                        )
         except Exception:
             pass
 
-    for idx, item in enumerate(items):
-        score, tier, func_tag, summary, benefit = analyze_uk_finance_benefit(item)
-        if idx in gemini_map:
-            g = gemini_map[idx]
-            score = int(g.get("score", score))
-            func_tag = str(g.get("func_tag") or func_tag)
-            summary = str(g.get("summary") or summary)
-            benefit = str(g.get("benefit") or benefit)
-            if score >= 85:
-                tier = "High UK Finance Impact"
-            elif score >= 70:
-                tier = "Finance Ops & Productivity"
-            else:
-                tier = "General AI & Research"
+    # 3. Process today's freshly fetched items
+    clean_today_items = [
+        it for it in items if not is_noisy_outlier(it.title, it.source)
+    ]
+    gemini_map = enrich_items_with_gemini(clean_today_items, settings)
 
-        breakdown = build_executive_breakdown(item, score, func_tag, benefit)
-        pub_domain = resolve_publisher_domain(item.source, item.url)
-        is_new = bool(previous_urls and item.url not in previous_urls)
+    final_by_url: dict[str, dict[str, object]] = dict(archive_by_url)
+    for idx, item in enumerate(clean_today_items):
+        g_override = gemini_map.get(idx)
+        if item.url in archive_by_url:
+            # Already briefed on an earlier day in the 7-day window: preserve its original date_key, update summary/timestamp
+            orig_date = str(archive_by_url[item.url]["date_key"])
+            final_by_url[item.url] = build_card_dict(
+                item, date_key=orig_date, is_new=False, gemini_override=g_override
+            )
+        else:
+            final_by_url[item.url] = build_card_dict(
+                item, date_key=today_slug, is_new=True, gemini_override=g_override
+            )
 
-        cards.append(
-            {
-                "id": f"item-{idx}",
-                "title": item.title,
-                "url": item.url,
-                "source": item.source,
-                "pub_domain": pub_domain,
-                "category": item.category,
-                "published_at": item.published_at,
-                "score": score,
-                "cfo_score": breakdown["cfo_score"],
-                "audit_score": breakdown["audit_score"],
-                "fpa_score": breakdown["fpa_score"],
-                "tier": tier,
-                "func_tag": func_tag,
-                "summary": summary,
-                "benefit": benefit,
-                "risk_angle": breakdown["risk_angle"],
-                "action_item": breakdown["action_item"],
-                "is_new": is_new,
-            }
-        )
+    # Also include any items from today's digest file if already generated and not in final_by_url
+    today_md = DIGESTS_DIR / f"{today_slug}.md"
+    for t_item in parse_digest_markdown_file(today_md, today_slug):
+        if t_item.url not in final_by_url:
+            final_by_url[t_item.url] = build_card_dict(
+                t_item, date_key=today_slug, is_new=True
+            )
 
-    cards.sort(key=lambda c: int(c["score"]), reverse=True)
+    # Filter strictly to [cutoff_slug, today_slug] and sort by score desc, then date_key desc
+    cards = [
+        c
+        for c in final_by_url.values()
+        if cutoff_slug <= str(c.get("date_key", "")) <= today_slug
+    ]
+    cards.sort(
+        key=lambda c: (int(c["score"]), str(c.get("date_key", ""))),
+        reverse=True,
+    )
     return cards
+
 
 
 def build_dashboard_html(
@@ -586,8 +872,9 @@ def build_dashboard_html(
       --mist: #f5f5f5;
       --mist-soft: #fafafa;
       --ink: #171717;
-      --ink-soft: #262626;
-      --mute: #737373;
+      --ink-soft: #1f1f1f;
+      --body-copy: #383838;
+      --mute: #636366;
       --line: #e5e5e5;
       --line-subtle: #efefef;
       --glass-sheet: rgba(255, 255, 255, 0.9);
@@ -627,7 +914,8 @@ def build_dashboard_html(
       --mist: #232323;
       --mist-soft: #191919;
       --ink: #ffffff;
-      --ink-soft: #e5e5e5;
+      --ink-soft: #ededf0;
+      --body-copy: #d8d8dc;
       --mute: #a1a1aa;
       --line: #2e2e2e;
       --line-subtle: #242424;
@@ -1268,9 +1556,9 @@ def build_dashboard_html(
     }}
     .lead-summary {{
       margin: 0 0 18px;
-      font-size: 15px;
-      line-height: 1.62;
-      color: var(--mute);
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: var(--body-copy);
     }}
     .lead-why-box {{
       background: var(--card-bg);
@@ -1331,9 +1619,9 @@ def build_dashboard_html(
     }}
     .stack-plus {{
       margin: 0 0 12px;
-      font-size: 13.5px;
-      line-height: 1.5;
-      color: var(--mute);
+      font-size: 13.8px;
+      line-height: 1.56;
+      color: var(--body-copy);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -1697,22 +1985,214 @@ def build_dashboard_html(
       color: var(--brand-violet);
     }}
     .card-summary {{
-      font-size: 14px;
-      color: var(--mute);
+      font-size: 14.5px;
+      color: var(--body-copy);
       margin: 0 0 16px;
-      line-height: 1.58;
+      line-height: 1.62;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }}
 
     /* "Why It Matters" Inset Callout Box */
     .benefit-box {{
       background: var(--mist);
       border: 1px solid var(--line-subtle);
+      border-left: 3px solid var(--brand-violet);
       padding: 13px 15px;
-      border-radius: 15px;
-      font-size: 13px;
-      line-height: 1.52;
+      border-radius: 14px;
+      font-size: 13.5px;
+      line-height: 1.58;
       color: var(--ink-soft);
       margin-bottom: 18px;
+    }}
+    .benefit-box.ops-box {{ border-left-color: var(--emerald); }}
+    .benefit-box.gen-box {{ border-left-color: var(--brand-blue); }}
+    .benefit-lead {{
+      color: var(--ink);
+      font-weight: 800;
+    }}
+
+    /* Comfort Reading Font Size Mode (A+) */
+    html[data-font-size="large"] .lead-title {{ font-size: clamp(24px, 2.7vw, 33px); }}
+    html[data-font-size="large"] .lead-summary {{ font-size: 17px; line-height: 1.68; }}
+    html[data-font-size="large"] .stack-title {{ font-size: 18px; }}
+    html[data-font-size="large"] .stack-plus {{ font-size: 14.5px; line-height: 1.58; }}
+    html[data-font-size="large"] .card-title {{ font-size: 21.5px; line-height: 1.34; }}
+    html[data-font-size="large"] .card-summary {{ font-size: 16px; line-height: 1.66; -webkit-line-clamp: 4; }}
+    html[data-font-size="large"] .benefit-box {{ font-size: 14.8px; line-height: 1.62; }}
+    html[data-font-size="large"] .stream-headline {{ font-size: clamp(21px, 2.4vw, 25px); }}
+    html[data-font-size="large"] .stream-bullets {{ font-size: 15.8px; line-height: 1.66; }}
+    html[data-font-size="large"] .drawer-sec-text {{ font-size: 15.8px; line-height: 1.66; }}
+
+    /* 7-Day Rolling Archive Date Filter Bar */
+    .date-filter-row {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--line-subtle);
+    }}
+    .date-filter-left {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }}
+    .date-filter-left::-webkit-scrollbar {{ display: none; }}
+    .date-bar-label {{
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--mute);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }}
+    .date-pills {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }}
+    .date-pill {{
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--body-copy);
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: all var(--dur-fast) ease;
+    }}
+    .date-pill:hover {{
+      border-color: var(--brand-violet);
+      color: var(--brand-violet);
+    }}
+    .date-pill.active {{
+      background: var(--brand-violet);
+      border-color: var(--brand-violet);
+      color: #ffffff;
+      font-weight: 700;
+    }}
+    .date-pill-count {{
+      font-size: 10.5px;
+      opacity: 0.82;
+      font-weight: 700;
+    }}
+    .date-picker-wrap {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }}
+    .date-picker-input {{
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }}
+    .date-picker-input:focus {{
+      border-color: var(--brand-violet);
+    }}
+    .sort-btn {{
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--ink);
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all var(--dur-fast) ease;
+      white-space: nowrap;
+    }}
+    .sort-btn:hover {{
+      border-color: var(--brand-violet);
+      color: var(--brand-violet);
+    }}
+    .active-filter-banner {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--mist);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 9px 15px;
+      margin-bottom: 20px;
+      font-size: 12.8px;
+      color: var(--body-copy);
+    }}
+    .filter-reset-link {{
+      cursor: pointer;
+      border: none;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      transition: opacity var(--dur-fast) ease;
+    }}
+    .filter-reset-link:hover {{ opacity: 0.86; }}
+    .day-group-header {{
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      margin: 10px 0 4px;
+      background: var(--mist);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--brand-violet);
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }}
+    .day-group-sub {{
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mute);
+    }}
+    .card-date-badge {{
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--mist);
+      border: 1px solid var(--line);
+      color: var(--body-copy);
+      font-size: 11px;
+      font-weight: 700;
     }}
     .benefit-header {{
       display: flex;
@@ -2455,6 +2935,9 @@ def build_dashboard_html(
           <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
           <span class="hide-sm">PDF</span>
         </button>
+        <button class="nav-btn nav-btn-icon" type="button" id="fontSizeToggleBtn" onclick="toggleFontSize()" aria-label="Toggle comfortable reading text size" title="Toggle Comfort Reading Text Size (f)">
+          <span style="font-weight:800;font-size:12px;">A+</span>
+        </button>
         <button class="nav-btn nav-btn-icon" type="button" onclick="toggleKbdModal()" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
           <span style="font-weight:800;font-size:13px;">?</span>
         </button>
@@ -2608,6 +3091,10 @@ def build_dashboard_html(
                 />
               </div>
 
+              <button class="sort-btn" type="button" id="sortModeBtn" onclick="toggleSortMode()" title="Switch between Priority Score and Chronological Date order">
+                <span>Sort: Priority ↓</span>
+              </button>
+
               <div class="view-toggle" role="group" aria-label="View layout" id="viewToggle">
                 <button class="view-btn active" type="button" id="viewCardsBtn" onclick="setViewMode('cards')" title="Editorial 3-column cards">
                   <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -2625,8 +3112,18 @@ def build_dashboard_html(
             </div>
           </div>
 
-          <!-- Sticky Category Pills & Topic Chips -->
+          <!-- Sticky Date Filter, Category Pills & Topic Chips -->
           <div class="controls-bar">
+            <div class="date-filter-row" role="group" aria-label="Filter stories by date (7-day rolling archive)">
+              <div class="date-filter-left">
+                <span class="date-bar-label">📅 7-Day Archive</span>
+                <div class="date-pills" id="dateFilterPills"></div>
+              </div>
+              <div class="date-picker-wrap">
+                <input type="date" id="datePickerInput" class="date-picker-input" title="Find stories from a specific day (last 7 days)" aria-label="Jump to date in 7-day archive" onchange="onDatePickerChange(this.value)" />
+              </div>
+            </div>
+
             <div class="tabs" role="tablist" id="filterTabs">
               <button class="tab active" type="button" data-filter="all" role="tab" aria-selected="true" onclick="setFilter('all', this)">All news ({len(cards)})</button>
               <button class="tab" type="button" data-filter="high" role="tab" aria-selected="false" onclick="setFilter('high', this)"><span id="tabFlagSlot"></span> High UK Finance ({high_impact_count})</button>
@@ -2646,6 +3143,7 @@ def build_dashboard_html(
             </div>
           </div>
 
+          <div id="activeFilterBanner" class="active-filter-banner" style="display:none;"></div>
           <div id="mainContainer" class="swap-target"></div>
         </section>
 
@@ -2804,6 +3302,7 @@ def build_dashboard_html(
         <div class="kbd-shortcut-row"><span>Share Briefing Modal</span><kbd>s</kbd></div>
         <div class="kbd-shortcut-row"><span>Copy Teams / Slack Summary</span><kbd>c</kbd></div>
         <div class="kbd-shortcut-row"><span>Export CSV Register</span><kbd>e</kbd></div>
+        <div class="kbd-shortcut-row"><span>Toggle Comfort Text Size (A+)</span><kbd>f</kbd></div>
         <div class="kbd-shortcut-row"><span>Toggle Light / Dark Theme</span><kbd>t</kbd></div>
         <div class="kbd-shortcut-row"><span>Toggle Shortcuts Help</span><kbd>?</kbd></div>
       </div>
@@ -2822,6 +3321,8 @@ def build_dashboard_html(
     let currentFilter = 'all';
     let currentLens = 'default';
     let currentTopic = 'all';
+    let currentDate = 'all';
+    let currentSort = 'score';
     let currentView = localStorage.getItem('ai-news-view') || 'cards';
     if (!['cards', 'briefing', 'table'].includes(currentView)) currentView = 'cards';
     let savedUrls = new Set(JSON.parse(localStorage.getItem('ai-news-saved') || '[]'));
@@ -2892,11 +3393,16 @@ def build_dashboard_html(
       if (ev) ev.preventDefault();
       syncSearchInputs('', null);
       currentTopic = 'all';
+      currentDate = 'all';
       document.querySelectorAll('.topic-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-topic') === 'all'));
+      document.querySelectorAll('.date-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-date') === 'all'));
+      const dp = document.getElementById('datePickerInput');
+      if (dp) dp.value = '';
       setFilterByName('all');
+      updateDynamicMetrics();
       renderHero();
       renderMain();
-      window.scrollTo({{ top: 0, behavior: 'smooth' }});
+      if (ev) window.scrollTo({{ top: 0, behavior: 'smooth' }});
     }}
 
     function jumpToSection(sectionId, filterName) {{
@@ -2919,6 +3425,127 @@ def build_dashboard_html(
 
     function formatTagHtml(tag) {{
       return escapeHtml(tag || '').replace(/\\uD83C\\uDDEC\\uD83C\\uDDE7/g, FLAG_SVG);
+    }}
+
+    function formatBenefitHtml(str) {{
+      if (!str) return '';
+      const esc = escapeHtml(str);
+      const colonIdx = esc.indexOf(':');
+      if (colonIdx > 2 && colonIdx <= 44) {{
+        return `<strong class="benefit-lead">${{esc.slice(0, colonIdx + 1)}}</strong>${{esc.slice(colonIdx + 1)}}`;
+      }}
+      return esc;
+    }}
+
+    function getAllArchiveDates() {{
+      const dateSet = new Set();
+      ITEMS.forEach(it => {{
+        if (it.date_key) dateSet.add(it.date_key);
+      }});
+      const sortedDates = Array.from(dateSet).sort().reverse();
+      if (!sortedDates.length) return [];
+      const newest = new Date(sortedDates[0] + 'T00:00:00Z');
+      const full7 = [];
+      for (let i = 0; i < 7; i++) {{
+        const d = new Date(newest.getTime() - i * 86400000);
+        full7.push(d.toISOString().slice(0, 10));
+      }}
+      return full7;
+    }}
+
+    function formatDatePillLabel(dateKey, idx) {{
+      const dt = new Date(dateKey + 'T00:00:00Z');
+      if (isNaN(dt.getTime())) return dateKey;
+      const dayNum = dt.getUTCDate();
+      const mon = dt.toLocaleString('en-GB', {{ month: 'short', timeZone: 'UTC' }});
+      const wk = dt.toLocaleString('en-GB', {{ weekday: 'short', timeZone: 'UTC' }});
+      if (idx === 0) return `Today · ${{dayNum}} ${{mon}}`;
+      if (idx === 1) return `Yesterday · ${{dayNum}} ${{mon}}`;
+      return `${{wk}} ${{dayNum}} ${{mon}}`;
+    }}
+
+    function formatFullDayHeading(dateKey) {{
+      const dates = getAllArchiveDates();
+      const idx = dates.indexOf(dateKey);
+      const dt = new Date(dateKey + 'T00:00:00Z');
+      if (isNaN(dt.getTime())) return dateKey;
+      const formatted = dt.toLocaleDateString('en-GB', {{
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC'
+      }});
+      if (idx === 0) return `${{formatted}} — Today's Edition`;
+      if (idx === 1) return `${{formatted}} — Yesterday's Edition`;
+      return formatted;
+    }}
+
+    function buildDateFilterPills() {{
+      const wrap = document.getElementById('dateFilterPills');
+      if (!wrap) return;
+      const dates = getAllArchiveDates();
+      const counts = {{}};
+      dates.forEach(d => counts[d] = 0);
+      ITEMS.forEach(it => {{
+        if (it.date_key && counts[it.date_key] !== undefined) counts[it.date_key]++;
+      }});
+
+      const dp = document.getElementById('datePickerInput');
+      if (dp && dates.length) {{
+        dp.max = dates[0];
+        dp.min = dates[dates.length - 1];
+      }}
+
+      let htmlPills = `
+        <button type="button" class="date-pill ${{currentDate === 'all' ? 'active' : ''}}" data-date="all" onclick="setDateFilter('all')">
+          All 7 Days <span class="date-pill-count">(${{ITEMS.length}})</span>
+        </button>
+      `;
+      dates.forEach((d, idx) => {{
+        const c = counts[d] || 0;
+        if (c === 0 && idx > 1) return;
+        const lbl = formatDatePillLabel(d, idx);
+        htmlPills += `
+          <button type="button" class="date-pill ${{currentDate === d ? 'active' : ''}}" data-date="${{d}}" onclick="setDateFilter('${{d}}')">
+            ${{escapeHtml(lbl)}} <span class="date-pill-count">(${{c}})</span>
+          </button>
+        `;
+      }});
+      wrap.innerHTML = htmlPills;
+    }}
+
+    function setDateFilter(dateVal) {{
+      if (dateVal === currentDate) return;
+      currentDate = dateVal;
+      selectedCardIndex = -1;
+      document.querySelectorAll('.date-pill').forEach(p => {{
+        p.classList.toggle('active', p.getAttribute('data-date') === dateVal);
+      }});
+      const dp = document.getElementById('datePickerInput');
+      if (dp) dp.value = dateVal === 'all' ? '' : dateVal;
+      swapContent(() => {{
+        updateDynamicMetrics();
+        renderHero();
+        renderMain();
+      }});
+    }}
+
+    function onDatePickerChange(val) {{
+      if (!val) {{
+        setDateFilter('all');
+        return;
+      }}
+      setDateFilter(val);
+    }}
+
+    function toggleSortMode() {{
+      currentSort = currentSort === 'score' ? 'date' : 'score';
+      const btn = document.getElementById('sortModeBtn');
+      if (btn) {{
+        btn.innerHTML = currentSort === 'score' ? '<span>Sort: Priority ↓</span>' : '<span>Sort: Newest Date ↓</span>';
+      }}
+      swapContent(() => renderMain());
     }}
 
     function safeUrl(url) {{
@@ -2952,9 +3579,11 @@ def build_dashboard_html(
       const kHigh = document.querySelector('.kpi-card[data-kpi="high"] .kpi-val');
       const kOps = document.querySelector('.kpi-card[data-kpi="ops"] .kpi-val');
       const kGen = document.querySelector('.kpi-card[data-kpi="general"] .kpi-val');
+      const kAll = document.querySelector('.kpi-card[data-kpi="all"] .kpi-val');
       if (kHigh) kHigh.textContent = high;
       if (kOps) kOps.textContent = ops;
       if (kGen) kGen.textContent = gen;
+      if (kAll) kAll.textContent = sorted.length;
 
       const pHigh = ((high / total) * 100).toFixed(1);
       const pOps = ((ops / total) * 100).toFixed(1);
@@ -2990,7 +3619,21 @@ def build_dashboard_html(
     }}
 
     function getSortedItems() {{
-      return [...ITEMS].sort((a, b) => getActiveScore(b) - getActiveScore(a));
+      const base = currentDate === 'all'
+        ? [...ITEMS]
+        : ITEMS.filter(it => it.date_key === currentDate);
+      if (currentSort === 'date') {{
+        return base.sort((a, b) => {{
+          const dCmp = String(b.date_key || '').localeCompare(String(a.date_key || ''));
+          if (dCmp !== 0) return dCmp;
+          return getActiveScore(b) - getActiveScore(a);
+        }});
+      }}
+      return base.sort((a, b) => {{
+        const sCmp = getActiveScore(b) - getActiveScore(a);
+        if (sCmp !== 0) return sCmp;
+        return String(b.date_key || '').localeCompare(String(a.date_key || ''));
+      }});
     }}
 
     function faviconUrl(domain) {{
@@ -3154,11 +3797,11 @@ def build_dashboard_html(
           ${{urgencyBadgeHtml(effScore, item)}}
         </div>
         <h2 class="drawer-title">${{escapeHtml(item.title)}}</h2>
-        <div class="drawer-meta">Published ${{escapeHtml(formatRelativeTime(item.published_at))}} (${{escapeHtml(item.published_at)}})</div>
+        <div class="drawer-meta">Briefing Date: <strong>${{escapeHtml(item.date_label || item.date_key || '')}}</strong> · Published ${{escapeHtml(formatRelativeTime(item.published_at))}} (${{escapeHtml(item.published_at)}})</div>
         ${{summaryBlock}}
         <div class="drawer-section">
           <div class="drawer-sec-title" style="color:var(--brand-violet);">${{FLAG_SVG}} Why It Matters · UK CFO &amp; Finance</div>
-          <p class="drawer-sec-text">${{escapeHtml(item.benefit)}}</p>
+          <p class="drawer-sec-text">${{formatBenefitHtml(item.benefit)}}</p>
         </div>
         <div class="drawer-section">
           <div class="drawer-sec-title" style="color:var(--emerald);">🛡️ Audit, Risk &amp; FCA Governance Angle</div>
@@ -3245,10 +3888,19 @@ def build_dashboard_html(
     /* Render Asymmetric Editorial Showcase (#1 Featured Lead + #2-#4 Top Stack) */
     function renderHero() {{
       const q = getSearchQuery();
-      const sorted = getSortedItems();
-      const top4 = sorted.slice(0, 4);
+      const allDates = getAllArchiveDates();
+      const targetHeroDate = currentDate === 'all' ? (allDates[0] || '') : currentDate;
+      const heroPool = targetHeroDate
+        ? ITEMS.filter(it => it.date_key === targetHeroDate).sort((a, b) => getActiveScore(b) - getActiveScore(a))
+        : getSortedItems();
+      const top4 = (heroPool.length >= 2 ? heroPool : getSortedItems()).slice(0, 4);
       const heroSec = document.getElementById('heroSection');
       const heroGrid = document.getElementById('heroGrid');
+      const eyebrowEl = heroSec ? heroSec.querySelector('.eyebrow') : null;
+      if (eyebrowEl && targetHeroDate) {{
+        const isLatest = allDates.length && targetHeroDate === allDates[0];
+        eyebrowEl.innerHTML = `<span class="eyebrow-dot"></span> ${{isLatest ? "Today's Briefing" : "Archive Briefing · " + escapeHtml(formatFullDayHeading(targetHeroDate))}}`;
+      }}
       if (!top4.length || currentFilter !== 'all' || currentTopic !== 'all' || q) {{
         heroSec.style.display = 'none';
         return;
@@ -3294,7 +3946,7 @@ def build_dashboard_html(
                   <span class="score-bar"><span class="score-fill" style="width:${{leadScore}}%"></span></span>
                 </span>
               </div>
-              <div style="font-size:13.8px;line-height:1.55;color:var(--ink-soft);">${{escapeHtml(lead.benefit)}}</div>
+              <div style="font-size:14px;line-height:1.6;color:var(--ink-soft);">${{formatBenefitHtml(lead.benefit)}}</div>
               <div class="lead-action-line"><strong>Next step:</strong> ${{escapeHtml(lead.action_item)}}</div>
             </div>
           </div>
@@ -3302,7 +3954,7 @@ def build_dashboard_html(
           <div class="card-footer">
             <span class="pub-pill">
               <img class="pub-favicon" src="${{faviconUrl(lead.pub_domain)}}" alt="" loading="lazy" />
-              ${{escapeHtml(lead.source)}} · <span title="${{escapeHtml(lead.published_at)}}">${{escapeHtml(formatRelativeTime(lead.published_at))}}</span>
+              ${{escapeHtml(lead.source)}} · <span class="card-date-badge">${{escapeHtml(lead.date_label || lead.date_key || '')}}</span> · <span title="${{escapeHtml(lead.published_at)}}">${{escapeHtml(formatRelativeTime(lead.published_at))}}</span>
             </span>
             <div class="footer-links">
               <button class="quick-brief-btn" type="button" onclick="openDrawer('${{lead.id}}', event)">Quick brief</button>
@@ -3343,7 +3995,7 @@ def build_dashboard_html(
                   <h3 class="stack-title">
                     <a href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">${{escapeHtml(item.title)}}</a>
                   </h3>
-                  <p class="stack-plus"><strong>Why it matters:</strong> ${{escapeHtml(item.benefit)}}</p>
+                  <p class="stack-plus">${{formatBenefitHtml(item.benefit)}}</p>
                 </div>
                 <div class="card-footer" style="padding-top:10px;">
                   <span class="pub-pill">
@@ -3430,7 +4082,26 @@ def build_dashboard_html(
 
       const countLbl = document.getElementById('storiesCountLabel');
       if (countLbl) {{
-        countLbl.textContent = `${{filtered.length}} ${{filtered.length === 1 ? 'story' : 'stories'}}`;
+        const archiveContext = currentDate === 'all' ? 'across 7-day archive' : `for ${{formatFullDayHeading(currentDate)}}`;
+        countLbl.textContent = `${{filtered.length}} ${{filtered.length === 1 ? 'story' : 'stories'}} (${{archiveContext}})`;
+      }}
+
+      const banner = document.getElementById('activeFilterBanner');
+      if (banner) {{
+        const activeParts = [];
+        if (currentDate !== 'all') activeParts.push(`📅 ${{formatFullDayHeading(currentDate)}}`);
+        if (currentFilter !== 'all') activeParts.push(`Category: ${{currentFilter.toUpperCase()}}`);
+        if (currentTopic !== 'all') activeParts.push(`Topic: ${{currentTopic.toUpperCase()}}`);
+        if (q) activeParts.push(`Search: "${{escapeHtml(q)}}"`);
+        if (activeParts.length > 0) {{
+          banner.style.display = 'flex';
+          banner.innerHTML = `
+            <span>Showing <strong>${{filtered.length}}</strong> of ${{ITEMS.length}} stories (7-day archive) · ${{activeParts.join(' · ')}}</span>
+            <button type="button" class="filter-reset-link" onclick="resetAllFilters()">Reset filters ✕</button>
+          `;
+        }} else {{
+          banner.style.display = 'none';
+        }}
       }}
 
       if (!filtered.length) {{
@@ -3473,7 +4144,7 @@ def build_dashboard_html(
                       <a class="compact-headline" href="${{safeUrl(item.url)}}" target="_blank" rel="noopener noreferrer">
                         ${{newBadge}}${{escapeHtml(item.title)}}
                       </a>
-                      <div class="compact-takeaway">${{escapeHtml(item.benefit)}}</div>
+                      <div class="compact-takeaway">${{formatBenefitHtml(item.benefit)}}</div>
                     </td>
                     <td class="compact-hide-mobile">
                       <span class="pub-pill">
@@ -3482,7 +4153,7 @@ def build_dashboard_html(
                       </span>
                     </td>
                     <td class="compact-hide-mobile"><strong>${{effScore}}</strong>/100</td>
-                    <td style="white-space:nowrap;color:var(--mute);" title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</td>
+                    <td style="white-space:nowrap;color:var(--mute);" title="${{escapeHtml(item.published_at)}}"><span class="card-date-badge">${{escapeHtml(item.date_label || '')}}</span></td>
                   </tr>
                 `;
               }}).join('')}}
@@ -3495,6 +4166,7 @@ def build_dashboard_html(
       /* VIEW MODE 2: "BRIEFING" 5-MINUTE READING STREAM */
       if (currentView === 'briefing') {{
         container.className = 'briefing-stream swap-target';
+        let lastStreamDate = '';
         container.innerHTML = filtered.map((item, idx) => {{
           const isSaved = savedUrls.has(item.url);
           const effScore = getActiveScore(item);
@@ -3504,7 +4176,19 @@ def build_dashboard_html(
           const summaryLine = item.summary
             ? `<div class="stream-bullet"><strong>Key Summary:</strong> ${{escapeHtml(item.summary)}}</div>`
             : '';
+          let streamDayHeader = '';
+          if (currentSort === 'date' && item.date_key && item.date_key !== lastStreamDate) {{
+            lastStreamDate = item.date_key;
+            const dayCount = filtered.filter(x => x.date_key === item.date_key).length;
+            streamDayHeader = `
+              <div class="day-group-header">
+                <span>📅 ${{escapeHtml(formatFullDayHeading(item.date_key))}}</span>
+                <span class="day-group-sub">${{dayCount}} ${{dayCount === 1 ? 'story' : 'stories'}}</span>
+              </div>
+            `;
+          }}
           return `
+            ${{streamDayHeader}}
             <article class="stream-article" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
               <div class="card-top">
                 <div class="tag-group">
@@ -3524,13 +4208,13 @@ def build_dashboard_html(
               </h3>
               <div class="stream-bullets">
                 ${{summaryLine}}
-                <div class="stream-bullet"><strong>Why it matters (UK Finance):</strong> ${{escapeHtml(item.benefit)}}</div>
+                <div class="stream-bullet"><strong>Why it matters (UK Finance):</strong> ${{formatBenefitHtml(item.benefit)}}</div>
                 <div class="stream-bullet"><strong>Action &amp; Governance:</strong> ${{escapeHtml(item.action_item)}}</div>
               </div>
               <div class="card-footer">
                 <span class="pub-pill">
                   <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
-                  ${{escapeHtml(item.source)}} · ${{escapeHtml(formatRelativeTime(item.published_at))}}
+                  ${{escapeHtml(item.source)}} · <span class="card-date-badge">${{escapeHtml(item.date_label || '')}}</span> · ${{escapeHtml(formatRelativeTime(item.published_at))}}
                 </span>
                 <div class="footer-links">
                   <button class="quick-brief-btn" type="button" onclick="openDrawer('${{item.id}}', event)">Full Risk Brief</button>
@@ -3545,6 +4229,7 @@ def build_dashboard_html(
 
       /* VIEW MODE 1 (DEFAULT): 3-COLUMN ROUNDED-3XL EDITORIAL CARDS */
       container.className = 'cards-grid swap-target';
+      let lastRenderedDate = '';
       container.innerHTML = filtered.map(item => {{
         const isSaved = savedUrls.has(item.url);
         const effScore = getActiveScore(item);
@@ -3553,7 +4238,19 @@ def build_dashboard_html(
         const summaryHtml = item.summary
           ? `<p class="card-summary">${{escapeHtml(item.summary)}}</p>`
           : '';
+        let dayHeaderHtml = '';
+        if (currentSort === 'date' && item.date_key && item.date_key !== lastRenderedDate) {{
+          lastRenderedDate = item.date_key;
+          const dayCount = filtered.filter(x => x.date_key === item.date_key).length;
+          dayHeaderHtml = `
+            <div class="day-group-header">
+              <span>📅 ${{escapeHtml(formatFullDayHeading(item.date_key))}}</span>
+              <span class="day-group-sub">${{dayCount}} ${{dayCount === 1 ? 'story' : 'stories'}}</span>
+            </div>
+          `;
+        }}
         return `
+          ${{dayHeaderHtml}}
           <article class="news-card ${{animate ? 'pre-reveal' : ''}}" data-card-id="${{item.id}}" onclick="openDrawer('${{item.id}}', event)">
             <div>
               <div class="card-top">
@@ -3582,12 +4279,12 @@ def build_dashboard_html(
                     <span class="score-bar"><span class="score-fill" style="width:${{effScore}}%"></span></span>
                   </span>
                 </div>
-                ${{escapeHtml(item.benefit)}}
+                ${{formatBenefitHtml(item.benefit)}}
               </div>
               <div class="card-footer">
                 <span class="pub-pill">
                   <img class="pub-favicon" src="${{faviconUrl(item.pub_domain)}}" alt="" loading="lazy" />
-                  ${{escapeHtml(item.source)}} · <span title="${{escapeHtml(item.published_at)}}">${{escapeHtml(formatRelativeTime(item.published_at))}}</span>
+                  ${{escapeHtml(item.source)}} · <span class="card-date-badge">${{escapeHtml(item.date_label || '')}}</span>
                 </span>
                 <div class="footer-links">
                   <button class="quick-brief-btn" type="button" onclick="openDrawer('${{item.id}}', event)">Brief</button>
@@ -3664,6 +4361,7 @@ def build_dashboard_html(
       const sorted = getSortedItems();
       const headers = [
         "Rank",
+        "Briefing Date",
         "Priority Score",
         "Tier",
         "Area / Tag",
@@ -3682,6 +4380,7 @@ def build_dashboard_html(
         const effScore = getActiveScore(it);
         const row = [
           idx + 1,
+          it.date_key || "",
           effScore,
           it.tier || "",
           it.func_tag || "",
@@ -3740,11 +4439,13 @@ def build_dashboard_html(
       const item = ITEM_MAP.get(hash);
       if (!item) return;
 
-      if (currentFilter !== 'all' || currentTopic !== 'all') {{
+      if (currentFilter !== 'all' || currentTopic !== 'all' || currentDate !== 'all') {{
         currentFilter = 'all';
         currentTopic = 'all';
+        currentDate = 'all';
         document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-filter') === 'all'));
         document.querySelectorAll('.topic-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-topic') === 'all'));
+        document.querySelectorAll('.date-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-date') === 'all'));
         renderMain({{ animate: false }});
       }}
 
@@ -3763,6 +4464,16 @@ def build_dashboard_html(
     function syncThemeIcon(theme) {{
       const btn = document.getElementById('themeToggleBtn');
       if (btn) btn.innerHTML = theme === 'dark' ? ICON_SUN : ICON_MOON;
+    }}
+
+    function toggleFontSize() {{
+      const root = document.documentElement;
+      const next = root.getAttribute('data-font-size') === 'large' ? 'normal' : 'large';
+      root.setAttribute('data-font-size', next);
+      localStorage.setItem('uk-fin-ai-font-size', next);
+      const btn = document.getElementById('fontSizeToggleBtn');
+      if (btn) btn.classList.toggle('nav-btn-primary', next === 'large');
+      showToast(next === 'large' ? '✓ Comfort Reading Text Size: Large (A+)' : 'Text Size: Standard');
     }}
 
     function toggleTheme() {{
@@ -3872,6 +4583,12 @@ def build_dashboard_html(
         return;
       }}
 
+      if (e.key === 'f' || e.key === 'F') {{
+        e.preventDefault();
+        toggleFontSize();
+        return;
+      }}
+
       const navigableCards = Array.from(document.querySelectorAll('.cards-grid .news-card, .briefing-stream .stream-article, .compact-table tbody tr'));
       if (!navigableCards.length) return;
 
@@ -3912,6 +4629,13 @@ def build_dashboard_html(
       const savedTheme = localStorage.getItem('uk-fin-ai-theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
       syncThemeIcon(savedTheme);
+
+      const savedFont = localStorage.getItem('uk-fin-ai-font-size') || 'normal';
+      document.documentElement.setAttribute('data-font-size', savedFont);
+      const fontBtn = document.getElementById('fontSizeToggleBtn');
+      if (fontBtn) fontBtn.classList.toggle('nav-btn-primary', savedFont === 'large');
+
+      buildDateFilterPills();
 
       document.getElementById('viewCardsBtn').classList.toggle('active', currentView === 'cards');
       document.getElementById('viewBriefingBtn').classList.toggle('active', currentView === 'briefing');

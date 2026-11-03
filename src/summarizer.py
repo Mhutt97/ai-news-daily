@@ -326,18 +326,25 @@ def _render_story_card_html(
     summary_html = ""
     if summary:
         summary_html = (
-            f'<p style="margin:8px 0 0 0;color:#525252;font-size:13.8px;line-height:1.6;">'
+            f'<p style="margin:8px 0 0 0;color:#383838;font-size:14.2px;line-height:1.62;">'
             f"{_format_email_inline(summary)}</p>"
         )
 
     benefit_html = ""
     if benefit:
+        formatted_benefit = _format_email_inline(benefit)
+        colon_idx = formatted_benefit.find(":")
+        if 2 < colon_idx <= 44 and "<" not in formatted_benefit[:colon_idx]:
+            formatted_benefit = (
+                f'<strong style="color:#171717;font-weight:800;">{formatted_benefit[:colon_idx + 1]}</strong>'
+                f"{formatted_benefit[colon_idx + 1:]}"
+            )
         benefit_html = (
             f'<div style="background:#fafafa;border:1px solid #efefef;border-left:3px solid {accent};border-radius:12px;margin-top:12px;padding:10px 14px;">'
             f'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:{accent};margin-bottom:4px;">'
             f'<span style="display:inline-block;background:#171717;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;margin-right:6px;letter-spacing:0.06em;">UK</span>'
             f"Why It Matters &middot; Finance</div>"
-            f'<div style="font-size:13px;line-height:1.55;color:#262626;">{_format_email_inline(benefit)}</div>'
+            f'<div style="font-size:13.4px;line-height:1.58;color:#1f1f1f;">{formatted_benefit}</div>'
             f"</div>"
         )
 
