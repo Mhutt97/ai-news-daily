@@ -20,7 +20,7 @@
     "benefit": "Systemic Third-Party & FCA Oversight (Global Regulation Tomorrow): Confirms that as AI moves into core UK financial infrastructure, supervisory reviews will focus heavily on operational resilience and Critical Third Party (CTP) concentration.",
     "risk_angle": "Concentrated reliance on a single foundation model vendor without tested fallback procedures violates PRA/FCA operational resilience expectations.",
     "action_item": "Update your Outsourcing and Critical Third Party (CTP) register to inventory all external LLM APIs, cloud AI endpoints, and embedded SaaS AI dependencies across finance and operations.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-d8ec3888",
@@ -43,7 +43,7 @@
     "benefit": "Systemic Third-Party & FCA Oversight (FinTech Futures): Confirms that as AI moves into core UK financial infrastructure, supervisory reviews will focus heavily on operational resilience and Critical Third Party (CTP) concentration.",
     "risk_angle": "Concentrated reliance on a single foundation model vendor without tested fallback procedures violates PRA/FCA operational resilience expectations.",
     "action_item": "Update your Outsourcing and Critical Third Party (CTP) register to inventory all external LLM APIs, cloud AI endpoints, and embedded SaaS AI dependencies across finance and operations.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-0429e474",
@@ -92,29 +92,6 @@
     "is_new": false
   },
   {
-    "id": "item-3a0cb236",
-    "title": "Trump threatens ‘tremendous tax’ for moving AI data centers outside the US",
-    "url": "https://www.theverge.com/policy/1038892/trump-foreign-data-centers-tax",
-    "source": "The Verge AI",
-    "pub_domain": "theverge.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-11-20 18:50 UTC",
-    "date_key": "2026-11-21",
-    "date_label": "21 Nov 2026",
-    "score": 96,
-    "cfo_score": 100,
-    "audit_score": 96,
-    "fpa_score": 96,
-    "tier": "High UK Finance Impact",
-    "func_tag": "📊 UK Tax & Reporting",
-    "summary": "President Donald Trump promised to put a \"tremendous tax\" on companies that build data centers outside of the US, even as states and cities around the country are placing restrictions on new applications to build them.",
-    "raw_summary": "President Donald Trump promised to put a \"tremendous tax\" on companies that build data centers outside of the US, even as states and cities around the country are placing restrictions on new applications to build them. \"We're not going to allow our companies to build data…",
-    "benefit": "UK Statutory & Tax Compliance (Trump threatens ‘tremendous tax’ for): Shows how UK finance teams can align mandatory disclosure and tax reporting workflows with evolving regulatory standards.",
-    "risk_angle": "Manual spreadsheet bridges in statutory and tax reporting remain a primary source of filing adjustments and compliance audit findings.",
-    "action_item": "Review 'Trump threatens ‘tremendous tax’ for moving AI data cen' with your Head of Tax and Financial Controller to verify that current ERP reporting templates and filing calendars reflect the latest rules.",
-    "is_new": true
-  },
-  {
     "id": "item-638dc26c",
     "title": "Payrolling benefits in kind: new HMRC guidance",
     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOSVpuV0ZLeWVtelREVU1MbEhQZEpWWVgtSGprRVNjRjE1bWZObGZWNkY5eW9qbHJUUHh0VXV3VnZhMXlsN0RrTE1zUTN2X0ZaRmljX3A1Mm9paE1zcmpnYVVDWjNYS1pQdmpkQUdLLVlad29WU2pQaWZ2RmxtUzFZQzB5UEtZbXJrQUh4NGRKOWlma2Zp?oc=5",
@@ -135,7 +112,30 @@
     "benefit": "UK Statutory & Tax Compliance (Payrolling benefits in kind): Shows how UK finance teams can align mandatory disclosure and tax reporting workflows with evolving regulatory standards.",
     "risk_angle": "Manual spreadsheet bridges in statutory and tax reporting remain a primary source of filing adjustments and compliance audit findings.",
     "action_item": "Review 'Payrolling benefits in kind: new HMRC guidance' with your Head of Tax and Financial Controller to verify that current ERP reporting templates and filing calendars reflect the latest rules.",
-    "is_new": true
+    "is_new": false
+  },
+  {
+    "id": "item-3a0cb236",
+    "title": "Trump threatens ‘tremendous tax’ for moving AI data centers outside the US",
+    "url": "https://www.theverge.com/policy/1038892/trump-foreign-data-centers-tax",
+    "source": "The Verge AI",
+    "pub_domain": "theverge.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-20 18:50 UTC",
+    "date_key": "2026-11-21",
+    "date_label": "21 Nov 2026",
+    "score": 96,
+    "cfo_score": 100,
+    "audit_score": 96,
+    "fpa_score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "📊 UK Tax & Reporting",
+    "summary": "President Donald Trump promised to put a \"tremendous tax\" on companies that build data centers outside of the US, even as states and cities around the country are placing restrictions on new applications to build them.",
+    "raw_summary": "President Donald Trump promised to put a \"tremendous tax\" on companies that build data centers outside of the US, even as states and cities around the country are placing restrictions on new applications to build them. \"We're not going to allow our companies to build data…",
+    "benefit": "UK Statutory & Tax Compliance (Trump threatens ‘tremendous tax’ for): Shows how UK finance teams can align mandatory disclosure and tax reporting workflows with evolving regulatory standards.",
+    "risk_angle": "Manual spreadsheet bridges in statutory and tax reporting remain a primary source of filing adjustments and compliance audit findings.",
+    "action_item": "Review 'Trump threatens ‘tremendous tax’ for moving AI data cen' with your Head of Tax and Financial Controller to verify that current ERP reporting templates and filing calendars reflect the latest rules.",
+    "is_new": false
   },
   {
     "id": "item-26e8475b",
@@ -230,6 +230,29 @@
     "is_new": false
   },
   {
+    "id": "item-8d54d4ad",
+    "title": "Signal restricts mobile screenshots as it confronts ‘existential threat’ of AI surveillance",
+    "url": "https://techcrunch.com/2026/11/21/signal-restricts-mobile-screenshots-as-it-confronts-existential-threat-of-ai-surveillance/",
+    "source": "TechCrunch AI",
+    "pub_domain": "techcrunch.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-21 21:37 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 95,
+    "cfo_score": 100,
+    "audit_score": 95,
+    "fpa_score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "📈 CFO ROI & Value",
+    "summary": "Signal is limiting users' ability to take screenshots in both its Android and iOS apps. Addresses how CFOs convert AI pilot activity into auditable cost savings and cycle-time reductions.",
+    "raw_summary": "Signal is limiting users' ability to take screenshots in both its Android and iOS apps.",
+    "benefit": "CFO Value Realisation (Signal restricts mobile screenshots as): Focuses on converting AI software spend into measurable close-cycle speed, working-capital discipline, and P&L productivity.",
+    "risk_angle": "Expanding enterprise AI licenses without auditable productivity KPIs leads to SaaS sprawl and unrecovered software overhead.",
+    "action_item": "Require every active AI pilot in your finance function to report baseline vs. post-deployment hours saved and error-rate reductions before approving annual license renewals.",
+    "is_new": true
+  },
+  {
     "id": "item-779ccf54",
     "title": "Signal is blocking Gemini and Siri AI from reading your screen",
     "url": "https://www.theverge.com/ai-artificial-intelligence/1038390/signal-blocking-ai-agent-screenshots-mobile-app",
@@ -250,7 +273,7 @@
     "benefit": "CFO Value Realisation (Signal): Focuses on converting AI software spend into measurable close-cycle speed, working-capital discipline, and P&L productivity.",
     "risk_angle": "Expanding enterprise AI licenses without auditable productivity KPIs leads to SaaS sprawl and unrecovered software overhead.",
     "action_item": "Require every active AI pilot in your finance function to report baseline vs. post-deployment hours saved and error-rate reductions before approving annual license renewals.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-f1dd0bea",
@@ -529,6 +552,75 @@
     "is_new": false
   },
   {
+    "id": "item-3c93eb1e",
+    "title": "UK regulators warn AI is shrinking the time firms have to patch flaws",
+    "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQNEd3THZXSTktTWdvZmtGUXI3MGJvcUliNW43Y1FfNmVGb052OTVSbjZlZDFnOTBWeWlBNldndzNHcGlfZWhLaVJMVVdhTWQ2SFNPUHhuUllGV3Q4dmR1ZnZMQnVaVjE2ZWhKa1AzM1JQdHVCdF9wbDZFeTZMQ1V4RjhiN1pHbGxuMjJhb3ltWHFxdw?oc=5",
+    "source": "Financial-News.co.uk",
+    "pub_domain": "financial-news.co.uk",
+    "category": "UK Finance & CFO AI",
+    "published_at": "2026-11-21 09:28 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 90,
+    "cfo_score": 100,
+    "audit_score": 90,
+    "fpa_score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "💷 UK Finance & Market Pulse",
+    "summary": "Market intelligence via Financial-News.co.uk ('UK regulators warn AI is shrinking the time firms have to patch flaws') examines how UK regulators warn AI is navigating UK regulators warn AI is shrinking the time firms have to patch flaws, highlighting capital-allocation, governance, and technology adoption implications for UK financial leaders.",
+    "raw_summary": "",
+    "benefit": "UK Finance & Market Intelligence (Financial-News.co.uk · UK regulators warn AI): Tracks how developments in 'UK regulators warn AI is shrinking the time firms have ' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
+    "risk_angle": "Market and technology shifts around UK regulators warn AI is shrinking the time firms have  require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
+    "action_item": "Assess the relevance of 'UK regulators warn AI is shrinking the time firms have ' (Financial-News.co.uk) during your next monthly finance leadership or investment committee review.",
+    "is_new": true
+  },
+  {
+    "id": "item-d3641de4",
+    "title": "Nvidia faces US accounting probe amid deepening turmoil: media",
+    "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPOVJJTEJDdUVoYzlsS3R5bm1mN3BUU0ZRRUFrRWRQakdGelV5R2JYXzFxa1ZISzhpbUY5UW1WazVXaXlLRmpZUjg4NVh3TzkybVNYNWFWZzJEZDI1MFotWExXMW01N3NHckV3WEx1dHRoXzhuUGR6LU5vamg2ZnI2UUxoMGw4RDFp?oc=5",
+    "source": "Yahoo Finance UK",
+    "pub_domain": "uk.finance.yahoo.com",
+    "category": "UK Finance & CFO AI",
+    "published_at": "2026-11-21 21:53 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 90,
+    "cfo_score": 100,
+    "audit_score": 90,
+    "fpa_score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "💷 UK Finance & Market Pulse",
+    "summary": "Market intelligence via Yahoo Finance UK ('Nvidia faces US accounting probe amid deepening turmoil: media') examines how Nvidia faces US accounting probe is navigating nvidia faces US accounting probe amid deepening turmoil: media, highlighting capital-allocation, governance, and technology adoption implications for UK financial leaders.",
+    "raw_summary": "",
+    "benefit": "UK Finance & Market Intelligence (Yahoo Finance UK · Nvidia faces US accounting probe): Tracks how developments in 'Nvidia faces US accounting probe amid deepening turmoil' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
+    "risk_angle": "Market and technology shifts around nvidia faces US accounting probe amid deepening turmoil require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
+    "action_item": "Assess the relevance of 'Nvidia faces US accounting probe amid deepening turmoil' (Yahoo Finance UK) during your next monthly finance leadership or investment committee review.",
+    "is_new": true
+  },
+  {
+    "id": "item-2ac70d37",
+    "title": "Epam CFO Jason Peterson sells $545,607 in stock",
+    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdTJFc0pXNkJuellQcWY0dHp1a1M3Y2JmbHY0M2U4M21rcG1pQ0tfUFBMSm9RNGlFWUUxN2VFaFJaZWFVWkJvdnY5TDhaS0lTdEd0cXF5NlJBMERCX1RyU0ctWXF0M3NDSnpEUEFEdmU2bEljcG9HeDR4cXNYMThyekx3MTlqU1F1TEFMUmJwSE05bUhvbDRrbTlEUmxsZUY0dnZWT0ZEM25aZw?oc=5",
+    "source": "Investing.com UK",
+    "pub_domain": "uk.investing.com",
+    "category": "UK Finance & CFO AI",
+    "published_at": "2026-11-21 23:48 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 90,
+    "cfo_score": 100,
+    "audit_score": 90,
+    "fpa_score": 96,
+    "tier": "High UK Finance Impact",
+    "func_tag": "💷 UK Finance & Market Pulse",
+    "summary": "Market intelligence via Investing.com UK ('Epam CFO Jason Peterson sells $545,607 in stock') examines how Epam CFO Jason Peterson sells is navigating epam CFO Jason Peterson sells $545,607 in stock, highlighting capital-allocation, governance, and technology adoption implications for UK financial leaders.",
+    "raw_summary": "",
+    "benefit": "UK Finance & Market Intelligence (Investing.com UK · Epam CFO Jason Peterson sells): Tracks how developments in 'Epam CFO Jason Peterson sells $545,607 in stock' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
+    "risk_angle": "Market and technology shifts around epam CFO Jason Peterson sells $545,607 in stock require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
+    "action_item": "Assess the relevance of 'Epam CFO Jason Peterson sells $545,607 in stock' (Investing.com UK) during your next monthly finance leadership or investment committee review.",
+    "is_new": true
+  },
+  {
     "id": "item-1e0980f2",
     "title": "Publishing's next reinvention",
     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOTEljU1NFZTI0MzVFOERkNzkzSVE4ZUVLNmZaMVBwaDhQX0ViVkRlZlphRlNRa25TMGh2dllKcktnS0dCMGVzUGZaTXc4RG5Ja3c5bnl0M3FCSUR2cVRrclpFVGNTTFNoUktHLXRZeml3Ri1fekM5ckdhWDZhZ3REVg?oc=5",
@@ -549,7 +641,7 @@
     "benefit": "UK Finance & Market Intelligence (kpmg.com · Publishing's next reinvention): Tracks how developments in 'Publishing's next reinvention' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
     "risk_angle": "Market and technology shifts around publishing's next reinvention require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
     "action_item": "Assess the relevance of 'Publishing's next reinvention' (kpmg.com) during your next monthly finance leadership or investment committee review.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-1ead670f",
@@ -572,7 +664,7 @@
     "benefit": "UK Finance & Market Intelligence (Lancaster University · Accounting experts give important corporate): Tracks how developments in 'Accounting experts give important corporate reporting a' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
     "risk_angle": "Market and technology shifts around accounting experts give important corporate reporting a require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
     "action_item": "Assess the relevance of 'Accounting experts give important corporate reporting a' (Lancaster University) during your next monthly finance leadership or investment committee review.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-ee0190ca",
@@ -595,7 +687,7 @@
     "benefit": "UK Finance & Market Intelligence (Charity Digital · Topics - How charity finance leaders): Tracks how developments in 'Topics - How charity finance leaders can create a compe' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
     "risk_angle": "Market and technology shifts around topics - How charity finance leaders can create a compe require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
     "action_item": "Assess the relevance of 'Topics - How charity finance leaders can create a compe' (Charity Digital) during your next monthly finance leadership or investment committee review.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-bbf0101d",
@@ -618,7 +710,7 @@
     "benefit": "UK Finance & Market Intelligence (Mobile Europe · Deutsche Telekom invests €100 million): Tracks how developments in 'Deutsche Telekom invests €100 million in Mistral AI' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
     "risk_angle": "Market and technology shifts around deutsche Telekom invests €100 million in Mistral AI require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
     "action_item": "Assess the relevance of 'Deutsche Telekom invests €100 million in Mistral AI' (Mobile Europe) during your next monthly finance leadership or investment committee review.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-caa72ebd",
@@ -641,7 +733,7 @@
     "benefit": "UK Finance & Market Intelligence (Accountancy Today · Increase the Value of AI): Tracks how developments in 'Increase the Value of AI Insights with Finance Expertis' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
     "risk_angle": "Market and technology shifts around increase the Value of AI Insights with Finance Expertis require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
     "action_item": "Assess the relevance of 'Increase the Value of AI Insights with Finance Expertis' (Accountancy Today) during your next monthly finance leadership or investment committee review.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-26599985",
@@ -664,7 +756,7 @@
     "benefit": "UK Finance & Market Intelligence (Resultsense · Sage grows revenue 11% and): Tracks how developments in 'Sage grows revenue 11% and plans £100m AI-era restructu' influence capital allocation, vendor risk, and operational strategy for UK finance teams.",
     "risk_angle": "Market and technology shifts around sage grows revenue 11% and plans £100m AI-era restructu require ongoing monitoring of counterparty exposure, cost assumptions, and governance controls.",
     "action_item": "Assess the relevance of 'Sage grows revenue 11% and plans £100m AI-era restructu' (Resultsense) during your next monthly finance leadership or investment committee review.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-d86ae4d8",
@@ -1173,50 +1265,27 @@
     "is_new": false
   },
   {
-    "id": "item-acaf0056",
-    "title": "Where was Nvidia’s security team?",
-    "url": "https://techcrunch.com/2026/11/14/where-was-nvidias-security-team/",
+    "id": "item-01945f6a",
+    "title": "Here are the top AI agents that can live in your text messages",
+    "url": "https://techcrunch.com/2026/11/21/all-the-ai-agents-that-can-live-in-your-text-messages/",
     "source": "TechCrunch AI",
     "pub_domain": "techcrunch.com",
     "category": "Tech & AI News",
-    "published_at": "2026-11-15 00:08 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 83,
-    "cfo_score": 87,
-    "audit_score": 95,
-    "fpa_score": 83,
+    "published_at": "2026-11-21 17:00 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 78,
+    "cfo_score": 83,
+    "audit_score": 78,
+    "fpa_score": 92,
     "tier": "Finance Ops & Productivity",
-    "func_tag": "🔒 AI Security & Controls",
-    "summary": "Nvidia’s security chief quietly left in August, and now that CEO Jensen Huang has stepped down over his relationships, including one with an executive at a company suspected of funneling chips to China, a former intelligence officer says it’s the kind of leak that runs everyday.",
-    "raw_summary": "Nvidia’s security chief quietly left in August, and now that CEO Jensen Huang has stepped down over his relationships, including one with an executive at a company suspected of funneling chips to China, a former intelligence officer says it’s the kind of leak that runs everyday…",
-    "benefit": "Enterprise AI Security Posture (Where was Nvidia’s security team?): Tracks how security teams and frontier labs detect model misalignment, patch supply-chain backdoors, and contain autonomous agent actions.",
-    "risk_angle": "Security vulnerabilities across where was Nvidia’s security team? can expose developer credentials, internal codebases, or connected financial databases to unauthorized access.",
-    "action_item": "Share this TechCrunch AI security update on 'Where was Nvidia’s security team?' with your CISO and internal audit lead to verify that IDE extensions, model APIs, and agent permissions are continuously monitored.",
-    "is_new": false
-  },
-  {
-    "id": "item-d46b516a",
-    "title": "The OpenAI board member who fired Sam Altman says we still can’t trust AI CEOs",
-    "url": "https://www.theverge.com/podcast/1032907/helen-toner-openai-cset-ai-safety-policy-interview",
-    "source": "The Verge AI",
-    "pub_domain": "theverge.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-11-14 15:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 83,
-    "cfo_score": 87,
-    "audit_score": 95,
-    "fpa_score": 83,
-    "tier": "Finance Ops & Productivity",
-    "func_tag": "🔒 AI Security & Controls",
-    "summary": "Today, I’m talking with Helen Toner, the executive director of the Center for Security and Emerging Technology at Georgetown University. This episode is part two of our series on AI in real life.",
-    "raw_summary": "Today, I’m talking with Helen Toner, the executive director of the Center for Security and Emerging Technology at Georgetown University. This episode is part two of our series on AI in real life. Helen is a well-known figure in the AI safety and policy community, though she is…",
-    "benefit": "Enterprise AI Security Posture (The OpenAI board member who fired Sam Altman): Tracks how security teams and frontier labs detect model misalignment, patch supply-chain backdoors, and contain autonomous agent actions.",
-    "risk_angle": "Security vulnerabilities across the OpenAI board member who fired Sam Altman says we st can expose developer credentials, internal codebases, or connected financial databases to unauthorized access.",
-    "action_item": "Share this The Verge AI security update on 'The OpenAI board member who fired Sam Altman says we st' with your CISO and internal audit lead to verify that IDE extensions, model APIs, and agent permissions are continuously monitored.",
-    "is_new": false
+    "func_tag": "🤖 AI Agents & Governance",
+    "summary": "We created a list of the most notable AI agents that can live in your text messages, from general assistants to agents designed for families, travel, and work.",
+    "raw_summary": "We created a list of the most notable AI agents that can live in your text messages, from general assistants to agents designed for families, travel, and work.",
+    "benefit": "Agentic Workflow Governance (Here · TechCrunch AI): Highlights why finance and operations leaders must judge AI agents by verified business outputs and auditability rather than raw token volume.",
+    "risk_angle": "Unmonitored agent autonomy in here are the top AI agents that can live in your text m creates corporate liability and operational errors when agents optimize for proxy metrics or bypass intended rules.",
+    "action_item": "Apply the lessons from 'Here are the top AI agents that can live in your text m' by requiring real-time action logging, spend caps, and human sign-off gates before any internal AI agent interacts with production systems.",
+    "is_new": true
   },
   {
     "id": "item-57728669",
@@ -1472,6 +1541,29 @@
     "is_new": false
   },
   {
+    "id": "item-89298d3b",
+    "title": "Is selling an AI version of your face to this microdrama startup the future of Hollywood?",
+    "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/",
+    "source": "TechCrunch AI",
+    "pub_domain": "techcrunch.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-21 16:00 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 75,
+    "cfo_score": 80,
+    "audit_score": 75,
+    "fpa_score": 89,
+    "tier": "Finance Ops & Productivity",
+    "func_tag": "⚡ Cloud & Compute Infra",
+    "summary": "An actor has licensed his face to a microdrama startup — in a trend that's already popular in China. Experts question the long-term consequences if this becomes a trend in Hollywood, too.",
+    "raw_summary": "An actor has licensed his face to a microdrama startup — in a trend that's already popular in China. Experts question the long-term consequences if this becomes a trend in Hollywood, too.",
+    "benefit": "AI Compute & Infrastructure Economics (Is selling an AI version): Tracks how 'Is selling an AI version of your face to this microd' shapes power-grid bottlenecks, financing guarantees, and hardware costs driving enterprise cloud AI pricing.",
+    "risk_angle": "Escalating data-center power, environmental permitting, and financing pressures around is selling an AI version of your face to this micr can translate into regional cloud capacity constraints and higher API unit costs.",
+    "action_item": "Factor cloud compute and energy pass-through costs highlighted in 'Is selling an AI version of your face to this micr' into your 3-year IT cloud FinOps budget and vendor financing assessments.",
+    "is_new": true
+  },
+  {
     "id": "item-07937395",
     "title": "Chips can survive the space environment — can their financing?",
     "url": "https://techcrunch.com/2026/11/20/chips-can-survive-the-space-environment-can-their-financing/",
@@ -1492,7 +1584,7 @@
     "benefit": "AI Compute & Infrastructure Economics (Chips): Tracks how 'Chips can survive the space environment — can their ' shapes power-grid bottlenecks, financing guarantees, and hardware costs driving enterprise cloud AI pricing.",
     "risk_angle": "Escalating data-center power, environmental permitting, and financing pressures around chips can survive the space environment — can thei can translate into regional cloud capacity constraints and higher API unit costs.",
     "action_item": "Factor cloud compute and energy pass-through costs highlighted in 'Chips can survive the space environment — can thei' into your 3-year IT cloud FinOps budget and vendor financing assessments.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-c4b0222f",
@@ -1515,7 +1607,7 @@
     "benefit": "AI Compute & Infrastructure Economics (Meta reconsiders 2030 net-zero goal): Tracks how 'Meta reconsiders 2030 net-zero goal amid record emis' shapes power-grid bottlenecks, financing guarantees, and hardware costs driving enterprise cloud AI pricing.",
     "risk_angle": "Escalating data-center power, environmental permitting, and financing pressures around meta reconsiders 2030 net-zero goal amid record em can translate into regional cloud capacity constraints and higher API unit costs.",
     "action_item": "Factor cloud compute and energy pass-through costs highlighted in 'Meta reconsiders 2030 net-zero goal amid record em' into your 3-year IT cloud FinOps budget and vendor financing assessments.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-bb3ee1cf",
@@ -1702,26 +1794,26 @@
     "is_new": false
   },
   {
-    "id": "item-859ee3ec",
-    "title": "Anthropic mathematician claims to have solved prestigious Millennium Prize problem with Claude",
-    "url": "https://www.theverge.com/ai-artificial-intelligence/1010051/anthropic-riemann-hypothesis-millennium-prize-problem",
+    "id": "item-a9f34b76",
+    "title": "Can Anthropic afford to put safety first?",
+    "url": "https://www.theverge.com/podcast/1038701/anthropic-ipo-ai-safety-openai-nvidia-structure",
     "source": "The Verge AI",
     "pub_domain": "theverge.com",
     "category": "Tech & AI News",
-    "published_at": "2026-11-20 16:34 UTC",
-    "date_key": "2026-11-21",
-    "date_label": "21 Nov 2026",
+    "published_at": "2026-11-21 15:00 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
     "score": 74,
     "cfo_score": 79,
     "audit_score": 74,
     "fpa_score": 88,
     "tier": "Finance Ops & Productivity",
     "func_tag": "🧠 Frontier Models & Labs",
-    "summary": "Anthropic mathematician Levent Alpöge claims he has proved the Riemann hypothesis, one of mathematics's most notoriously difficult problems, with the help of Claude, cracking a puzzle that has eluded some of the world's best mathematicians for decades.",
-    "raw_summary": "Anthropic mathematician Levent Alpöge claims he has proved the Riemann hypothesis, one of mathematics's most notoriously difficult problems, with the help of Claude, cracking a puzzle that has eluded some of the world's best mathematicians for decades. If verified, it would…",
-    "benefit": "Frontier Lab & Model Intelligence (Anthropic mathematician claims to have): Keeps technology and finance leaders informed on how 'Anthropic mathematician claims to have solved prestigio' shifts enterprise copilot capabilities, vendor credit profiles, and licensing.",
-    "risk_angle": "Rapid frontier model updates and commercial shifts around anthropic mathematician claims to have solved prestigio require version pinning and governance review so automated enterprise workflows remain stable.",
-    "action_item": "Evaluate how Anthropic mathematician claims to have's update ('Anthropic mathematician claims to have solved pres') impacts your approved enterprise model catalog, workspace integrations, or AI vendor risk scorecard.",
+    "summary": "Today, I’m talking with Hayden Field, The Verge’s senior AI reporter, about the Anthropic IPO for the third and final episode in our series about AI in real life. The AI lab behind Claude went public on the Nasdaq last Thursday.",
+    "raw_summary": "Today, I’m talking with Hayden Field, The Verge’s senior AI reporter, about the Anthropic IPO for the third and final episode in our series about AI in real life. The AI lab behind Claude went public on the Nasdaq last Thursday. The numbers are gigantic, but not really that…",
+    "benefit": "Frontier Lab & Model Intelligence (Can Anthropic afford to put): Keeps technology and finance leaders informed on how 'Can Anthropic afford to put safety first?' shifts enterprise copilot capabilities, vendor credit profiles, and licensing.",
+    "risk_angle": "Rapid frontier model updates and commercial shifts around can Anthropic afford to put safety first? require version pinning and governance review so automated enterprise workflows remain stable.",
+    "action_item": "Evaluate how Can Anthropic afford to put's update ('Can Anthropic afford to put safety first?') impacts your approved enterprise model catalog, workspace integrations, or AI vendor risk scorecard.",
     "is_new": true
   },
   {
@@ -1745,7 +1837,30 @@
     "benefit": "Frontier Lab & Model Intelligence (Combatting adversarial distillation): Keeps technology and finance leaders informed on how 'Combatting adversarial distillation' shifts enterprise copilot capabilities, vendor credit profiles, and licensing.",
     "risk_angle": "Rapid frontier model updates and commercial shifts around combatting adversarial distillation require version pinning and governance review so automated enterprise workflows remain stable.",
     "action_item": "Evaluate how Combatting adversarial distillation's update ('Combatting adversarial distillation') impacts your approved enterprise model catalog, workspace integrations, or AI vendor risk scorecard.",
-    "is_new": true
+    "is_new": false
+  },
+  {
+    "id": "item-859ee3ec",
+    "title": "Anthropic mathematician claims to have solved prestigious Millennium Prize problem with Claude",
+    "url": "https://www.theverge.com/ai-artificial-intelligence/1010051/anthropic-riemann-hypothesis-millennium-prize-problem",
+    "source": "The Verge AI",
+    "pub_domain": "theverge.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-20 16:34 UTC",
+    "date_key": "2026-11-21",
+    "date_label": "21 Nov 2026",
+    "score": 74,
+    "cfo_score": 79,
+    "audit_score": 74,
+    "fpa_score": 88,
+    "tier": "Finance Ops & Productivity",
+    "func_tag": "🧠 Frontier Models & Labs",
+    "summary": "Anthropic mathematician Levent Alpöge claims he has proved the Riemann hypothesis, one of mathematics's most notoriously difficult problems, with the help of Claude, cracking a puzzle that has eluded some of the world's best mathematicians for decades.",
+    "raw_summary": "Anthropic mathematician Levent Alpöge claims he has proved the Riemann hypothesis, one of mathematics's most notoriously difficult problems, with the help of Claude, cracking a puzzle that has eluded some of the world's best mathematicians for decades. If verified, it would…",
+    "benefit": "Frontier Lab & Model Intelligence (Anthropic mathematician claims to have): Keeps technology and finance leaders informed on how 'Anthropic mathematician claims to have solved prestigio' shifts enterprise copilot capabilities, vendor credit profiles, and licensing.",
+    "risk_angle": "Rapid frontier model updates and commercial shifts around anthropic mathematician claims to have solved prestigio require version pinning and governance review so automated enterprise workflows remain stable.",
+    "action_item": "Evaluate how Anthropic mathematician claims to have's update ('Anthropic mathematician claims to have solved pres') impacts your approved enterprise model catalog, workspace integrations, or AI vendor risk scorecard.",
+    "is_new": false
   },
   {
     "id": "item-a628e3d5",
@@ -1978,29 +2093,6 @@
     "is_new": false
   },
   {
-    "id": "item-7134e7e1",
-    "title": "The AI graveyard: a running list of projects and startups that didn’t make it",
-    "url": "https://techcrunch.com/2026/11/14/the-ai-graveyard-a-running-list-of-projects-and-startups-that-didnt-make-it/",
-    "source": "TechCrunch AI",
-    "pub_domain": "techcrunch.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-11-14 17:30 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 74,
-    "cfo_score": 79,
-    "audit_score": 74,
-    "fpa_score": 88,
-    "tier": "Finance Ops & Productivity",
-    "func_tag": "🧠 Frontier Models & Labs",
-    "summary": "From Apple's repeatedly delayed Siri AI to OpenAI's messy \"super app\" launch, here's a look at the AI projects that shut down or missed expectations.",
-    "raw_summary": "From Apple's repeatedly delayed Siri AI to OpenAI's messy \"super app\" launch, here's a look at the AI projects that shut down or missed expectations.",
-    "benefit": "Frontier Lab & Model Intelligence (The AI graveyard): Keeps technology and finance leaders informed on how 'The AI graveyard: a running list of projects and startu' shifts enterprise copilot capabilities, vendor credit profiles, and licensing.",
-    "risk_angle": "Rapid frontier model updates and commercial shifts around a running list of projects and startups that didn’t mak require version pinning and governance review so automated enterprise workflows remain stable.",
-    "action_item": "Evaluate how The AI graveyard's update ('The AI graveyard: a running list of projects and s') impacts your approved enterprise model catalog, workspace integrations, or AI vendor risk scorecard.",
-    "is_new": false
-  },
-  {
     "id": "item-5e93d3e1",
     "title": "Accelerating Mixture of Block Attention via Dynamic Routing, KV-Centric Execution and Runtime Pipelining",
     "url": "https://huggingface.co/papers/2611.26268",
@@ -2201,11 +2293,11 @@
     "tier": "General AI & Research",
     "func_tag": "🔬 Foundation R&D Paper",
     "summary": "Learning and inference on time series can pose significant statistical challenges, including autocorrelated observations, distribution shift over time, and the curse of dimensionality.",
-    "raw_summary": "[1 upvotes] Learning and inference on time series can pose significant statistical challenges, including autocorrelated observations, distribution shift over time, and the curse of dimensionality. These challenges complicate the practical application of causal discovery algorithms, which…",
+    "raw_summary": "[2 upvotes] Learning and inference on time series can pose significant statistical challenges, including autocorrelated observations, distribution shift over time, and the curse of dimensionality. These challenges complicate the practical application of causal discovery algorithms, which…",
     "benefit": "Foundation Model R&D (Time Series Structure Learning with): Advances academic understanding of time Series Structure Learning with Local Causal Parent Discovery, informing next-generation multimodal and reasoning architectures.",
     "risk_angle": "Early-stage academic methods like Time Series Structure Learning with require extensive enterprise hardening and reproducibility checks before production adoption.",
     "action_item": "Log Time Series Structure Learning with in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-4fad1f8c",
@@ -2224,11 +2316,11 @@
     "tier": "General AI & Research",
     "func_tag": "🔬 Foundation R&D Paper",
     "summary": "Vision-language-action (VLA) models enable robots to perform diverse tasks from visual observations and language instructions. Contributes technical benchmarks and architectural insights for advancing reliability in teaching Vision-Language-Action Models to Stop Safely.",
-    "raw_summary": "[3 upvotes] Vision-language-action (VLA) models enable robots to perform diverse tasks from visual observations and language instructions. While prior work has explored task suppression and refusal, stopping prohibited behavior once execution is underway and controlling the resulting…",
+    "raw_summary": "[7 upvotes] Vision-language-action (VLA) models enable robots to perform diverse tasks from visual observations and language instructions. While prior work has explored task suppression and refusal, stopping prohibited behavior once execution is underway and controlling the resulting…",
     "benefit": "Foundation Model R&D (Teaching Vision-Language-Action Models to Stop): Advances academic understanding of teaching Vision-Language-Action Models to Stop Safely, informing next-generation multimodal and reasoning architectures.",
     "risk_angle": "Early-stage academic methods like Teaching Vision-Language-Action Models to Stop require extensive enterprise hardening and reproducibility checks before production adoption.",
     "action_item": "Log Teaching Vision-Language-Action Models to Stop in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-21c9f234",
@@ -2251,7 +2343,7 @@
     "benefit": "Foundation Model R&D (PAD): Advances academic understanding of policy-Aware Data Valuation for Autonomous Driving, informing next-generation multimodal and reasoning architectures.",
     "risk_angle": "Early-stage academic methods like PAD require extensive enterprise hardening and reproducibility checks before production adoption.",
     "action_item": "Log PAD in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-41560a41",
@@ -2274,7 +2366,7 @@
     "benefit": "Foundation Model R&D (Lang-SVG): Advances academic understanding of hierarchical Image Vectorization with Language Priors, informing next-generation multimodal and reasoning architectures.",
     "risk_angle": "Early-stage academic methods like Lang-SVG require extensive enterprise hardening and reproducibility checks before production adoption.",
     "action_item": "Log Lang-SVG in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-bf5d9ebd",
@@ -2293,11 +2385,11 @@
     "tier": "General AI & Research",
     "func_tag": "🔬 Foundation R&D Paper",
     "summary": "Introduces Squoosh Bench, a research framework addressing evaluating UX-1 on 318 Historical Website A/B Tests. Experimentation teams must decide which proposed website changes to test with live traffic. We evaluated whether forecasts from simulated shoppers could inform that choice.",
-    "raw_summary": "[2 upvotes] Experimentation teams must decide which proposed website changes to test with live traffic. We evaluated whether forecasts from simulated shoppers could inform that choice. We screened 412 historical website A/B tests and evaluated four systems on the 318 that ran longer than…",
+    "raw_summary": "[3 upvotes] Experimentation teams must decide which proposed website changes to test with live traffic. We evaluated whether forecasts from simulated shoppers could inform that choice. We screened 412 historical website A/B tests and evaluated four systems on the 318 that ran longer than…",
     "benefit": "Foundation Model R&D (Squoosh Bench): Advances academic understanding of evaluating UX-1 on 318 Historical Website A/B Tests, informing next-generation multimodal and reasoning architectures.",
     "risk_angle": "Early-stage academic methods like Squoosh Bench require extensive enterprise hardening and reproducibility checks before production adoption.",
     "action_item": "Log Squoosh Bench in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-8c18510f",
@@ -3266,142 +3358,73 @@
     "is_new": false
   },
   {
-    "id": "item-53a9ebad",
-    "title": "ArchSpace: Recording, Reviewing, and Referencing LLM Architecture Research",
-    "url": "https://arxiv.org/abs/2611.17332v1",
-    "source": "ArXiv (cs.AI / cs.LG)",
-    "pub_domain": "arxiv.org",
-    "category": "Research Papers",
-    "published_at": "2026-11-15 08:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 56,
-    "cfo_score": 61,
-    "audit_score": 56,
-    "fpa_score": 70,
+    "id": "item-234da3fc",
+    "title": "The UN fails to agree on rules regulating ‘killer robots’",
+    "url": "https://www.theverge.com/tech/1039554/un-regulations-killer-robots",
+    "source": "The Verge AI",
+    "pub_domain": "theverge.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-21 20:03 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 50,
+    "cfo_score": 50,
+    "audit_score": 50,
+    "fpa_score": 58,
     "tier": "General AI & Research",
-    "func_tag": "🔬 Foundation R&D Paper",
-    "summary": "Introduces ArchSpace, a research framework addressing recording, Reviewing, and Referencing LLM Architecture Research. Model architecture shapes the scaling behavior, training efficiency, and inference cost of LLMs, making it a central focus of both industry and academia.",
-    "raw_summary": "Introduces ArchSpace, a research framework addressing recording, Reviewing, and Referencing LLM Architecture Research. Model architecture shapes the scaling behavior, training efficiency, and inference cost of LLMs, making it a central focus of both industry and academia.",
-    "benefit": "Foundation Model R&D (ArchSpace): Advances academic understanding of recording, Reviewing, and Referencing LLM Architecture Research, informing next-generation multimodal and reasoning architectures.",
-    "risk_angle": "Early-stage academic methods like ArchSpace require extensive enterprise hardening and reproducibility checks before production adoption.",
-    "action_item": "Log ArchSpace in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": false
+    "func_tag": "🌐 Enterprise Tech & AI",
+    "summary": "One of the items on the agenda for UN diplomats meeting in Geneva this week was working towards rules regarding the use of autonomous weapons, or so-called \"killer robots.\" Eventually, representatives left the meetings agreeing to \"start discussing options\" after a largely.",
+    "raw_summary": "One of the items on the agenda for UN diplomats meeting in Geneva this week was working towards rules regarding the use of autonomous weapons, or so-called \"killer robots.\" Eventually, representatives left the meetings agreeing to \"start discussing options\" after a largely…",
+    "benefit": "Industry & Workplace AI Context (The UN fails to agree · The Verge AI): Tracks how developments in 'The UN fails to agree on rules regulating ‘killer robot' shape workforce policies, platform ecosystems, and digital strategy.",
+    "risk_angle": "Emerging shifts in the UN fails to agree on rules regulating ‘killer robot can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
+    "action_item": "Note 'The UN fails to agree on rules regulating ‘killer robot' (The Verge AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
+    "is_new": true
   },
   {
-    "id": "item-a683e7ac",
-    "title": "Back to Pixels: Lifting Latent Video Diffusion into Pixel Space",
-    "url": "https://huggingface.co/papers/2611.17336",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-11-15 08:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 56,
-    "cfo_score": 61,
-    "audit_score": 56,
-    "fpa_score": 70,
+    "id": "item-e74727ec",
+    "title": "Chess.com’s next move is a new hub for classic games, from mahjong to sudoku",
+    "url": "https://www.theverge.com/games/1038099/chess-classic-games-expansion-ai",
+    "source": "The Verge AI",
+    "pub_domain": "theverge.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-21 14:00 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 50,
+    "cfo_score": 50,
+    "audit_score": 50,
+    "fpa_score": 58,
     "tier": "General AI & Research",
-    "func_tag": "🔬 Foundation R&D Paper",
-    "summary": "Introduces Back to Pixels, a research framework addressing lifting Latent Video Diffusion into Pixel Space. Frontier video generation models work in a VAE latent space that compresses video in both space and time.",
-    "raw_summary": "Introduces Back to Pixels, a research framework addressing lifting Latent Video Diffusion into Pixel Space. Frontier video generation models work in a VAE latent space that compresses video in both space and time.",
-    "benefit": "Foundation Model R&D (Back to Pixels): Advances academic understanding of lifting Latent Video Diffusion into Pixel Space, informing next-generation multimodal and reasoning architectures.",
-    "risk_angle": "Early-stage academic methods like Back to Pixels require extensive enterprise hardening and reproducibility checks before production adoption.",
-    "action_item": "Log Back to Pixels in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": false
+    "func_tag": "🌐 Enterprise Tech & AI",
+    "summary": "Chess.com is ready to go a lot bigger than chess. After launching Gambit, a gambling-free poker site, earlier this year, the company is now adding 10 more games: backgammon, checkers, go, hearts, mahjong, shogi, sudoku, solitaire, xiangqi, and a Scrabble alternative called.",
+    "raw_summary": "Chess.com is ready to go a lot bigger than chess. After launching Gambit, a gambling-free poker site, earlier this year, the company is now adding 10 more games: backgammon, checkers, go, hearts, mahjong, shogi, sudoku, solitaire, xiangqi, and a Scrabble alternative called…",
+    "benefit": "Industry & Workplace AI Context (Chess.com’s next move · The Verge AI): Tracks how developments in 'Chess.com’s next move is a new hub for classic games, f' shape workforce policies, platform ecosystems, and digital strategy.",
+    "risk_angle": "Emerging shifts in chess.com’s next move is a new hub for classic games, f can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
+    "action_item": "Note 'Chess.com’s next move is a new hub for classic games, f' (The Verge AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
+    "is_new": true
   },
   {
-    "id": "item-254acb1c",
-    "title": "Who Remembers What? Multi-Granularity Memory Extraction for Multi-User, Multi-Agent Interaction",
-    "url": "https://huggingface.co/papers/2611.10439",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-11-15 08:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 56,
-    "cfo_score": 61,
-    "audit_score": 56,
-    "fpa_score": 70,
+    "id": "item-127326b8",
+    "title": "A tale of two Nvidias",
+    "url": "https://techcrunch.com/2026/11/21/a-tale-of-two-nvidias/",
+    "source": "TechCrunch AI",
+    "pub_domain": "techcrunch.com",
+    "category": "Tech & AI News",
+    "published_at": "2026-11-21 21:07 UTC",
+    "date_key": "2026-11-22",
+    "date_label": "22 Nov 2026",
+    "score": 50,
+    "cfo_score": 50,
+    "audit_score": 50,
+    "fpa_score": 58,
     "tier": "General AI & Research",
-    "func_tag": "🔬 Foundation R&D Paper",
-    "summary": "Self-evolving agents improve their own skills, memory, and harness code from experience without retraining the base LLM, and group-evolving agents go further by sharing these lessons across agents.",
-    "raw_summary": "Self-evolving agents improve their own skills, memory, and harness code from experience without retraining the base LLM, and group-evolving agents go further by sharing these lessons across agents.",
-    "benefit": "Foundation Model R&D (Who Remembers What? Multi-Granularity Memory): Advances academic understanding of who Remembers What? Multi-Granularity Memory Extraction for Multi, informing next-generation multimodal and reasoning architectures.",
-    "risk_angle": "Early-stage academic methods like Who Remembers What? Multi-Granularity Memory require extensive enterprise hardening and reproducibility checks before production adoption.",
-    "action_item": "Log Who Remembers What? Multi-Granularity Memory in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": false
-  },
-  {
-    "id": "item-63e770c5",
-    "title": "EgoX: Egocentric Cross-Embodiment Manipulation with Embodiment Dreaming",
-    "url": "https://huggingface.co/papers/2611.16728",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-11-15 08:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 56,
-    "cfo_score": 61,
-    "audit_score": 56,
-    "fpa_score": 70,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Foundation R&D Paper",
-    "summary": "Introduces EgoX, a research framework addressing egocentric Cross-Embodiment Manipulation with Embodiment Dreaming. Generalist manipulation policies can benefit from the complementary experience of humans, real robots, and simulated agents. However, differences in morphology, sensing, and control interfaces make it difficult to learn effectively from their combined demonstrations.",
-    "raw_summary": "Introduces EgoX, a research framework addressing egocentric Cross-Embodiment Manipulation with Embodiment Dreaming. Generalist manipulation policies can benefit from the complementary experience of humans, real robots, and simulated agents. However, differences in morphology, sensing, and control interfaces make it difficult to learn effectively from their combined demonstrations.",
-    "benefit": "Foundation Model R&D (EgoX): Advances academic understanding of egocentric Cross-Embodiment Manipulation with Embodiment Dreaming, informing next-generation multimodal and reasoning architectures.",
-    "risk_angle": "Early-stage academic methods like EgoX require extensive enterprise hardening and reproducibility checks before production adoption.",
-    "action_item": "Log EgoX in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": false
-  },
-  {
-    "id": "item-58237c13",
-    "title": "Consensus Capture in Reference-Based UAV Video Stabilization: A Benchmark on Dynamic Urban Scenes",
-    "url": "https://huggingface.co/papers/2611.17190",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-11-15 08:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 56,
-    "cfo_score": 61,
-    "audit_score": 56,
-    "fpa_score": 70,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Foundation R&D Paper",
-    "summary": "Reference-frame stabilization registers every frame of a hovering-drone video onto one reference frame, keeping object positions comparable. The registration pipelines it relies on are selected on feature-matching benchmarks in which only the camera moves.",
-    "raw_summary": "Reference-frame stabilization registers every frame of a hovering-drone video onto one reference frame, keeping object positions comparable. The registration pipelines it relies on are selected on feature-matching benchmarks in which only the camera moves.",
-    "benefit": "Foundation Model R&D (Consensus Capture in Reference-Based UAV): Advances academic understanding of consensus Capture in Reference-Based UAV Video Stabilization: A B, informing next-generation multimodal and reasoning architectures.",
-    "risk_angle": "Early-stage academic methods like Consensus Capture in Reference-Based UAV require extensive enterprise hardening and reproducibility checks before production adoption.",
-    "action_item": "Log Consensus Capture in Reference-Based UAV in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": false
-  },
-  {
-    "id": "item-dcf061d1",
-    "title": "TurtLES: A Large-Scale Benchmark for Turbulent 3D Neural PDE Surrogates",
-    "url": "https://huggingface.co/papers/2611.09567",
-    "source": "HF Daily Papers",
-    "pub_domain": "huggingface.co",
-    "category": "Research Papers",
-    "published_at": "2026-11-15 08:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 56,
-    "cfo_score": 61,
-    "audit_score": 56,
-    "fpa_score": 70,
-    "tier": "General AI & Research",
-    "func_tag": "🔬 Foundation R&D Paper",
-    "summary": "Introduces TurtLES, a research framework addressing a Large-Scale Benchmark for Turbulent 3D Neural PDE Surrogates. Machine-learning surrogates are increasingly used to accelerate computational fluid dynamics, yet progress is limited by the lack of benchmarks capturing realistic, time-dependent turbulent flows.",
-    "raw_summary": "Introduces TurtLES, a research framework addressing a Large-Scale Benchmark for Turbulent 3D Neural PDE Surrogates. Machine-learning surrogates are increasingly used to accelerate computational fluid dynamics, yet progress is limited by the lack of benchmarks capturing realistic, time-dependent turbulent flows.",
-    "benefit": "Foundation Model R&D (TurtLES): Advances academic understanding of a Large-Scale Benchmark for Turbulent 3D Neural PDE Surrogates, informing next-generation multimodal and reasoning architectures.",
-    "risk_angle": "Early-stage academic methods like TurtLES require extensive enterprise hardening and reproducibility checks before production adoption.",
-    "action_item": "Log TurtLES in your technical R&D radar for quarterly review by data-science leads; no immediate finance workflow changes required.",
-    "is_new": false
+    "func_tag": "🌐 Enterprise Tech & AI",
+    "summary": "We got two very different pictures of Nvidia — the company’s latest earnings report vs. the tech executives loudly calling for Jensen Huang’s return.",
+    "raw_summary": "We got two very different pictures of Nvidia — the company’s latest earnings report vs. the tech executives loudly calling for Jensen Huang’s return.",
+    "benefit": "Industry & Workplace AI Context (A tale of two Nvidias · TechCrunch AI): Tracks how developments in 'A tale of two Nvidias' shape workforce policies, platform ecosystems, and digital strategy.",
+    "risk_angle": "Emerging shifts in a tale of two Nvidias can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
+    "action_item": "Note 'A tale of two Nvidias' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
+    "is_new": true
   },
   {
     "id": "item-299291fd",
@@ -3424,7 +3447,7 @@
     "benefit": "Industry & Workplace AI Context (The week everything fell apart · The Verge AI): Tracks how developments in 'The week everything fell apart' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in the week everything fell apart can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'The week everything fell apart' (The Verge AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-01449c61",
@@ -3447,7 +3470,7 @@
     "benefit": "Industry & Workplace AI Context (The most misunderstood graph in · MIT Technology Review AI): Tracks how developments in 'The most misunderstood graph in AI just got a major upd' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in the most misunderstood graph in AI just got a major upd can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'The most misunderstood graph in AI just got a major upd' (MIT Technology Review AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-340614cb",
@@ -3470,7 +3493,7 @@
     "benefit": "Industry & Workplace AI Context (Daniel Ek · TechCrunch AI): Tracks how developments in 'Daniel Ek backs AI researcher’s fusion power startup. H' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in daniel Ek backs AI researcher’s fusion power startup. H can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'Daniel Ek backs AI researcher’s fusion power startup. H' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-d6bff584",
@@ -3493,7 +3516,7 @@
     "benefit": "Industry & Workplace AI Context (AI claimed a solution to · TechCrunch AI): Tracks how developments in 'AI claimed a solution to the 167-year-old Riemann hypot' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in AI claimed a solution to the 167-year-old Riemann hypot can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'AI claimed a solution to the 167-year-old Riemann hypot' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-92c1cc86",
@@ -3516,7 +3539,7 @@
     "benefit": "Industry & Workplace AI Context (The fallout from Nvidia’s Jensen · TechCrunch AI): Tracks how developments in 'The fallout from Nvidia’s Jensen Huang scandal continue' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in the fallout from Nvidia’s Jensen Huang scandal continue can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'The fallout from Nvidia’s Jensen Huang scandal continue' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-7d8981ef",
@@ -3539,7 +3562,7 @@
     "benefit": "Industry & Workplace AI Context (Six AI-powered gadgets that · TechCrunch AI): Tracks how developments in 'Six AI-powered gadgets that could make your home office' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in six AI-powered gadgets that could make your home office can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'Six AI-powered gadgets that could make your home office' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-5a49fd4a",
@@ -3562,7 +3585,7 @@
     "benefit": "Industry & Workplace AI Context (Google rolls out new search · Ars Technica AI): Tracks how developments in 'Google rolls out new search homepage with AI chat histo' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in google rolls out new search homepage with AI chat histo can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'Google rolls out new search homepage with AI chat histo' (Ars Technica AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-99727b65",
@@ -3585,7 +3608,7 @@
     "benefit": "Industry & Workplace AI Context (Researcher plants 2m canaries into · Ars Technica AI): Tracks how developments in 'Researcher plants 2m canaries into the AI supply chain.' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in researcher plants 2m canaries into the AI supply chain. can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'Researcher plants 2m canaries into the AI supply chain.' (Ars Technica AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "item-c3e7758a",
@@ -4482,75 +4505,6 @@
     "benefit": "Industry & Workplace AI Context (SNL gathers all the tech · TechCrunch AI): Tracks how developments in 'SNL gathers all the tech tycoons for a lesson in dating' shape workforce policies, platform ecosystems, and digital strategy.",
     "risk_angle": "Emerging shifts in sNL gathers all the tech tycoons for a lesson in dating can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
     "action_item": "Note 'SNL gathers all the tech tycoons for a lesson in dating' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": false
-  },
-  {
-    "id": "item-a4a92fbc",
-    "title": "Elon Musk, other tech execs sign petition calling on Nvidia to reinstate Jensen Huang",
-    "url": "https://techcrunch.com/2026/11/14/elon-musk-other-tech-execs-sign-petition-calling-on-nvidia-to-reinstate-jensen-huang/",
-    "source": "TechCrunch AI",
-    "pub_domain": "techcrunch.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-11-14 21:41 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 50,
-    "cfo_score": 50,
-    "audit_score": 50,
-    "fpa_score": 58,
-    "tier": "General AI & Research",
-    "func_tag": "🌐 Enterprise Tech & AI",
-    "summary": "The petition had attracted more than 115,000 signatures as of Saturday afternoon. Provides broader industry context on elon Musk, other tech execs sign petition calling on Nvidia to re as reported by TechCrunch AI.",
-    "raw_summary": "The petition had attracted more than 115,000 signatures as of Saturday afternoon.",
-    "benefit": "Industry & Workplace AI Context (Elon Musk, other tech execs · TechCrunch AI): Tracks how developments in 'Elon Musk, other tech execs sign petition calling on Nv' shape workforce policies, platform ecosystems, and digital strategy.",
-    "risk_angle": "Emerging shifts in elon Musk, other tech execs sign petition calling on Nv can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
-    "action_item": "Note 'Elon Musk, other tech execs sign petition calling on Nv' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": false
-  },
-  {
-    "id": "item-075bbfb6",
-    "title": "Asian governments react to Nvidia CEO Jensen Huang’s exit",
-    "url": "https://techcrunch.com/2026/11/14/asian-governments-react-to-nvidia-ceo-jensen-huangs-exit/",
-    "source": "TechCrunch AI",
-    "pub_domain": "techcrunch.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-11-14 16:34 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 50,
-    "cfo_score": 50,
-    "audit_score": 50,
-    "fpa_score": 58,
-    "tier": "General AI & Research",
-    "func_tag": "🌐 Enterprise Tech & AI",
-    "summary": "Some governments moved to confirm chip supply commitments, while others are monitoring the impact on local projects or addressing ongoing investigations.",
-    "raw_summary": "Some governments moved to confirm chip supply commitments, while others are monitoring the impact on local projects or addressing ongoing investigations.",
-    "benefit": "Industry & Workplace AI Context (Asian governments react to Nvidia · TechCrunch AI): Tracks how developments in 'Asian governments react to Nvidia CEO Jensen Huang’s ex' shape workforce policies, platform ecosystems, and digital strategy.",
-    "risk_angle": "Emerging shifts in asian governments react to Nvidia CEO Jensen Huang’s ex can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
-    "action_item": "Note 'Asian governments react to Nvidia CEO Jensen Huang’s ex' (TechCrunch AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
-    "is_new": false
-  },
-  {
-    "id": "item-567fa298",
-    "title": "Jensen Huang and the decline of the visionary showman founder CEO",
-    "url": "https://www.theverge.com/tech/1033781/nvidia-jensen-huang-last-visionary-showman-founder-ceo",
-    "source": "The Verge AI",
-    "pub_domain": "theverge.com",
-    "category": "Tech & AI News",
-    "published_at": "2026-11-14 12:00 UTC",
-    "date_key": "2026-11-15",
-    "date_label": "15 Nov 2026",
-    "score": 50,
-    "cfo_score": 50,
-    "audit_score": 50,
-    "fpa_score": 58,
-    "tier": "General AI & Research",
-    "func_tag": "🌐 Enterprise Tech & AI",
-    "summary": "On January 6th, 2025, Nvidia CEO Jensen Huang got his rockstar moment at last. Provides broader industry context on jensen Huang and the decline of the visionary showman founder CEO as reported by The Verge AI.",
-    "raw_summary": "On January 6th, 2025, Nvidia CEO Jensen Huang got his rockstar moment at last. He strode triumphantly onstage, hand raised in the air, to the claps and cheers of a 14,000-person arena absolutely packed with influencers and fans, their faces awash in blue glow, as he made his…",
-    "benefit": "Industry & Workplace AI Context (Jensen Huang and the decline · The Verge AI): Tracks how developments in 'Jensen Huang and the decline of the visionary showman f' shape workforce policies, platform ecosystems, and digital strategy.",
-    "risk_angle": "Emerging shifts in jensen Huang and the decline of the visionary showman f can influence employee expectations, shadow-IT usage, and platform vendor lock-in if not addressed in corporate IT policy.",
-    "action_item": "Note 'Jensen Huang and the decline of the visionary showman f' (The Verge AI) in your quarterly technology horizon scan to anticipate downstream impacts on workplace tooling and employee AI policies.",
     "is_new": false
   }
 ]
